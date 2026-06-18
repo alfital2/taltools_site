@@ -393,7 +393,7 @@ function NatchoDemo() {
   return (
     <div className="rounded-2xl border-2 border-ink bg-gradient-to-br from-sky/40 to-grape/30 p-5">
       <div
-        className={`relative mx-auto aspect-[16/10] w-full max-w-sm overflow-hidden ring-2 ring-ink transition-all duration-300 ${round ? 'rounded-2xl' : 'rounded-none'}`}
+        className={`relative mx-auto aspect-[16/10] w-full max-w-sm overflow-hidden ring-2 ring-ink transition-all duration-300 ${round ? 'rounded-b-2xl rounded-t-none' : 'rounded-none'}`}
         style={MAC_WALLPAPER}
       >
         {/* layer 1: menu-bar background strip. Goes solid black when "hidden" so the
@@ -431,7 +431,7 @@ function NatchoDemo() {
           {hidden ? 'Show the notch' : 'Hide the notch'}
         </button>
         <button onClick={() => setRound((v) => !v)} className="rounded-lg border-2 border-ink bg-white px-4 py-2 font-700 shadow-pop-sm transition-transform hover:-translate-y-0.5">
-          Corners: {round ? 'on' : 'off'}
+          {round ? 'Show corners' : 'Hide corners'}
         </button>
       </div>
     </div>
@@ -524,24 +524,33 @@ function FlicKeyDemo() {
 /* ----- Tally: the real menu-bar popover, with session + weekly rings ----- */
 const TALLY_GREEN = '#46e08f'
 const TALLY_CYAN = '#4cc9f0'
+const TALLY_ORANGE = '#ff9f0a'
+const TALLY_RED = '#ff453a'
+
+// Session escalates: calm below 60%, warning at 60%+, critical at 90%+.
+function severity(pct, base) {
+  if (pct >= 90) return TALLY_RED
+  if (pct >= 60) return TALLY_ORANGE
+  return base
+}
 
 // One gauge = two concentric rings. Each ring is split into a cyan "used" arc
 // and a green "remaining" arc, separated by small gaps, so it's NOT a closed
 // circle — the cyan segment grows (and the gaps shift) as usage climbs.
-function GaugeRing({ r, pct }) {
+function GaugeRing({ r, pct, usedColor = TALLY_CYAN }) {
   const c = 2 * Math.PI * r
   const GAP = 8 // gap (in path units) at each of the two seams
   const used = (c * pct) / 100
   const rem = c - used
   return (
     <>
-      {/* cyan = used */}
+      {/* used arc (cyan by default, escalates to orange/red for the session ring) */}
       <circle
         cx="60"
         cy="60"
         r={r}
         fill="none"
-        stroke={TALLY_CYAN}
+        stroke={usedColor}
         strokeWidth="6"
         strokeLinecap="round"
         strokeDasharray={`${Math.max(used - GAP, 0.001)} ${c}`}
@@ -563,16 +572,16 @@ function GaugeRing({ r, pct }) {
   )
 }
 
-function TallyGauge({ pct, innerPct, label, reset, dot }) {
+function TallyGauge({ pct, innerPct, label, reset, dot, outerColor = TALLY_CYAN, numberColor = TALLY_GREEN }) {
   return (
     <div className="flex flex-col items-center">
       <div className="relative h-32 w-32">
         <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
-          <GaugeRing r={46} pct={pct} />
+          <GaugeRing r={46} pct={pct} usedColor={outerColor} />
           <GaugeRing r={31} pct={innerPct} />
         </svg>
         <div className="absolute inset-0 grid place-content-center text-center leading-none">
-          <span className="font-display text-xl font-700" style={{ color: TALLY_GREEN }}>
+          <span className="font-display text-xl font-700" style={{ color: numberColor }}>
             {pct}%
           </span>
           <span className="mt-1 text-[10px] font-600 text-white/55">{label}</span>
@@ -586,6 +595,31 @@ function TallyGauge({ pct, innerPct, label, reset, dot }) {
   )
 }
 
+// Live miniature of the session ring for the menu bar (reflects the same status color).
+function MiniRing({ pct }) {
+  const r = 6.5
+  const c = 2 * Math.PI * r
+  const col = severity(pct, TALLY_GREEN)
+  return (
+    <span className="relative inline-grid place-items-center" style={{ width: 17, height: 17 }}>
+      <span className="absolute inset-0 rounded-full" style={{ background: '#0e1430' }} />
+      <svg width="17" height="17" viewBox="0 0 17 17" className="relative -rotate-90">
+        <circle cx="8.5" cy="8.5" r={r} fill="none" stroke="rgba(255,255,255,0.16)" strokeWidth="2.4" />
+        <circle
+          cx="8.5"
+          cy="8.5"
+          r={r}
+          fill="none"
+          stroke={col}
+          strokeWidth="2.4"
+          strokeLinecap="round"
+          strokeDasharray={`${Math.max((c * pct) / 100, 0.001)} ${c}`}
+        />
+      </svg>
+    </span>
+  )
+}
+
 function TallyDemo() {
   const [session, setSession] = useState(28)
   const weekly = 33
@@ -594,8 +628,8 @@ function TallyDemo() {
       {/* faux menu bar */}
       <div className="mb-2 flex items-center justify-end gap-3 rounded-lg bg-black/30 px-3 py-1.5 text-[11px] font-700 text-white/85 backdrop-blur">
         <span className="rounded bg-grape/80 px-1.5 py-0.5 text-white">EN</span>
-        <span className="flex items-center gap-1">
-          <AppImage id="tally" size={15} className="rounded-[3px]" />
+        <span className="flex items-center gap-1" style={{ color: severity(session, '#ffffff') }}>
+          <MiniRing pct={session} />
           {session}%
         </span>
         <WifiGlyph />
@@ -608,7 +642,15 @@ function TallyDemo() {
         <div className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 rounded-[2px] border-l border-t border-white/10" style={{ background: 'rgba(22,24,44,0.96)' }} />
         <div className="rounded-2xl border border-white/10 p-5 shadow-lg" style={{ background: 'rgba(22,24,44,0.96)', backdropFilter: 'blur(10px)' }}>
           <div className="flex items-start justify-around gap-4">
-            <TallyGauge pct={session} innerPct={64} label="session" reset="1h 55m" dot="#f0a500" />
+            <TallyGauge
+              pct={session}
+              innerPct={64}
+              label="session"
+              reset="1h 55m"
+              dot="#f0a500"
+              outerColor={severity(session, TALLY_CYAN)}
+              numberColor={severity(session, TALLY_GREEN)}
+            />
             <TallyGauge pct={weekly} innerPct={47} label="weekly" reset="12h 25m" dot={TALLY_CYAN} />
           </div>
           <div className="mt-4 border-t border-white/10 pt-2 text-center text-[11px] font-600 text-white/45">
