@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
+
+const DEMO_BY_ID = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo }
 
 const DISPLAY = '"Baloo 2", "Trebuchet MS", sans-serif'
 const SANS = '"Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
@@ -28,7 +31,7 @@ function shade(hex, amt) {
 }
 
 /* ---------- A single faceted isometric box ---------- */
-function IsoBox({ w, d, h, color, children, signEmoji }) {
+function IsoBox({ w, d, h, color, children, signIcon, signAlt }) {
   const top = shade(color, 36)
   const left = shade(color, -28)
   const right = shade(color, -52)
@@ -75,10 +78,18 @@ function IsoBox({ w, d, h, color, children, signEmoji }) {
           justifyContent: 'center',
         }}
       >
-        {signEmoji && (
-          <span style={{ fontSize: Math.max(20, w * 0.32), filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.25))' }}>
-            {signEmoji}
-          </span>
+        {signIcon && (
+          <img
+            src={signIcon}
+            alt={signAlt}
+            width={Math.max(34, w * 0.5)}
+            height={Math.max(34, w * 0.5)}
+            style={{
+              borderRadius: '22%',
+              filter: 'drop-shadow(0 3px 4px rgba(0,0,0,0.35))',
+              boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.2)',
+            }}
+          />
         )}
       </div>
       {/* side (left-facing) face */}
@@ -226,6 +237,16 @@ export default function Variant13() {
           filter: blur(2px);
         }
         .iso-dl:hover { transform: translateY(-2px); filter: brightness(1.05); }
+        .iso-fulldemo { transition: gap 0.15s ease, background 0.15s ease; }
+        .iso-fulldemo:hover { gap: 10px; background: rgba(120,110,170,0.1); }
+        .iso-fulldemo:hover svg { transform: translateX(2px); }
+        .iso-fulldemo svg { transition: transform 0.15s ease; }
+        .iso-focusable:focus-visible,
+        .iso-dl:focus-visible,
+        .iso-fulldemo:focus-visible {
+          outline: 3px solid #4b3f7a;
+          outline-offset: 3px;
+        }
         @media (max-width: 720px) {
           .iso-stage { transform: scale(0.62) !important; }
         }
@@ -349,6 +370,7 @@ export default function Variant13() {
                     onClick={() => setActive(isActive ? null : b.app.id)}
                     aria-label={`Open ${b.app.name}`}
                     aria-pressed={isActive}
+                    className="iso-focusable"
                     style={{
                       position: 'relative',
                       border: 'none',
@@ -362,7 +384,7 @@ export default function Variant13() {
                     whileHover={reduced ? {} : { translateZ: lift + 22 }}
                     transition={{ type: 'spring', stiffness: 220, damping: 18 }}
                   >
-                    <IsoBox w={b.w} d={b.d} h={b.h} color={b.app.accent} signEmoji={b.app.emoji}>
+                    <IsoBox w={b.w} d={b.d} h={b.h} color={b.app.accent} signIcon={b.app.icon} signAlt={`${b.app.name} icon`}>
                       <span
                         style={{
                           fontFamily: DISPLAY,
@@ -419,6 +441,9 @@ export default function Variant13() {
                 bottom: 'clamp(20px, 6vh, 60px)',
                 transform: 'translateX(-50%)',
                 width: 'min(92vw, 420px)',
+                maxHeight: 'min(86vh, 760px)',
+                overflowY: 'auto',
+                WebkitOverflowScrolling: 'touch',
                 background: 'rgba(255,255,255,0.94)',
                 borderRadius: 26,
                 padding: '26px 26px 24px',
@@ -428,6 +453,7 @@ export default function Variant13() {
               <button
                 onClick={() => setActive(null)}
                 aria-label="Close"
+                className="iso-focusable"
                 style={{
                   position: 'absolute',
                   top: 14,
@@ -446,20 +472,16 @@ export default function Variant13() {
                 ×
               </button>
               <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                <div
+                <img
+                  src={activeApp.icon}
+                  alt={`${activeApp.name} icon`}
+                  width={56}
+                  height={56}
                   style={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: 16,
-                    display: 'grid',
-                    placeItems: 'center',
-                    fontSize: 30,
-                    background: `linear-gradient(135deg, ${shade(activeApp.accent, 40)}, ${activeApp.accent})`,
-                    boxShadow: `0 8px 18px ${activeApp.accent}66`,
+                    borderRadius: '22%',
+                    boxShadow: `0 8px 18px ${activeApp.accent}55`,
                   }}
-                >
-                  {activeApp.emoji}
-                </div>
+                />
                 <div>
                   <div style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 24, color: '#42396f', lineHeight: 1 }}>
                     {activeApp.name}
@@ -494,12 +516,30 @@ export default function Variant13() {
                   </li>
                 ))}
               </ul>
+              {(() => {
+                const Demo = DEMO_BY_ID[activeApp.id]
+                return Demo ? (
+                  <div
+                    style={{
+                      marginTop: 18,
+                      padding: 14,
+                      borderRadius: 18,
+                      background: '#f4f1fb',
+                      boxShadow: 'inset 0 0 0 1px rgba(120,110,170,0.16)',
+                    }}
+                  >
+                    <Demo tone="light" />
+                  </div>
+                ) : null
+              })()}
+
               <a
-                href="#"
+                href={activeApp.site}
                 className="iso-dl"
+                {...(activeApp.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                 style={{
                   display: 'block',
-                  marginTop: 22,
+                  marginTop: 18,
                   textAlign: 'center',
                   textDecoration: 'none',
                   fontFamily: DISPLAY,
@@ -513,7 +553,31 @@ export default function Variant13() {
                   transition: 'transform 0.15s ease, filter 0.15s ease',
                 }}
               >
-                Download {activeApp.name}
+                Get {activeApp.name}
+              </a>
+
+              <a
+                href={activeApp.site}
+                className="iso-fulldemo"
+                {...(activeApp.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 6,
+                  marginTop: 12,
+                  textDecoration: 'none',
+                  fontWeight: 800,
+                  fontSize: 14,
+                  color: shade(activeApp.accent, -40),
+                  borderRadius: 12,
+                  padding: '6px 8px',
+                }}
+              >
+                See the full demo
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </a>
             </motion.div>
           </>

@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
+
+const DEMOS = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo }
 
 const DISPLAY = '"Orbitron", "Audiowide", system-ui, sans-serif'
 const SANS = '"Rajdhani", "Inter", -apple-system, BlinkMacSystemFont, sans-serif'
@@ -156,6 +159,10 @@ function Grid({ reduced }) {
 /* ---------- App cassette card ---------- */
 function Cassette({ app, reduced, index }) {
   const [hover, setHover] = useState(false)
+  const Demo = DEMOS[app.id]
+  const linkProps = app.external
+    ? { target: '_blank', rel: 'noopener noreferrer' }
+    : {}
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -187,15 +194,17 @@ function Cassette({ app, reduced, index }) {
           marginBottom: '1rem',
         }}
       >
-        <div
+        <img
+          src={app.icon}
+          alt={app.name + ' icon'}
+          width={44}
+          height={44}
           style={{
-            fontSize: '1.8rem',
-            lineHeight: 1,
-            filter: `drop-shadow(0 0 8px ${hexToRgba(app.accent, 0.9)})`,
+            borderRadius: '22%',
+            flexShrink: 0,
+            filter: `drop-shadow(0 0 10px ${hexToRgba(app.accent, 0.85)})`,
           }}
-        >
-          {app.emoji}
-        </div>
+        />
         <h3
           style={{
             fontFamily: DISPLAY,
@@ -307,8 +316,25 @@ function Cassette({ app, reduced, index }) {
         ))}
       </ul>
 
+      {/* live demo behind a cassette window */}
+      {Demo ? (
+        <div
+          style={{
+            borderRadius: 12,
+            padding: '0.7rem',
+            marginBottom: '1.3rem',
+            background: 'rgba(0,0,0,0.45)',
+            border: `1px solid ${hexToRgba(app.accent, 0.4)}`,
+            boxShadow: `inset 0 0 20px ${hexToRgba(app.accent, 0.18)}`,
+          }}
+        >
+          <Demo tone="dark" />
+        </div>
+      ) : null}
+
       <a
-        href="#"
+        href={app.site}
+        {...linkProps}
         style={{
           display: 'inline-block',
           width: '100%',
@@ -327,9 +353,39 @@ function Cassette({ app, reduced, index }) {
           boxShadow: `0 0 14px ${hexToRgba(app.accent, hover ? 0.8 : 0.4)}, inset 0 0 12px ${hexToRgba(app.accent, 0.3)}`,
           textShadow: `0 0 8px ${hexToRgba(app.accent, 0.9)}`,
           transition: 'all 0.3s ease',
+          cursor: 'pointer',
         }}
+        className="tt7-focusable"
       >
         ▼ Download
+      </a>
+
+      <a
+        href={app.site}
+        {...linkProps}
+        className="tt7-focusable tt7-fulldemo"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.4rem',
+          width: '100%',
+          marginTop: '0.8rem',
+          fontFamily: SANS,
+          fontWeight: 700,
+          fontSize: '0.86rem',
+          letterSpacing: '0.06em',
+          textTransform: 'uppercase',
+          textDecoration: 'none',
+          color: CYAN,
+          textShadow: `0 0 8px ${hexToRgba(CYAN, 0.6)}`,
+          cursor: 'pointer',
+        }}
+      >
+        See the full demo
+        <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style={{ flexShrink: 0 }}>
+          <path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke={CYAN} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </a>
     </motion.div>
   )
@@ -417,9 +473,24 @@ export default function Variant7() {
           );
           mix-blend-mode: multiply;
         }
+        .tt7-focusable:focus-visible {
+          outline: 2px solid ${CYAN};
+          outline-offset: 3px;
+          border-radius: 10px;
+        }
+        .tt7-fulldemo {
+          transition: filter 0.25s ease, transform 0.25s ease;
+        }
+        .tt7-fulldemo:hover {
+          filter: brightness(1.25);
+          transform: translateX(2px);
+        }
         @media (prefers-reduced-motion: reduce) {
           .tt7-grid-anim, .tt7-star, .tt7-reel, .tt7-flicker, .tt7-cta {
             animation: none !important;
+          }
+          .tt7-fulldemo:hover {
+            transform: none;
           }
         }
       `}</style>
@@ -515,7 +586,7 @@ export default function Variant7() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.45 }}
-            className={reduced ? '' : 'tt7-cta'}
+            className={`tt7-focusable ${reduced ? '' : 'tt7-cta'}`}
             style={{
               display: 'inline-block',
               marginTop: '2.4rem',
@@ -531,6 +602,7 @@ export default function Variant7() {
               border: `2px solid ${PINK}`,
               background: `linear-gradient(120deg, ${hexToRgba(PINK, 0.25)}, ${hexToRgba(CYAN, 0.2)})`,
               textShadow: `0 0 10px ${hexToRgba(PINK, 0.9)}`,
+              cursor: 'pointer',
             }}
           >
             Enter the Grid
@@ -575,7 +647,7 @@ export default function Variant7() {
               letterSpacing: '0.04em',
             }}
           >
-            Side A · Side B · Side C — load a cassette
+            Side A · Side B · Side C. Load a cassette.
           </p>
 
           <div

@@ -93,7 +93,7 @@ function PaperApp({ app, index, reduced }) {
             transition: reduced ? 'none' : 'transform 0.9s cubic-bezier(.16,1,.3,1)',
           }}
         >
-          {/* facets — each a clip-path polygon in a slightly different shade */}
+          {/* facets, each a clip-path polygon in a slightly different shade */}
           <span
             className="ori-facet"
             style={{
@@ -139,8 +139,14 @@ function PaperApp({ app, index, reduced }) {
               transition: reduced ? 'none' : 'transform 0.9s cubic-bezier(.16,1,.3,1)',
             }}
           />
-          <span className="ori-emoji" style={{ transform: open ? 'translateZ(60px)' : 'translateZ(28px)' }}>
-            {app.emoji}
+          <span className="ori-appicon" style={{ transform: open ? 'translateZ(60px)' : 'translateZ(28px)' }}>
+            <img
+              src={app.icon}
+              alt={app.name + ' icon'}
+              width={78}
+              height={78}
+              style={{ borderRadius: '22%', display: 'block' }}
+            />
           </span>
         </div>
       </div>
@@ -177,9 +183,27 @@ function PaperApp({ app, index, reduced }) {
               </motion.li>
             ))}
           </ul>
-          <a href="#" className="ori-dl" style={{ background: shade(a, -0.1), boxShadow: `0 6px 0 ${shade(a, -0.35)}` }}>
-            Download {app.name}
-          </a>
+          <div className="ori-actions">
+            <a
+              href={app.site}
+              {...(app.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              className="ori-dl"
+              style={{ background: shade(a, -0.1), boxShadow: `0 6px 0 ${shade(a, -0.35)}` }}
+            >
+              Get {app.name}
+            </a>
+            <a
+              href={app.site}
+              {...(app.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              className="ori-seedemo"
+              style={{ color: shade(a, -0.42) }}
+            >
+              See the full demo
+              <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" className="ori-arrow">
+                <path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
+          </div>
         </motion.div>
       </div>
     </motion.article>
@@ -285,7 +309,7 @@ export default function Variant20() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <span className="ori-foldmark" /> TalTools — a paper-folded lab
+          <span className="ori-foldmark" /> TalTools, a paper-folded lab
         </motion.div>
 
         <motion.h1
@@ -450,11 +474,12 @@ const ORI_CSS = `
   position: absolute; inset: 0; display: block;
   filter: drop-shadow(2px 3px 4px rgba(60,40,15,0.25));
 }
-.ori-emoji {
+.ori-appicon {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-  font-size: 54px; transition: transform 0.9s cubic-bezier(.16,1,.3,1);
-  filter: drop-shadow(0 6px 6px rgba(0,0,0,0.25));
+  transition: transform 0.9s cubic-bezier(.16,1,.3,1);
+  filter: drop-shadow(0 7px 8px rgba(0,0,0,0.32));
 }
+.ori-appicon img { box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset; }
 
 .ori-leaf { min-height: 200px; }
 .ori-leaf-inner {
@@ -474,13 +499,32 @@ const ORI_CSS = `
 .ori-bullets { list-style: none; margin: 0 0 20px; padding: 0; display: grid; gap: 9px; }
 .ori-bullets li { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; color: #3b3426; }
 .ori-tick { width: 11px; height: 11px; display: inline-block; flex: 0 0 auto; }
+.ori-actions { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .ori-dl {
   display: inline-block; color: #fff; font-weight: 700; font-size: 14px;
   text-decoration: none; padding: 11px 22px; border-radius: 3px;
-  transition: transform 0.15s ease;
+  cursor: pointer; transition: transform 0.15s ease;
 }
 .ori-dl:hover { transform: translateY(-2px); }
 .ori-dl:active { transform: translateY(4px); box-shadow: none !important; }
+.ori-seedemo {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-weight: 700; font-size: 13.5px; letter-spacing: 0.01em;
+  text-decoration: none; cursor: pointer;
+  border-bottom: 2px solid transparent; padding-bottom: 1px;
+  transition: gap 0.18s ease, border-color 0.18s ease;
+}
+.ori-seedemo:hover { gap: 10px; border-color: currentColor; }
+.ori-arrow { transition: transform 0.18s ease; }
+.ori-seedemo:hover .ori-arrow { transform: translateX(2px); }
+
+.ori-dl:focus-visible,
+.ori-seedemo:focus-visible,
+.ori-scroll:focus-visible {
+  outline: 3px solid var(--ac, #e9573f);
+  outline-offset: 3px; border-radius: 3px;
+}
+.ori-card:focus-within { box-shadow: 8px 12px 0 rgba(120,95,55,0.22), 0 0 0 2px rgba(120,95,55,0.18); }
 
 .ori-footer {
   position: relative; z-index: 2; text-align: center;

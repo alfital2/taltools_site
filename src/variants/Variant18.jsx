@@ -1,6 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
+
+const DEMOS = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo }
 
 // ── Palette ──────────────────────────────────────────────
 const PAPER = '#e8e0cf'
@@ -201,8 +204,28 @@ function SpecimenPlant({ index, accent }) {
   )
 }
 
+// ── Small arrow glyph for links ──────────────────────────
+function ArrowGlyph({ external = false }) {
+  if (external) {
+    return (
+      <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true" style={{ flexShrink: 0 }}>
+        <path d="M4 10L10 4M5 3.5h5.5V9" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    )
+  }
+  return (
+    <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true" style={{ flexShrink: 0 }}>
+      <path d="M2 7h9M7.5 3.5L11 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
 // ── Specimen card ────────────────────────────────────────
 function SpecimenCard({ app, index }) {
+  const Demo = DEMOS[app.id]
+  const linkProps = app.external
+    ? { target: '_blank', rel: 'noopener noreferrer' }
+    : {}
   return (
     <motion.article
       initial={prefersReduced ? { opacity: 1, y: 0 } : { opacity: 0, y: 48 }}
@@ -223,12 +246,13 @@ function SpecimenCard({ app, index }) {
         overflow: 'hidden',
       }}
     >
-      {/* herbarium top label strip */}
+      {/* herbarium top label strip with real specimen icon */}
       <div
         style={{
           display: 'flex',
-          alignItems: 'baseline',
+          alignItems: 'center',
           justifyContent: 'space-between',
+          gap: 10,
           padding: '10px 16px',
           borderBottom: `1px dashed ${FOREST_SOFT}`,
           fontFamily: "'Nunito Sans', sans-serif",
@@ -238,7 +262,16 @@ function SpecimenCard({ app, index }) {
           color: FOREST_SOFT,
         }}
       >
-        <span>No. {String(index + 1).padStart(2, '0')}</span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 9 }}>
+          <img
+            src={app.icon}
+            alt={app.name + ' icon'}
+            width={26}
+            height={26}
+            style={{ borderRadius: '22%', display: 'block', boxShadow: '0 1px 3px rgba(36,53,40,0.28)' }}
+          />
+          No. {String(index + 1).padStart(2, '0')}
+        </span>
         <span>{FAMILY[app.id]}</span>
       </div>
 
@@ -261,11 +294,34 @@ function SpecimenCard({ app, index }) {
         <div style={{ width: '64%', height: '92%' }}>
           <SpecimenPlant index={index} accent={app.accent} />
         </div>
+        {/* "living specimen" marker, CSS only */}
         <span
           aria-hidden="true"
-          style={{ position: 'absolute', top: 8, right: 10, fontSize: 18, opacity: 0.5 }}
+          style={{
+            position: 'absolute',
+            top: 9,
+            right: 11,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 5,
+            fontFamily: "'Nunito Sans', sans-serif",
+            fontSize: 9,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            color: FOREST_SOFT,
+            opacity: 0.7,
+          }}
         >
-          {app.emoji}
+          <span
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: '50%',
+              background: app.accent,
+              boxShadow: `0 0 0 2px ${app.accent}33`,
+            }}
+          />
+          Living
         </span>
       </div>
 
@@ -291,7 +347,7 @@ function SpecimenCard({ app, index }) {
             margin: '0 0 12px',
           }}
         >
-          {LATIN[app.id]} — “{app.tagline}”
+          {LATIN[app.id]}, “{app.tagline}”
         </p>
 
         <p
@@ -329,31 +385,86 @@ function SpecimenCard({ app, index }) {
           ))}
         </ul>
 
-        <a
-          href="#"
-          className="bot-dl"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            fontFamily: "'Nunito Sans', sans-serif",
-            fontWeight: 700,
-            fontSize: 13.5,
-            letterSpacing: '0.04em',
-            color: PAPER,
-            background: FOREST,
-            border: `1.5px solid ${FOREST}`,
-            borderRadius: 999,
-            padding: '10px 20px',
-            textDecoration: 'none',
-            transition: 'background .25s, color .25s, transform .2s',
-          }}
-        >
-          Download specimen
-          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
-            <path d="M7 1v9M3 6l4 4 4-4M2 13h10" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </a>
+        {/* live specimen, pressed under glass */}
+        {Demo && (
+          <div
+            style={{
+              position: 'relative',
+              margin: '0 0 18px',
+              padding: '12px 12px 14px',
+              borderRadius: 5,
+              background: 'rgba(232,224,207,0.5)',
+              border: `1px solid ${PAPER_DEEP}`,
+              boxShadow: '0 1px 0 rgba(255,255,255,0.55) inset',
+            }}
+          >
+            <span
+              style={{
+                display: 'block',
+                fontFamily: "'Nunito Sans', sans-serif",
+                fontSize: 10,
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                color: FOREST_SOFT,
+                margin: '0 0 9px',
+              }}
+            >
+              Specimen under glass · try it
+            </span>
+            <Demo tone="light" />
+          </div>
+        )}
+
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px 18px' }}>
+          <a
+            href={app.site}
+            {...linkProps}
+            className="bot-dl"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              fontFamily: "'Nunito Sans', sans-serif",
+              fontWeight: 700,
+              fontSize: 13.5,
+              letterSpacing: '0.04em',
+              color: PAPER,
+              background: FOREST,
+              border: `1.5px solid ${FOREST}`,
+              borderRadius: 999,
+              padding: '10px 20px',
+              textDecoration: 'none',
+              transition: 'background .25s, color .25s, transform .2s',
+              cursor: 'pointer',
+            }}
+          >
+            Download specimen
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+              <path d="M7 1v9M3 6l4 4 4-4M2 13h10" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
+
+          <a
+            href={app.site}
+            {...linkProps}
+            className="bot-link"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              fontFamily: "'Nunito Sans', sans-serif",
+              fontWeight: 700,
+              fontSize: 13.5,
+              letterSpacing: '0.02em',
+              color: FOREST,
+              textDecoration: 'none',
+              cursor: 'pointer',
+            }}
+          >
+            See the full demo
+            <ArrowGlyph external={app.external} />
+          </a>
+        </div>
       </div>
     </motion.article>
   )
@@ -406,6 +517,11 @@ export default function Variant18() {
           background: ${TERRA}; transform: scaleX(0); transform-origin: left; transition: transform .3s ease;
         }
         .bot-link:hover::after { transform: scaleX(1); }
+        .bot-link:focus-visible::after { transform: scaleX(1); }
+        .bot-dl:focus-visible, .bot-link:focus-visible {
+          outline: 2px solid ${TERRA}; outline-offset: 3px; border-radius: 6px;
+        }
+        a { cursor: pointer; }
         .bot-grain {
           position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.5;
           mix-blend-mode: multiply;
@@ -524,7 +640,7 @@ export default function Variant18() {
               margin: '0 auto 30px',
             }}
           >
-            Three tiny, well-rooted utilities that live quietly in your menu bar —
+            Three tiny, well-rooted utilities that live quietly in your menu bar,
             no accounts, no clutter, just careful little things that do one job beautifully.
           </motion.p>
 
@@ -656,7 +772,7 @@ export default function Variant18() {
               Software, tended like a garden.
             </h2>
             {[
-              ['Native &amp; light', 'Each app is a tiny notarized macOS binary — no Electron, no background bloat. It sits in your menu bar and stays out of the way.'],
+              ['Native &amp; light', 'Each app is a tiny notarized macOS binary, no Electron, no background bloat. It sits in your menu bar and stays out of the way.'],
               ['Fully local', 'No accounts to grow, no data shipped off. What happens on your Mac stays on your Mac, tucked safely in the Keychain when needed.'],
               ['Made by one pair of hands', 'A small, slow lab. Things are planted with care, pruned often, and only released when they’re ready to thrive.'],
             ].map(([t, d], i) => (
@@ -729,12 +845,13 @@ export default function Variant18() {
             {APPS.map((app) => (
               <a
                 key={app.id}
-                href="#"
+                href={app.site}
+                {...(app.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                 className="bot-dl"
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: 8,
+                  gap: 9,
                   fontFamily: "'Nunito Sans', sans-serif",
                   fontWeight: 700,
                   fontSize: 14,
@@ -742,11 +859,19 @@ export default function Variant18() {
                   background: PAPER,
                   border: `1.5px solid ${PAPER}`,
                   borderRadius: 999,
-                  padding: '11px 22px',
+                  padding: '9px 20px 9px 9px',
                   textDecoration: 'none',
+                  cursor: 'pointer',
                 }}
               >
-                <span aria-hidden="true">{app.emoji}</span> {app.name}
+                <img
+                  src={app.icon}
+                  alt={app.name + ' icon'}
+                  width={24}
+                  height={24}
+                  style={{ borderRadius: '22%', display: 'block' }}
+                />
+                {app.name}
               </a>
             ))}
           </div>

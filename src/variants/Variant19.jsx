@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
+
+const DEMO_BY_ID = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo }
 
 // ── Mission Control / Live Ops Dashboard ──────────────────────────────────
 // Dark navy operations console: cyan + orange data accents, thin grid lines,
@@ -36,6 +39,7 @@ function seedSeries(seed, n = 28) {
 }
 
 function sparkPath(series, w, h) {
+  if (!series || series.length < 2) return `M0,${h.toFixed(2)} L${w.toFixed(2)},${h.toFixed(2)}`
   const n = series.length
   const step = w / (n - 1)
   return series
@@ -149,6 +153,8 @@ function SystemPanel({ app, idx, reduced }) {
   }, [reduced])
 
   const uid = `mc-sys-${app.id}`
+  const Demo = DEMO_BY_ID[app.id]
+  const linkProps = app.external ? { target: '_blank', rel: 'noopener noreferrer' } : {}
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -160,6 +166,7 @@ function SystemPanel({ app, idx, reduced }) {
       onFocus={() => setHover(true)}
       onBlur={() => setHover(false)}
       tabIndex={0}
+      className="mc-panel"
       style={{
         position: 'relative',
         background: PANEL,
@@ -179,7 +186,18 @@ function SystemPanel({ app, idx, reduced }) {
       {/* header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 22, lineHeight: 1 }}>{app.emoji}</span>
+          <img
+            src={app.icon}
+            alt={app.name + ' icon'}
+            width={40}
+            height={40}
+            style={{
+              borderRadius: '22%',
+              display: 'block',
+              flexShrink: 0,
+              boxShadow: `0 0 0 1px ${meta.gaugeColor}33, 0 4px 14px -6px ${meta.gaugeColor}88`,
+            }}
+          />
           <div>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: DIM, letterSpacing: 2 }}>{meta.code}</div>
             <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 18, fontWeight: 700, color: '#fff', lineHeight: 1.1 }}>{app.name}</div>
@@ -215,6 +233,7 @@ function SystemPanel({ app, idx, reduced }) {
               strokeWidth="1.8"
               strokeLinejoin="round"
               style={{ filter: `drop-shadow(0 0 3px ${meta.gaugeColor})` }}
+              initial={false}
               animate={{ d: sparkPath(series, W, H) }}
               transition={reduced ? { duration: 0 } : { duration: 0.8, ease: 'linear' }}
             />
@@ -250,26 +269,77 @@ function SystemPanel({ app, idx, reduced }) {
         ))}
       </ul>
 
-      <a
-        href="#"
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 8,
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: 12,
-          fontWeight: 700,
-          letterSpacing: 1,
-          color: NAVY,
-          background: meta.gaugeColor,
-          borderRadius: 6,
-          padding: '9px 16px',
-          textDecoration: 'none',
-          boxShadow: `0 4px 18px -6px ${meta.gaugeColor}`,
-        }}
-      >
-        ⬇ DEPLOY / DOWNLOAD
-      </a>
+      {/* live feed: embedded interactive demo */}
+      {Demo && (
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: DIM, letterSpacing: 1.5, marginBottom: 8 }}>
+            <span>LIVE FEED</span>
+            <span className="mc-blink" style={{ width: 6, height: 6, borderRadius: 99, background: meta.gaugeColor, boxShadow: `0 0 6px ${meta.gaugeColor}` }} />
+            <span style={{ marginLeft: 'auto', color: meta.gaugeColor }}>INTERACTIVE</span>
+          </div>
+          <div
+            style={{
+              border: `1px solid ${meta.gaugeColor}33`,
+              borderRadius: 8,
+              padding: 10,
+              background: '#040c17',
+            }}
+          >
+            <Demo tone="dark" />
+          </div>
+        </div>
+      )}
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+        <a
+          href={app.site}
+          {...linkProps}
+          className="mc-link"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: 1,
+            color: NAVY,
+            background: meta.gaugeColor,
+            borderRadius: 6,
+            padding: '9px 16px',
+            textDecoration: 'none',
+            cursor: 'pointer',
+            boxShadow: `0 4px 18px -6px ${meta.gaugeColor}`,
+          }}
+        >
+          OPEN {app.name.toUpperCase()}
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M5 12h14M13 6l6 6-6 6" stroke={NAVY} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </a>
+        <a
+          href={app.site}
+          {...linkProps}
+          className="mc-link"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 12,
+            fontWeight: 500,
+            letterSpacing: 0.5,
+            color: meta.gaugeColor,
+            textDecoration: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          See the full demo
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M5 12h14M13 6l6 6-6 6" stroke={meta.gaugeColor} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </a>
+      </div>
     </motion.div>
   )
 }
@@ -284,7 +354,7 @@ export default function Variant19() {
   const LOG_LINES = [
     'boot   :: mission control online',
     'auth   :: keychain handshake OK',
-    'sys-01 :: notch mask applied · 0 perms',
+    'sys-01 :: notch mask applied · minimal perms',
     'sys-02 :: layout switch · per-tab memory hit',
     'sys-03 :: claude window polled · 6ms',
     'net    :: telemetry stream nominal',
@@ -359,6 +429,8 @@ export default function Variant19() {
         @keyframes mc-blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0.25; } }
         @keyframes mc-sweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .mc-blink { animation: mc-blink 1.1s steps(1) infinite; }
+        .mc-link:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 6px; }
+        .mc-panel:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
         @media (prefers-reduced-motion: reduce) {
           .mc-blink, .mc-scanline, .mc-sweep { animation: none !important; }
         }
@@ -457,7 +529,7 @@ export default function Variant19() {
         </motion.h1>
         <p style={{ maxWidth: 560, marginTop: 18, fontSize: 16, lineHeight: 1.6, color: DIM }}>
           TalTools runs small, sharp utilities that live in your menu bar. Below is the live operations
-          board — three systems, real telemetry, all nominal.
+          board. Three systems, real telemetry, all nominal.
         </p>
       </header>
 

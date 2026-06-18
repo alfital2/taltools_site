@@ -266,7 +266,7 @@ export default function Variant3() {
             opacity: 0.85,
           }}
         >
-          // a tiny lab of three mac menu-bar apps &mdash; v3.0.0
+          // a tiny lab of three mac menu-bar apps, v3.0.0
         </div>
 
         {/* Terminal window */}
@@ -308,7 +308,7 @@ export default function Variant3() {
                 textOverflow: 'ellipsis',
               }}
             >
-              tal@taltools: ~/lab &mdash; zsh
+              tal@taltools: ~/lab, zsh
             </span>
           </div>
 
@@ -347,6 +347,7 @@ export default function Variant3() {
               <Prompt />
               <input
                 ref={inputRef}
+                className="tt-input"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={onKeyDown}
@@ -424,12 +425,32 @@ export default function Variant3() {
         >
           <span style={{ color: GREEN }}>● online</span>
           <span>apps: {APPS.length}</span>
-          <span>permissions: 0</span>
+          <span>permissions: minimal</span>
           <span>telemetry: none</span>
           <span style={{ marginLeft: 'auto', color: CYAN }}>made with ☕ &amp; swift</span>
         </div>
       </div>
     </div>
+  )
+}
+
+function AppIcon({ app, size = 18 }) {
+  return (
+    <img
+      src={app.icon}
+      alt={app.name + ' icon'}
+      width={size}
+      height={size}
+      style={{
+        width: size,
+        height: size,
+        borderRadius: '22%',
+        flexShrink: 0,
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        boxShadow: `0 0 0 1px #ffffff14, 0 0 10px ${app.accent}33`,
+      }}
+    />
   )
 }
 
@@ -539,7 +560,7 @@ function OutputLine({ line, onChipClick }) {
                 flexWrap: 'wrap',
               }}
             >
-              <span style={{ fontSize: 18, flexShrink: 0 }}>{a.emoji}</span>
+              <AppIcon app={a} size={18} />
               <span style={{ color: a.accent, fontWeight: 700, minWidth: 76 }}>
                 {a.name}
               </span>
@@ -569,7 +590,7 @@ function OutputLine({ line, onChipClick }) {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 26 }}>{a.emoji}</span>
+          <AppIcon app={a} size={28} />
           <span
             style={{
               color: a.accent,
@@ -580,7 +601,7 @@ function OutputLine({ line, onChipClick }) {
           >
             {a.name}
           </span>
-          <span style={{ color: '#8b949e' }}>&mdash; {a.tagline}</span>
+          <span style={{ color: '#8b949e' }}>// {a.tagline}</span>
         </div>
         <pre style={{ ...preStyle, color: '#c9d1d9', marginTop: 8 }}>{a.blurb}</pre>
         <div style={{ marginTop: 8 }}>
@@ -591,13 +612,36 @@ function OutputLine({ line, onChipClick }) {
             </div>
           ))}
         </div>
-        <button
-          onClick={() => onChipClick('download')}
-          className="tt-link"
-          style={{ ...linkBtnStyle, color: a.accent, borderColor: `${a.accent}66`, marginTop: 10 }}
-        >
-          $ download {a.id}
-        </button>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
+          <button
+            onClick={() => onChipClick('download')}
+            className="tt-link"
+            style={{ ...linkBtnStyle, color: a.accent, borderColor: `${a.accent}66` }}
+          >
+            $ download {a.id}
+          </button>
+          <a
+            href={a.site}
+            {...(a.external
+              ? { target: '_blank', rel: 'noopener noreferrer' }
+              : {})}
+            className="tt-link"
+            style={{
+              ...linkBtnStyle,
+              color: a.accent,
+              borderColor: `${a.accent}66`,
+              textDecoration: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 5,
+            }}
+          >
+            see the full demo
+            <span aria-hidden="true" style={{ fontSize: 14, lineHeight: 1 }}>
+              {a.external ? '↗' : '→'}
+            </span>
+          </a>
+        </div>
       </div>
     )
   }
@@ -627,6 +671,7 @@ function OutputLine({ line, onChipClick }) {
             <motion.a
               key={a.id}
               href="#"
+              className="tt-dl"
               whileHover={{ y: -2, boxShadow: `0 6px 20px ${a.accent}33` }}
               whileTap={{ scale: 0.96 }}
               onClick={(e) => e.preventDefault()}
@@ -642,9 +687,11 @@ function OutputLine({ line, onChipClick }) {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 6,
+                cursor: 'pointer',
               }}
             >
-              {a.emoji} get {a.name}
+              <AppIcon app={a} size={16} />
+              get {a.name}
             </motion.a>
           ))}
         </div>
@@ -719,8 +766,20 @@ function StyleBlock() {
         background: rgba(57,197,255,0.14) !important;
         box-shadow: 0 0 14px rgba(57,197,255,0.25);
       }
+      .tt-link {
+        cursor: pointer;
+      }
       .tt-link:hover {
         background: rgba(57,197,255,0.12) !important;
+      }
+      .tt-chip:focus-visible,
+      .tt-link:focus-visible {
+        outline: 2px solid ${GREEN};
+        outline-offset: 2px;
+      }
+      .tt-dl:focus-visible {
+        outline: 2px solid ${GREEN};
+        outline-offset: 2px;
       }
       .tt-out::selection, .tt-out *::selection { background: ${GREEN}55; }
       @media (prefers-reduced-motion: reduce) {

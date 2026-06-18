@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
+
+const DEMO_FOR = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo }
 
 const DISPLAY = "'Archivo Black', system-ui, sans-serif"
 const MONO = "'Space Mono', ui-monospace, monospace"
@@ -11,17 +14,19 @@ const INK = '#1b1233'
 const PAPER = '#fffdf5'
 
 // ---- tactile chunky button -------------------------------------------------
-function ChunkyButton({ children, href = '#', bg = INK, fg = PAPER, className = '', style = {} }) {
+function ChunkyButton({ children, href = '#', bg = INK, fg = PAPER, external = false, className = '', style = {} }) {
   const [pressed, setPressed] = useState(false)
+  const ext = external ? { target: '_blank', rel: 'noopener noreferrer' } : {}
   return (
     <a
       href={href}
+      {...ext}
       onMouseDown={() => setPressed(true)}
       onMouseUp={() => setPressed(false)}
       onMouseLeave={() => setPressed(false)}
       onTouchStart={() => setPressed(true)}
       onTouchEnd={() => setPressed(false)}
-      className={`inline-block select-none uppercase tracking-tight ${className}`}
+      className={`tt-press inline-block cursor-pointer select-none uppercase tracking-tight ${className}`}
       style={{
         fontFamily: DISPLAY,
         background: bg,
@@ -78,6 +83,7 @@ function Sticker({ children, rotate = -8, bg = RED, top, left, right, bottom }) 
 function AppBlock({ app, index }) {
   const [hover, setHover] = useState(false)
   const num = String(index + 1).padStart(2, '0')
+  const Demo = DEMO_FOR[app.id]
   return (
     <motion.article
       initial={{ opacity: 0, y: 40 }}
@@ -119,16 +125,23 @@ function AppBlock({ app, index }) {
       <div style={{ position: 'relative', zIndex: 2 }}>
         <div
           style={{
-            display: 'inline-block',
-            fontSize: 'clamp(2.5rem, 6vw, 3.75rem)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             border: `4px solid ${hover ? PAPER : INK}`,
-            background: app.accent,
-            padding: '0.25rem 0.75rem',
-            lineHeight: 1,
+            background: PAPER,
+            padding: '0.4rem',
+            lineHeight: 0,
             boxShadow: '5px 5px 0 #1b1233',
           }}
         >
-          {app.emoji}
+          <img
+            src={app.icon}
+            alt={app.name + ' icon'}
+            width={64}
+            height={64}
+            style={{ display: 'block', width: 'clamp(48px, 12vw, 64px)', height: 'auto', borderRadius: '22%' }}
+          />
         </div>
 
         <h3
@@ -208,14 +221,76 @@ function AppBlock({ app, index }) {
           ))}
         </ul>
 
-        <ChunkyButton
-          href="#"
-          bg={app.accent}
-          fg={INK}
-          style={{ fontSize: '1.1rem' }}
-        >
-          Get it →
-        </ChunkyButton>
+        {/* live demo, kept on a stable light panel so the card hover-invert never muddies it */}
+        {Demo && (
+          <div
+            style={{
+              background: PAPER,
+              border: `4px solid ${hover ? PAPER : INK}`,
+              boxShadow: '5px 5px 0 #1b1233',
+              padding: 'clamp(0.85rem, 2.5vw, 1.25rem)',
+              margin: '0 0 1.5rem',
+              color: INK,
+            }}
+          >
+            <div
+              aria-hidden
+              style={{
+                fontFamily: MONO,
+                fontWeight: 700,
+                fontSize: '0.7rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                color: INK,
+                marginBottom: '0.75rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+              }}
+            >
+              <span style={{ width: '0.7rem', height: '0.7rem', background: app.accent, border: `2px solid ${INK}`, display: 'inline-block' }} />
+              Try it
+            </div>
+            <Demo tone="light" />
+          </div>
+        )}
+
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '1rem' }}>
+          <ChunkyButton
+            href={app.site}
+            external={app.external}
+            bg={app.accent}
+            fg={INK}
+            style={{ fontSize: '1.1rem' }}
+          >
+            Get it →
+          </ChunkyButton>
+
+          <a
+            href={app.site}
+            {...(app.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            className="tt-demolink cursor-pointer"
+            style={{
+              fontFamily: MONO,
+              fontWeight: 700,
+              fontSize: '0.85rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.02em',
+              textDecoration: 'none',
+              color: hover ? app.accent : INK,
+              borderBottom: `3px solid ${hover ? app.accent : INK}`,
+              paddingBottom: '0.1rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+            }}
+          >
+            See the full demo
+            <span aria-hidden style={{ display: 'inline-block', transition: 'transform 140ms ease' }} className="tt-arrow">
+              →
+            </span>
+          </a>
+        </div>
       </div>
     </motion.article>
   )
@@ -296,6 +371,11 @@ export default function Variant2() {
           * { animation: none !important; }
         }
         .tt-link:hover { background:${INK} !important; color:${YELLOW} !important; }
+        .tt-demolink:hover .tt-arrow { transform: translateX(4px); }
+        a:focus-visible, button:focus-visible {
+          outline: 4px solid ${RED};
+          outline-offset: 3px;
+        }
       `}</style>
 
       {/* top bar */}
@@ -365,13 +445,31 @@ export default function Variant2() {
             position: 'absolute',
             right: 'clamp(0.5rem, 6vw, 5rem)',
             bottom: 'clamp(1rem, 4vw, 3rem)',
-            fontSize: 'clamp(3rem, 12vw, 8rem)',
+            width: 'clamp(3.5rem, 12vw, 8rem)',
+            height: 'clamp(3.5rem, 12vw, 8rem)',
             animation: reduce ? 'none' : 'tt-bob 4s ease-in-out infinite',
             pointerEvents: 'none',
             zIndex: 0,
           }}
         >
-          🌮
+          <svg viewBox="0 0 100 100" width="100%" height="100%" aria-hidden>
+            <circle cx="50" cy="50" r="44" fill={YELLOW} stroke={INK} strokeWidth="6" />
+            <circle cx="50" cy="50" r="22" fill={RED} stroke={INK} strokeWidth="6" />
+            {[...Array(12)].map((_, i) => {
+              const a = (i / 12) * Math.PI * 2
+              return (
+                <line
+                  key={i}
+                  x1={50 + Math.cos(a) * 24}
+                  y1={50 + Math.sin(a) * 24}
+                  x2={50 + Math.cos(a) * 44}
+                  y2={50 + Math.sin(a) * 44}
+                  stroke={INK}
+                  strokeWidth="4"
+                />
+              )
+            })}
+          </svg>
         </motion.div>
 
         <motion.div
@@ -525,15 +623,26 @@ export default function Variant2() {
           aria-hidden
           style={{
             position: 'absolute',
-            right: '-1rem',
+            right: 'clamp(-1rem, 2vw, 2rem)',
             top: '50%',
             transform: 'translateY(-50%)',
-            fontSize: 'clamp(5rem, 20vw, 14rem)',
-            opacity: 0.25,
+            width: 'clamp(7rem, 22vw, 16rem)',
+            height: 'clamp(7rem, 22vw, 16rem)',
+            opacity: 0.28,
             pointerEvents: 'none',
           }}
         >
-          📊
+          <svg viewBox="0 0 120 120" width="100%" height="100%" aria-hidden>
+            <rect x="6" y="6" width="108" height="108" fill="none" stroke={PAPER} strokeWidth="5" />
+            {[
+              [16, 78, 22],
+              [42, 54, 46],
+              [68, 30, 70],
+              [94, 64, 36],
+            ].map(([x, y, h], i) => (
+              <rect key={i} x={x} y={y} width="14" height={h} fill={PAPER} stroke={INK} strokeWidth="4" />
+            ))}
+          </svg>
         </div>
       </section>
 

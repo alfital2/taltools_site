@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence, useMotionValue } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
 
 // ---------------------------------------------------------------------------
-// TalOS — a fake, fully interactive macOS-style desktop, in the browser.
+// TalOS, a fake, fully interactive macOS-style desktop, in the browser.
 // Self-contained showstopper variant. Imports only from react + framer-motion.
 // ---------------------------------------------------------------------------
 
@@ -101,217 +102,21 @@ function BatteryGlyph() {
   )
 }
 
+function SearchGlyph() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <circle cx="7" cy="7" r="4.4" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M10.4 10.4 14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 function AppleGlyph() {
   return (
     <svg width="15" height="18" viewBox="0 0 15 18" fill="currentColor" aria-hidden="true">
       <path d="M11.7 9.5c0-2 1.6-3 1.7-3a3.6 3.6 0 0 0-2.9-1.6c-1.2-.1-2.4.7-3 .7-.6 0-1.6-.7-2.6-.7C3.3 5 1.8 6.1 1 7.9c-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.1 0 1.6-.7 3-.7s1.8.7 3 .7c1.2 0 2-1.1 2.8-2.2a9 9 0 0 0 1.2-2.6c-.1 0-2.4-.9-2.4-3.5z" transform="translate(0 -3)" />
       <path d="M9.6 3.2A3.4 3.4 0 0 0 10.4.6 3.5 3.5 0 0 0 8.1 1.8 3.2 3.2 0 0 0 7.3 4.3 2.9 2.9 0 0 0 9.6 3.2z" />
     </svg>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// Natcho notch demo — used both in the menu bar and inside the Natcho window.
-// ---------------------------------------------------------------------------
-function Notch({ hidden, onToggle, label = true }) {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-      <button
-        onClick={onToggle}
-        title={hidden ? 'Notch hidden — click to reveal' : 'Click to hide the notch (Natcho)'}
-        aria-label={hidden ? 'Reveal camera notch' : 'Hide camera notch'}
-        style={{
-          position: 'relative',
-          width: 118,
-          height: 26,
-          border: 'none',
-          padding: 0,
-          cursor: 'pointer',
-          background: 'transparent',
-          display: 'block',
-        }}
-      >
-        {/* The notch body */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: '#05060a',
-            borderBottomLeftRadius: 14,
-            borderBottomRightRadius: 14,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 8,
-            boxShadow: hidden ? 'none' : 'inset 0 0 0 1px rgba(255,255,255,0.04)',
-          }}
-        >
-          {/* camera dot + lens */}
-          <AnimatePresence initial={false}>
-            {!hidden && (
-              <motion.div
-                key="cam"
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.5 }}
-                transition={{ duration: 0.2 }}
-                style={{ display: 'flex', alignItems: 'center', gap: 7 }}
-              >
-                <span
-                  style={{
-                    width: 7,
-                    height: 7,
-                    borderRadius: '50%',
-                    background: 'radial-gradient(circle at 35% 30%, #3b6fd6, #0a1f4d)',
-                    boxShadow: '0 0 4px rgba(80,140,255,0.8)',
-                  }}
-                />
-                <span
-                  style={{
-                    width: 5,
-                    height: 5,
-                    borderRadius: '50%',
-                    background: 'radial-gradient(circle at 40% 30%, #44d07a, #0c3a1d)',
-                  }}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </button>
-      {label && (
-        <span style={{ fontSize: 11, opacity: 0.55 }}>
-          {hidden ? 'Notch hidden 🌮' : 'Click the notch'}
-        </span>
-      )}
-    </div>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// Tally live demo — animated SVG usage ring + slider.
-// ---------------------------------------------------------------------------
-function TallyDemo({ accent }) {
-  const [pct, setPct] = useState(64)
-  const R = 46
-  const C = 2 * Math.PI * R
-  const dash = (pct / 100) * C
-  const hue = pct < 60 ? accent : pct < 85 ? '#f4a52b' : '#ff5b6e'
-  const reset = Math.max(0, Math.round((100 - pct) * 1.7))
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}>
-      <div style={{ position: 'relative', width: 120, height: 120, flex: '0 0 auto' }}>
-        <svg width="120" height="120" viewBox="0 0 120 120">
-          <circle cx="60" cy="60" r={R} fill="none" stroke="rgba(0,0,0,0.10)" strokeWidth="11" />
-          <motion.circle
-            cx="60"
-            cy="60"
-            r={R}
-            fill="none"
-            stroke={hue}
-            strokeWidth="11"
-            strokeLinecap="round"
-            strokeDasharray={C}
-            transform="rotate(-90 60 60)"
-            animate={{ strokeDashoffset: C - dash }}
-            transition={{ type: 'spring', stiffness: 120, damping: 18 }}
-          />
-        </svg>
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <span style={{ fontSize: 26, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
-            {pct}%
-          </span>
-          <span style={{ fontSize: 10, opacity: 0.55 }}>weekly used</span>
-        </div>
-      </div>
-      <div style={{ flex: '1 1 140px', minWidth: 140 }}>
-        <label style={{ fontSize: 12, opacity: 0.7, display: 'block', marginBottom: 8 }}>
-          Drag to simulate usage
-        </label>
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value={pct}
-          onChange={(e) => setPct(Number(e.target.value))}
-          aria-label="Usage percent"
-          style={{ width: '100%', accentColor: hue, cursor: 'pointer' }}
-        />
-        <div style={{ fontSize: 12, opacity: 0.7, marginTop: 10 }}>
-          Resets in <b style={{ fontVariantNumeric: 'tabular-nums' }}>{reset}h</b>
-          {pct >= 85 && <span style={{ color: '#ff5b6e' }}> · heads-up!</span>}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// FlicKey live demo — turn gibberish into Hebrew.
-// ---------------------------------------------------------------------------
-function FlicKeyDemo({ accent }) {
-  const GIBBERISH = 'susj'
-  const FIXED = 'שלום'
-  const [fixed, setFixed] = useState(false)
-  return (
-    <div>
-      <div
-        style={{
-          fontSize: 28,
-          fontWeight: 600,
-          letterSpacing: '0.5px',
-          padding: '14px 16px',
-          borderRadius: 12,
-          background: 'rgba(0,0,0,0.05)',
-          textAlign: 'center',
-          minHeight: 36,
-          direction: fixed ? 'rtl' : 'ltr',
-        }}
-      >
-        <AnimatePresence mode="wait">
-          <motion.span
-            key={fixed ? 'fixed' : 'gib'}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.18 }}
-            style={{ display: 'inline-block' }}
-          >
-            {fixed ? FIXED : GIBBERISH}
-          </motion.span>
-        </AnimatePresence>
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 12 }}>
-        <button
-          onClick={() => setFixed((f) => !f)}
-          style={{
-            border: 'none',
-            cursor: 'pointer',
-            padding: '8px 14px',
-            borderRadius: 9,
-            fontWeight: 600,
-            fontSize: 13,
-            color: '#fff',
-            background: accent,
-            boxShadow: '0 4px 14px rgba(0,0,0,0.15)',
-          }}
-        >
-          Double-tap ⇧
-        </button>
-        <span style={{ fontSize: 12, opacity: 0.6 }}>
-          {fixed ? 'Fixed to Hebrew →' : 'Typed in the wrong layout'}
-        </span>
-      </div>
-    </div>
   )
 }
 
@@ -326,8 +131,6 @@ function AppWindow({
   isSmall,
   reduced,
   dragRef,
-  notchHidden,
-  setNotchHidden,
   onFocus,
   onClose,
 }) {
@@ -410,14 +213,30 @@ function AppWindow({
           <div
             style={{
               flex: 1,
-              textAlign: 'center',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 7,
               fontSize: 13,
               fontWeight: 600,
-              opacity: 0.75,
+              opacity: 0.78,
               marginRight: 52,
             }}
           >
-            {win.id === FINDER_ID ? 'Welcome to TalOS' : `${app.emoji}  ${app.name}`}
+            {win.id === FINDER_ID ? (
+              'Welcome to TalOS'
+            ) : (
+              <>
+                <img
+                  src={app.icon}
+                  alt=""
+                  width={18}
+                  height={18}
+                  style={{ borderRadius: '22%', display: 'block' }}
+                />
+                {app.name}
+              </>
+            )}
           </div>
         </div>
 
@@ -426,12 +245,7 @@ function AppWindow({
           {win.id === FINDER_ID ? (
             <FinderContent />
           ) : (
-            <AppContent
-              app={app}
-              accent={accent}
-              notchHidden={notchHidden}
-              setNotchHidden={setNotchHidden}
-            />
+            <AppContent app={app} accent={accent} />
           )}
         </div>
       </div>
@@ -494,26 +308,25 @@ function trafficStyle(color) {
 // ---------------------------------------------------------------------------
 // Window content for the 3 real apps.
 // ---------------------------------------------------------------------------
-function AppContent({ app, accent, notchHidden, setNotchHidden }) {
+function AppContent({ app, accent }) {
+  const externalProps = app.external
+    ? { target: '_blank', rel: 'noopener noreferrer' }
+    : {}
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 12 }}>
-        <div
+        <img
+          src={app.icon}
+          alt={`${app.name} icon`}
+          width={56}
+          height={56}
           style={{
-            width: 56,
-            height: 56,
-            borderRadius: 14,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 32,
-            background: `linear-gradient(145deg, ${accent}33, ${accent}11)`,
-            boxShadow: `0 6px 18px ${accent}33, inset 0 0 0 1px ${accent}33`,
+            borderRadius: '22%',
             flex: '0 0 auto',
+            boxShadow: `0 6px 18px ${accent}40`,
+            display: 'block',
           }}
-        >
-          {app.emoji}
-        </div>
+        />
         <div>
           <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, fontFamily: DISPLAY_STACK }}>
             {app.name}
@@ -544,6 +357,7 @@ function AppContent({ app, accent, notchHidden, setNotchHidden }) {
                 justifyContent: 'center',
                 flex: '0 0 auto',
               }}
+              aria-hidden="true"
             >
               ✓
             </span>
@@ -552,7 +366,7 @@ function AppContent({ app, accent, notchHidden, setNotchHidden }) {
         ))}
       </ul>
 
-      {/* Live mini demo per app */}
+      {/* Live, fully interactive demo per app */}
       <div
         style={{
           padding: 14,
@@ -565,18 +379,14 @@ function AppContent({ app, accent, notchHidden, setNotchHidden }) {
         <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.6, textTransform: 'uppercase', opacity: 0.5, marginBottom: 12 }}>
           Live demo
         </div>
-        {app.id === 'tally' && <TallyDemo accent={accent} />}
-        {app.id === 'flickey' && <FlicKeyDemo accent={accent} />}
-        {app.id === 'natcho' && (
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Notch hidden={notchHidden} onToggle={() => setNotchHidden((h) => !h)} />
-          </div>
-        )}
+        {app.id === 'tally' && <TallyDemo />}
+        {app.id === 'flickey' && <FlicKeyDemo tone="light" />}
+        {app.id === 'natcho' && <NatchoDemo tone="light" />}
       </div>
 
       <a
-        href="#"
-        onClick={(e) => e.preventDefault()}
+        href={app.site}
+        {...externalProps}
         style={{
           display: 'inline-flex',
           alignItems: 'center',
@@ -589,9 +399,13 @@ function AppContent({ app, accent, notchHidden, setNotchHidden }) {
           fontWeight: 700,
           fontSize: 14,
           boxShadow: `0 8px 22px ${accent}55`,
+          cursor: 'pointer',
         }}
       >
-        ↓ Download {app.name}
+        See the full demo
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h9M8.5 4l4 4-4 4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </a>
     </div>
   )
@@ -600,17 +414,28 @@ function AppContent({ app, accent, notchHidden, setNotchHidden }) {
 function FinderContent() {
   return (
     <div style={{ textAlign: 'center', padding: '6px 4px' }}>
-      <div style={{ fontSize: 40, marginBottom: 8 }}>👋</div>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 10, marginBottom: 14 }}>
+        {APPS.map((a) => (
+          <img
+            key={a.id}
+            src={a.icon}
+            alt={`${a.name} icon`}
+            width={40}
+            height={40}
+            style={{ borderRadius: '22%', display: 'block', boxShadow: `0 6px 14px ${a.accent}40` }}
+          />
+        ))}
+      </div>
       <h2 style={{ margin: '0 0 6px', fontSize: 22, fontWeight: 700, fontFamily: DISPLAY_STACK }}>
         Welcome to TalOS
       </h2>
       <p style={{ fontSize: 14, lineHeight: 1.55, opacity: 0.78, maxWidth: 320, margin: '0 auto 8px' }}>
         A tiny desktop running three real Mac menu-bar apps. Click an icon in the
-        dock below to launch it — drag the windows around, and try the live demos
+        dock below to launch it, drag the windows around, and try the live demos
         inside each.
       </p>
       <p style={{ fontSize: 13, opacity: 0.6, margin: 0 }}>
-        Pro tip: click the camera notch up top to hide it. 🌮
+        Pro tip: click the camera notch up top to hide it.
       </p>
     </div>
   )
@@ -619,13 +444,29 @@ function FinderContent() {
 // ---------------------------------------------------------------------------
 // A dock icon with magnify + bounce.
 // ---------------------------------------------------------------------------
-function DockIcon({ emoji, label, accent, bouncing, onClick, reduced }) {
+function FolderGlyph() {
+  return (
+    <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+      <path
+        d="M3 9.5a2.5 2.5 0 0 1 2.5-2.5h7l2.6 2.6h11.4A2.5 2.5 0 0 1 29 12.1V25a2.5 2.5 0 0 1-2.5 2.5h-21A2.5 2.5 0 0 1 3 25V9.5z"
+        fill="#cfe6ff"
+      />
+      <path
+        d="M3 13h26v12a2.5 2.5 0 0 1-2.5 2.5h-21A2.5 2.5 0 0 1 3 25V13z"
+        fill="#8fc4ff"
+      />
+    </svg>
+  )
+}
+
+function DockIcon({ icon, label, accent, bouncing, onClick, reduced, isFolder }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <motion.button
         onClick={onClick}
         aria-label={`Open ${label}`}
         title={label}
+        className="talos-focusable"
         whileHover={reduced ? {} : { scale: 1.45, y: -14 }}
         whileTap={reduced ? {} : { scale: 1.1 }}
         animate={
@@ -643,17 +484,35 @@ function DockIcon({ emoji, label, accent, bouncing, onClick, reduced }) {
           height: 52,
           borderRadius: 14,
           border: 'none',
+          padding: 0,
           cursor: 'pointer',
-          fontSize: 30,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: `linear-gradient(145deg, ${accent}cc, ${accent}77)`,
-          boxShadow: `0 8px 18px ${accent}66, inset 0 1px 0 rgba(255,255,255,0.5)`,
+          background: isFolder
+            ? 'linear-gradient(145deg, rgba(255,255,255,0.55), rgba(255,255,255,0.2))'
+            : 'transparent',
+          boxShadow: isFolder
+            ? `0 8px 18px ${accent}55, inset 0 1px 0 rgba(255,255,255,0.5)`
+            : `0 8px 18px ${accent}55`,
           transformOrigin: 'bottom center',
         }}
       >
-        <span style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.25))' }}>{emoji}</span>
+        {isFolder ? (
+          <FolderGlyph />
+        ) : (
+          <img
+            src={icon}
+            alt={`${label} icon`}
+            width={52}
+            height={52}
+            style={{
+              borderRadius: '22%',
+              display: 'block',
+              filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.28))',
+            }}
+          />
+        )}
       </motion.button>
     </div>
   )
@@ -779,8 +638,8 @@ export default function Variant5() {
   }, [])
 
   const dockItems = [
-    ...APPS.map((a) => ({ id: a.id, emoji: a.emoji, label: a.name, accent: a.accent })),
-    { id: '__downloads__', emoji: '📁', label: 'Downloads', accent: '#5b8cff' },
+    ...APPS.map((a) => ({ id: a.id, icon: a.icon, label: a.name, accent: a.accent })),
+    { id: '__downloads__', isFolder: true, label: 'Downloads', accent: '#5b8cff' },
   ]
 
   return (
@@ -805,6 +664,11 @@ export default function Variant5() {
         }
         .talos-scroll::-webkit-scrollbar { width: 8px; }
         .talos-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.18); border-radius: 8px; }
+        .talos-focusable:focus-visible {
+          outline: 2px solid #fff;
+          outline-offset: 3px;
+          border-radius: 14px;
+        }
       `}</style>
 
       {/* Wallpaper */}
@@ -906,7 +770,9 @@ export default function Variant5() {
           <span style={{ display: 'flex' }}>
             <WifiGlyph />
           </span>
-          <span aria-hidden="true">🔍</span>
+          <span style={{ display: 'flex' }}>
+            <SearchGlyph />
+          </span>
           <MenuClock />
         </div>
       </div>
@@ -936,8 +802,6 @@ export default function Variant5() {
                 isSmall={isSmall}
                 reduced={reduced}
                 dragRef={desktopRef}
-                notchHidden={notchHidden}
-                setNotchHidden={setNotchHidden}
                 onFocus={bringToFront}
                 onClose={closeWin}
               />
@@ -974,7 +838,8 @@ export default function Variant5() {
           {dockItems.map((d) => (
             <DockIcon
               key={d.id}
-              emoji={d.emoji}
+              icon={d.icon}
+              isFolder={d.isFolder}
               label={d.label}
               accent={d.accent}
               bouncing={bouncing === d.id}
@@ -1006,8 +871,9 @@ function NotchTop({ hidden, onToggle }) {
   return (
     <button
       onClick={onToggle}
-      title={hidden ? 'Notch hidden — click to reveal' : 'Click to hide the notch (Natcho)'}
+      title={hidden ? 'Notch hidden, click to reveal' : 'Click to hide the notch (Natcho)'}
       aria-label={hidden ? 'Reveal camera notch' : 'Hide camera notch'}
+      className="talos-focusable"
       style={{
         position: 'relative',
         width: 150,

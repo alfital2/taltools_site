@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
+
+const DEMOS = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo }
 
 const DISPLAY = '"Anton", "Arial Narrow", Impact, sans-serif'
 const SANS = '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
@@ -189,9 +192,16 @@ export default function Variant14() {
         @keyframes kt-blink { 50% { opacity: 0; } }
         @media (prefers-reduced-motion: reduce) { .kt-blink { animation: none; } }
         ::selection { background: ${RED}; color: ${PAPER}; }
+        .kt-focus:focus-visible { outline: 3px solid ${RED}; outline-offset: 3px; }
+        .kt-fulldemo .kt-arrow { transition: transform 0.2s ease; }
+        .kt-fulldemo:hover .kt-arrow { transform: translateX(6px); }
+        @media (prefers-reduced-motion: reduce) {
+          .kt-fulldemo .kt-arrow { transition: none; }
+          .kt-fulldemo:hover .kt-arrow { transform: none; }
+        }
       `}</style>
 
-      {/* Top bar — kept clear of top-left corner for the overlay button */}
+      {/* Top bar, kept clear of top-left corner for the overlay button */}
       <header
         style={{
           position: 'fixed',
@@ -293,7 +303,7 @@ export default function Variant14() {
       {/* SCRUB band */}
       <section style={{ padding: 'clamp(40px, 10vh, 120px) 0', display: 'flex', flexDirection: 'column', gap: '0.1em' }}>
         <ScrubLine text="MENU BAR · MENU BAR · MENU BAR" color={INK} from="-12%" to="-40%" reduced={reduced} />
-        <ScrubLine text="ZERO BLOAT — FULLY LOCAL — NO ACCOUNT" color={RED} from="-45%" to="0%" reduced={reduced} weight={900} />
+        <ScrubLine text="ZERO BLOAT · FULLY LOCAL · NO ACCOUNT" color={RED} from="-45%" to="0%" reduced={reduced} weight={900} />
         <ScrubLine text="NOTARIZED · NATIVE · FAST" color={INK} from="-10%" to="-38%" reduced={reduced} />
       </section>
 
@@ -309,18 +319,33 @@ export default function Variant14() {
             position: 'relative',
           }}
         >
-          {/* big index numeral */}
+          {/* big index numeral + real app icon */}
           <div
-            aria-hidden="true"
             style={{
-              fontFamily: DISPLAY,
-              fontSize: 'clamp(1.2rem, 2.5vw, 2rem)',
-              letterSpacing: '0.2em',
-              color: RED,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 14,
               marginBottom: 'clamp(8px, 2vh, 20px)',
             }}
           >
-            0{idx + 1} / 03
+            <img
+              src={app.icon}
+              alt={app.name + ' icon'}
+              width={44}
+              height={44}
+              style={{ borderRadius: '22%', display: 'block', flexShrink: 0 }}
+            />
+            <span
+              aria-hidden="true"
+              style={{
+                fontFamily: DISPLAY,
+                fontSize: 'clamp(1.2rem, 2.5vw, 2rem)',
+                letterSpacing: '0.2em',
+                color: RED,
+              }}
+            >
+              0{idx + 1} / 03
+            </span>
           </div>
 
           <h2
@@ -411,18 +436,60 @@ export default function Variant14() {
                         paddingBottom: 8,
                       }}
                     >
-                      <span style={{ color: RED, fontFamily: DISPLAY, fontSize: '1.1em' }}>—</span>
+                      <span style={{ color: RED, fontFamily: DISPLAY, fontSize: '1.1em' }}>/</span>
                       {b}
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div>
+              {/* live interactive demo, framed in the brutalist style */}
+              {(() => {
+                const Demo = DEMOS[app.id]
+                if (!Demo) return null
+                return (
+                  <div
+                    style={{
+                      border: `2px solid ${INK}`,
+                      padding: 'clamp(14px, 3vw, 28px)',
+                      maxWidth: 560,
+                      background: PAPER,
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontFamily: SANS,
+                        fontWeight: 800,
+                        fontSize: 11,
+                        letterSpacing: '0.3em',
+                        textTransform: 'uppercase',
+                        marginBottom: 14,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 8,
+                      }}
+                    >
+                      <span style={{ color: RED }}>●</span> Live demo
+                    </div>
+                    <Demo tone="light" />
+                  </div>
+                )
+              })()}
+
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  gap: 'clamp(16px, 3vw, 32px)',
+                }}
+              >
                 <motion.a
-                  href="#"
+                  href={app.site}
+                  {...(app.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                   whileHover={reduced ? undefined : { scale: 1.04 }}
                   whileTap={{ scale: 0.97 }}
+                  className="kt-focus"
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -435,10 +502,37 @@ export default function Variant14() {
                     letterSpacing: '0.04em',
                     padding: '0.5em 1em',
                     border: `2px solid ${INK}`,
+                    cursor: 'pointer',
                   }}
                 >
-                  DOWNLOAD <span style={{ color: RED }}>{app.name.toUpperCase()}</span> ↓
+                  GET <span style={{ color: RED }}>{app.name.toUpperCase()}</span> ↓
                 </motion.a>
+
+                <a
+                  href={app.site}
+                  {...(app.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  className="kt-focus kt-fulldemo"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    color: INK,
+                    textDecoration: 'none',
+                    fontFamily: SANS,
+                    fontWeight: 800,
+                    fontSize: 'clamp(0.8rem, 1.2vw, 0.95rem)',
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    borderBottom: `2px solid ${RED}`,
+                    paddingBottom: 3,
+                    cursor: 'pointer',
+                  }}
+                >
+                  See the full demo
+                  <span className="kt-arrow" style={{ color: RED }} aria-hidden="true">
+                    →
+                  </span>
+                </a>
               </div>
             </motion.div>
           </div>
@@ -475,7 +569,7 @@ export default function Variant14() {
             textTransform: 'uppercase',
           }}
         >
-          TALTOOLS — built tiny, on purpose · {new Date().getFullYear()}
+          TALTOOLS · built tiny, on purpose · {new Date().getFullYear()}
         </p>
       </footer>
     </div>

@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
+
+const DEMOS = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo }
 
 // ---------------------------------------------------------------------------
-// Variant 15 — "Boarding Pass / Thermal Receipt"
+// Variant 15 - "Boarding Pass / Thermal Receipt"
 // The whole page is printed paper. A long thermal-receipt header up top with
 // dashed tear lines, dotted-leader item rows, a CSS barcode, a QR-ish block
 // and a TOTAL. Then each of the 3 apps is an airline-style boarding pass with
@@ -110,7 +113,7 @@ function QrBlock({ seed = 'QR', size = 72 }) {
 }
 
 // Dotted-leader receipt row: label .......... price
-function ItemRow({ label, price, dim }) {
+function ItemRow({ label, price, dim, icon, iconAlt }) {
   return (
     <div
       style={{
@@ -124,7 +127,18 @@ function ItemRow({ label, price, dim }) {
         letterSpacing: '0.04em',
       }}
     >
-      <span style={{ whiteSpace: 'nowrap' }}>{label}</span>
+      <span style={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+        {icon && (
+          <img
+            src={icon}
+            alt={iconAlt || ''}
+            width={16}
+            height={16}
+            style={{ borderRadius: '22%', display: 'block', filter: 'grayscale(1) contrast(1.05)' }}
+          />
+        )}
+        {label}
+      </span>
       <span
         aria-hidden="true"
         style={{
@@ -141,6 +155,7 @@ function ItemRow({ label, price, dim }) {
 // --- Boarding pass for one app --------------------------------------------
 function BoardingPass({ app, index, reduced }) {
   const [torn, setTorn] = useState(false)
+  const Demo = DEMOS[app.id]
   const seat = String(12 + index * 11) + ['A', 'C', 'F'][index % 3]
   const gate = ['G', 'F', 'T'][index % 3] + String(index + 1)
   const flight = 'TT' + String(101 + index)
@@ -209,16 +224,18 @@ function BoardingPass({ app, index, reduced }) {
               BOARDING PASS
             </div>
           </div>
-          <div
+          <img
+            src={app.icon}
+            alt={app.name + ' icon'}
+            width={40}
+            height={40}
             style={{
-              fontSize: '26px',
-              lineHeight: 1,
+              borderRadius: '22%',
               transform: 'rotate(-6deg)',
+              boxShadow: '0 2px 6px -2px rgba(22,19,15,0.5)',
+              flexShrink: 0,
             }}
-            aria-hidden="true"
-          >
-            {app.emoji}
-          </div>
+          />
         </header>
 
         {/* field grid */}
@@ -288,29 +305,91 @@ function BoardingPass({ app, index, reduced }) {
           ))}
         </div>
 
+        {/* inflight preview = live demo, framed like a receipt panel */}
+        {Demo && (
+          <div
+            style={{
+              border: `2px solid ${INK}`,
+              borderRadius: '8px',
+              padding: '12px 12px 14px',
+              marginBottom: '14px',
+              background: 'rgba(22,19,15,0.015)',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontSize: '9.5px',
+                letterSpacing: '0.18em',
+                opacity: 0.7,
+                marginBottom: '10px',
+              }}
+            >
+              <span>INFLIGHT PREVIEW</span>
+              <span aria-hidden="true" style={{ flex: 1, borderBottom: '1px dotted rgba(22,19,15,0.4)' }} />
+              <span>LIVE</span>
+            </div>
+            <Demo tone="light" />
+          </div>
+        )}
+
         <Barcode seed={app.id + flight} height={36} style={{ marginBottom: '12px' }} />
 
-        <motion.a
-          href="#"
-          whileHover={reduced ? undefined : { scale: 1.03 }}
-          whileTap={reduced ? undefined : { scale: 0.97 }}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            background: INK,
-            color: PAPER,
-            fontFamily: MONO,
-            fontSize: '12px',
-            fontWeight: 700,
-            letterSpacing: '0.12em',
-            textDecoration: 'none',
-            padding: '11px 18px',
-            borderRadius: '6px',
-          }}
-        >
-          BOARD NOW — DOWNLOAD ↓
-        </motion.a>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px 18px' }}>
+          <motion.a
+            href={app.site}
+            target={app.external ? '_blank' : undefined}
+            rel={app.external ? 'noopener noreferrer' : undefined}
+            whileHover={reduced ? undefined : { scale: 1.03 }}
+            whileTap={reduced ? undefined : { scale: 0.97 }}
+            className="bp15-focus"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: INK,
+              color: PAPER,
+              fontFamily: MONO,
+              fontSize: '12px',
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+              textDecoration: 'none',
+              padding: '11px 18px',
+              borderRadius: '6px',
+              cursor: 'pointer',
+            }}
+          >
+            BOARD NOW, DOWNLOAD ↓
+          </motion.a>
+
+          <a
+            href={app.site}
+            target={app.external ? '_blank' : undefined}
+            rel={app.external ? 'noopener noreferrer' : undefined}
+            className="bp15-focus bp15-fulllink"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              color: INK,
+              fontFamily: MONO,
+              fontSize: '11px',
+              fontWeight: 700,
+              letterSpacing: '0.08em',
+              textDecoration: 'none',
+              borderBottom: `1px solid rgba(22,19,15,0.35)`,
+              paddingBottom: '1px',
+              cursor: 'pointer',
+            }}
+          >
+            SEE THE FULL DEMO
+            <span aria-hidden="true" className="bp15-arrow" style={{ display: 'inline-block' }}>
+              {app.external ? '↗' : '→'}
+            </span>
+          </a>
+        </div>
       </div>
 
       {/* perforation column (notches) */}
@@ -354,6 +433,7 @@ function BoardingPass({ app, index, reduced }) {
           type="button"
           onClick={() => setTorn(true)}
           disabled={torn}
+          className="bp15-focus"
           style={{
             marginTop: 'auto',
             background: 'transparent',
@@ -532,6 +612,17 @@ export default function Variant15() {
         }
         .bp15-tear::before { left: 4px; }
         .bp15-tear::after { right: 4px; transform: scaleX(-1); }
+        .bp15-focus:focus-visible {
+          outline: 3px solid ${STAMP};
+          outline-offset: 3px;
+          border-radius: 4px;
+        }
+        .bp15-fulllink:hover { border-bottom-color: ${INK}; }
+        .bp15-fulllink:hover .bp15-arrow { transform: translateX(3px); }
+        .bp15-arrow { transition: transform 0.2s ease; }
+        @media (prefers-reduced-motion: reduce) {
+          .bp15-arrow { transition: none; }
+        }
       `}</style>
 
       {/* ================= THERMAL RECEIPT ================= */}
@@ -570,7 +661,7 @@ export default function Variant15() {
 
         <div style={{ display: 'grid', gap: '2px' }}>
           {APPS.map((a) => (
-            <ItemRow key={a.id} label={`${a.emoji} ${a.name}`} price="FREE" />
+            <ItemRow key={a.id} label={a.name} price="FREE" icon={a.icon} iconAlt={a.name + ' icon'} />
           ))}
           <ItemRow label="No accounts" price="FREE" dim />
           <ItemRow label="No tracking" price="FREE" dim />

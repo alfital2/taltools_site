@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
 
 // ── Claymorphism "Toy" landing page for TalTools ──────────────────────────
 // Soft, puffy, molded-plasticine aesthetic. Pastel candy palette, rounded
@@ -116,9 +117,19 @@ function Hero() {
           letterSpacing: 0.3,
         }}
       >
-        <span className="clay-wobble" style={{ fontSize: 18, display: 'inline-block' }}>
-          🧸
-        </span>
+        <span
+          className="clay-wobble"
+          aria-hidden
+          style={{
+            width: 16,
+            height: 16,
+            borderRadius: '46% 54% 52% 48% / 50% 46% 54% 50%',
+            background: 'linear-gradient(150deg,#ffd6e8,#ff9ec4)',
+            boxShadow: 'inset 1px 1px 2px rgba(255,255,255,0.9), inset -1px -1px 3px rgba(196,58,120,0.4)',
+            display: 'inline-block',
+            flex: '0 0 auto',
+          }}
+        />
         a tiny lab of three squishy Mac apps
       </motion.div>
 
@@ -186,7 +197,7 @@ function Hero() {
 function AppGrid() {
   return (
     <section id="apps" style={{ marginBottom: 'clamp(64px, 9vw, 110px)' }}>
-      <SectionTitle emoji="🍬" title="Squeeze one of these" />
+      <SectionTitle glyph="spark" title="Squeeze one of these" />
       <div
         style={{
           marginTop: 38,
@@ -201,6 +212,13 @@ function AppGrid() {
       </div>
     </section>
   )
+}
+
+function AppDemo({ app }) {
+  if (app.id === 'natcho') return <NatchoDemo tone="light" />
+  if (app.id === 'flickey') return <FlicKeyDemo tone="light" />
+  if (app.id === 'tally') return <TallyDemo tone="light" />
+  return null
 }
 
 function AppCard({ app, index }) {
@@ -224,7 +242,7 @@ function AppCard({ app, index }) {
         flexDirection: 'column',
       }}
     >
-      {/* puffy emoji blob avatar that bobs */}
+      {/* puffy clay cradle holding the real app icon, gently bobbing */}
       <div
         className={`clay-bob clay-bob-${index % 3}`}
         style={{
@@ -236,11 +254,20 @@ function AppCard({ app, index }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: 46,
           marginBottom: 22,
         }}
       >
-        <span style={{ filter: 'drop-shadow(0 3px 4px ' + hexA(tone, 0.4) + ')' }}>{app.emoji}</span>
+        <img
+          src={app.icon}
+          alt={app.name + ' icon'}
+          width={58}
+          height={58}
+          style={{
+            borderRadius: '22%',
+            display: 'block',
+            filter: 'drop-shadow(0 4px 6px ' + hexA(tone, 0.42) + ')',
+          }}
+        />
       </div>
 
       <h3
@@ -316,16 +343,66 @@ function AppCard({ app, index }) {
         ))}
       </ul>
 
-      <div style={{ marginTop: 'auto', paddingTop: 26 }}>
+      {/* soft clay tray cradling the real interactive demo */}
+      <div
+        style={{
+          marginTop: 22,
+          padding: 'clamp(12px, 2vw, 16px)',
+          borderRadius: 26,
+          background: 'linear-gradient(150deg,#ffffff,' + hexA(tone, 0.1) + ')',
+          boxShadow: `inset 4px 5px 12px ${hexA(tone, 0.32)}, inset -4px -5px 12px rgba(255,255,255,0.9)`,
+          display: 'flex',
+          justifyContent: 'center',
+          overflow: 'hidden',
+        }}
+      >
+        <AppDemo app={app} />
+      </div>
+
+      <div style={{ marginTop: 'auto', paddingTop: 22 }}>
         <ClayButton
-          href="#"
+          href={app.site}
+          external={app.external}
           tone={tone}
           full
           bg={`linear-gradient(150deg, ${hexA(tone, 0.95)}, ${tone})`}
           textColor="#fff"
         >
-          ⬇ Download {app.name}
+          Download {app.name}
         </ClayButton>
+
+        <a
+          href={app.site}
+          {...(app.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+          className="clay-link"
+          style={{
+            marginTop: 14,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 7,
+            fontFamily: "'Quicksand', sans-serif",
+            fontWeight: 700,
+            fontSize: 14.5,
+            color: theme.text,
+            textDecoration: 'none',
+            cursor: 'pointer',
+            borderRadius: 999,
+            padding: '4px 6px',
+          }}
+        >
+          See the full demo
+          <span className="clay-arrow" aria-hidden style={{ display: 'inline-flex' }}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path
+                d="M3 8h9M8 4l4 4-4 4"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+        </a>
       </div>
     </motion.article>
   )
@@ -334,13 +411,25 @@ function AppCard({ app, index }) {
 /* ───────────────────────── WHY CLAY ───────────────────────── */
 function WhyClay() {
   const items = [
-    { e: '🪶', t: 'Featherweight', d: 'Each app is tiny, native, and notarized. No Electron bloat, just soft pure Swift.' },
-    { e: '🔒', t: 'Zero snooping', d: 'Local-first by design. No accounts to invent, no data leaving your squishy machine.' },
-    { e: '✨', t: 'Made with love', d: 'Hand-molded interactions and gentle details, because tools you touch daily should feel good.' },
+    {
+      g: 'feather',
+      t: 'Featherweight',
+      d: 'Each app is tiny, native, and notarized. No Electron bloat, just soft pure Swift.',
+    },
+    {
+      g: 'lock',
+      t: 'Barely any access',
+      d: 'Local-first by design. Minimal permissions, no accounts to invent, no data leaving your squishy machine.',
+    },
+    {
+      g: 'heart',
+      t: 'Made with love',
+      d: 'Hand-molded interactions and gentle details, because tools you touch daily should feel good.',
+    },
   ]
   return (
     <section id="why" style={{ marginBottom: 'clamp(64px, 9vw, 110px)' }}>
-      <SectionTitle emoji="💗" title="Why so soft?" />
+      <SectionTitle glyph="heart" title="Why so soft?" />
       <div
         style={{
           marginTop: 38,
@@ -366,9 +455,20 @@ function WhyClay() {
           >
             <div
               className={`clay-bob clay-bob-${i % 3}`}
-              style={{ fontSize: 40, marginBottom: 12, display: 'inline-block' }}
+              style={{
+                width: 58,
+                height: 58,
+                marginBottom: 12,
+                borderRadius: '46% 54% 52% 48% / 50% 46% 54% 50%',
+                background: 'linear-gradient(150deg,#ffffff,#e8eeff)',
+                boxShadow: claySoft('#aeb9e8'),
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#6b6aa8',
+              }}
             >
-              {it.e}
+              <ClayGlyph kind={it.g} />
             </div>
             <h4 style={{ margin: 0, fontWeight: 800, fontSize: 21, color: '#4f4567' }}>{it.t}</h4>
             <p
@@ -408,9 +508,18 @@ function CTA() {
         overflow: 'hidden',
       }}
     >
-      <div className="clay-bob clay-bob-1" style={{ fontSize: 54 }}>
-        🎈
-      </div>
+      <div
+        className="clay-bob clay-bob-1"
+        aria-hidden
+        style={{
+          width: 64,
+          height: 64,
+          margin: '0 auto',
+          borderRadius: '46% 54% 58% 42% / 52% 44% 56% 48%',
+          background: 'linear-gradient(150deg,#fff0bb,#ffb3d4)',
+          boxShadow: claySoft('#f3a8c8'),
+        }}
+      />
       <h2
         style={{
           margin: '12px auto 0',
@@ -437,7 +546,7 @@ function CTA() {
       </p>
       <div style={{ marginTop: 28, display: 'flex', justifyContent: 'center' }}>
         <ClayButton href="#apps" tone="#ff7eb3" bg="linear-gradient(145deg,#ff9ec9,#ff5fa2)" textColor="#fff">
-          Grab them all ✨
+          Grab them all
         </ClayButton>
       </div>
     </motion.section>
@@ -457,16 +566,70 @@ function Footer() {
         color: '#9a89a4',
       }}
     >
-      <span style={{ display: 'inline-block', marginBottom: 6 }} className="clay-wobble">
-        🧸
-      </span>
-      <div>Molded by hand · TalTools · {new Date().getFullYear()}</div>
+      <span
+        aria-hidden
+        className="clay-wobble"
+        style={{
+          display: 'inline-block',
+          marginBottom: 8,
+          width: 18,
+          height: 18,
+          borderRadius: '46% 54% 52% 48% / 50% 46% 54% 50%',
+          background: 'linear-gradient(150deg,#ffd6e8,#c5e8ff)',
+          boxShadow: 'inset 1px 1px 2px rgba(255,255,255,0.9), inset -1px -1px 3px rgba(154,137,164,0.5)',
+        }}
+      />
+      <div>Molded by hand, TalTools, {new Date().getFullYear()}</div>
     </footer>
   )
 }
 
 /* ───────────────────────── SHARED BITS ───────────────────────── */
-function SectionTitle({ emoji, title }) {
+function ClayGlyph({ kind, size = 28 }) {
+  const common = {
+    width: size,
+    height: size,
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 2,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+  }
+  if (kind === 'feather') {
+    return (
+      <svg {...common}>
+        <path d="M20 4C13 4 6 9 6 16v3l-2 2" />
+        <path d="M6 16c4 0 8-2 11-7" />
+        <path d="M8.5 18.5L18 9" />
+      </svg>
+    )
+  }
+  if (kind === 'lock') {
+    return (
+      <svg {...common}>
+        <rect x="5" y="11" width="14" height="9" rx="2.5" />
+        <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+        <circle cx="12" cy="15.5" r="1.2" fill="currentColor" stroke="none" />
+      </svg>
+    )
+  }
+  if (kind === 'heart') {
+    return (
+      <svg {...common}>
+        <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10Z" />
+      </svg>
+    )
+  }
+  // 'spark' default
+  return (
+    <svg {...common}>
+      <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18" />
+    </svg>
+  )
+}
+
+function SectionTitle({ glyph, title }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 18 }}
@@ -483,13 +646,13 @@ function SectionTitle({ emoji, title }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: 28,
+          color: '#d34f8a',
           background: 'linear-gradient(150deg,#ffffff,#ffe9f4)',
           boxShadow: claySoft('#ffb3d4'),
         }}
         className="clay-bob clay-bob-0"
       >
-        {emoji}
+        <ClayGlyph kind={glyph} size={28} />
       </span>
       <h2
         style={{
@@ -506,10 +669,11 @@ function SectionTitle({ emoji, title }) {
   )
 }
 
-function ClayButton({ href, children, tone, bg, textColor, full }) {
+function ClayButton({ href, children, tone, bg, textColor, full, external }) {
   return (
     <motion.a
       href={href}
+      {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
       whileHover={{ y: -3, scale: 1.03 }}
       whileTap={{ scale: 0.93, y: 2 }}
       transition={{ type: 'spring', stiffness: 400, damping: 18 }}
@@ -583,6 +747,18 @@ function ClayStyles() {
   return (
     <style>{`
       .clay-btn:active { box-shadow: var(--clay-press) !important; }
+      .clay-btn:focus-visible,
+      .clay-link:focus-visible {
+        outline: 3px solid rgba(86,52,79,0.55);
+        outline-offset: 3px;
+      }
+
+      .clay-link { transition: color 0.18s ease; }
+      .clay-link .clay-arrow { transition: transform 0.2s ease; }
+      .clay-link:hover .clay-arrow { transform: translateX(4px); }
+      @media (prefers-reduced-motion: reduce) {
+        .clay-link .clay-arrow { transition: none; }
+      }
 
       @keyframes clayBob {
         0%,100% { transform: translateY(0) rotate(0deg); }

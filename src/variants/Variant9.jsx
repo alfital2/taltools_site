@@ -1,6 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
+
+const DEMO_FOR = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo }
 
 // ── Hand-drawn sketchbook landing page for TalTools ──────────────────────────
 // Cream paper, ruled grid, wobbly borders, doodled arrows, sticky notes & tape.
@@ -74,44 +77,19 @@ function DoodleArrow({ color = INK, reduce, style }) {
   )
 }
 
-// A little hand-sketched icon per app (drawn fresh, not an image).
-function AppDoodle({ id, accent }) {
-  const common = { fill: 'none', stroke: INK, strokeWidth: 3, strokeLinecap: 'round', strokeLinejoin: 'round' }
-  if (id === 'natcho') {
-    // a laptop with a notch bar
-    return (
-      <svg viewBox="0 0 90 70" width="74" height="58" aria-hidden="true">
-        <path d="M14 12 q-2 -2 0 -4 h62 q2 -2 0 4 v32 q2 2 -2 2 H16 q-4 0 -2 -2 z" {...common} />
-        <rect x="34" y="8" width="22" height="7" rx="3" fill={INK} />
-        <path d="M6 50 q-2 6 5 6 h68 q7 0 5 -6" {...common} fill={accent} fillOpacity="0.4" />
-      </svg>
-    )
-  }
-  if (id === 'flickey') {
-    // a keyboard
-    return (
-      <svg viewBox="0 0 90 70" width="74" height="58" aria-hidden="true">
-        <path d="M10 18 q-2 -3 2 -3 h66 q4 0 2 3 v34 q2 3 -2 3 H12 q-4 0 -2 -3 z" {...common} fill={accent} fillOpacity="0.35" />
-        <path d="M20 26 h6 M34 26 h6 M48 26 h6 M62 26 h6" {...common} />
-        <path d="M20 36 h6 M34 36 h6 M48 36 h6 M62 36 h6" {...common} />
-        <path d="M28 46 h34" {...common} />
-      </svg>
-    )
-  }
-  // tally — a little bar chart / tally marks
+// Small hand-drawn arrow that sits inside the "see the full demo" link.
+function InlineArrow({ color = INK }) {
   return (
-    <svg viewBox="0 0 90 70" width="74" height="58" aria-hidden="true">
-      <path d="M14 56 h64" {...common} />
-      <path d="M22 56 v-20 h10 v20" {...common} fill={accent} fillOpacity="0.4" />
-      <path d="M38 56 v-32 h10 v32" {...common} fill={accent} fillOpacity="0.4" />
-      <path d="M54 56 v-14 h10 v14" {...common} fill={accent} fillOpacity="0.4" />
-      <path d="M70 22 l6 -8" {...common} />
+    <svg viewBox="0 0 34 18" width="26" height="14" style={{ overflow: 'visible' }} aria-hidden="true">
+      <path d="M2 9 C 12 6, 22 12, 30 9" fill="none" stroke={color} strokeWidth="2.6" strokeLinecap="round" />
+      <path d="M30 9 L 23 5 M30 9 L 24 14" fill="none" stroke={color} strokeWidth="2.6" strokeLinecap="round" />
     </svg>
   )
 }
 
 function StickyNote({ app, index, reduce }) {
   const tilt = [-2.5, 1.8, -1.4][index % 3]
+  const Demo = DEMO_FOR[app.id]
   return (
     <motion.div
       initial={reduce ? { opacity: 1, y: 0 } : { opacity: 0, y: 40, rotate: tilt - 6 }}
@@ -145,22 +123,28 @@ function StickyNote({ app, index, reduce }) {
           border: '1px dashed rgba(43,43,43,0.25)',
         }}
       />
-      {/* accent doodle blob behind icon */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+      {/* real app icon, pinned to the note like a photo with a hand-drawn frame */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 8 }}>
         <div
           style={{
-            background: app.accent,
+            position: 'relative',
+            padding: 5,
+            background: '#fffdf3',
+            border: `2.5px solid ${INK}`,
             borderRadius: ROUGH[(index + 1) % 3],
-            padding: '6px 8px',
-            border: `2px solid ${INK}`,
+            boxShadow: '3px 4px 0 rgba(43,43,43,0.2)',
             display: 'inline-flex',
+            transform: `rotate(${[-3, 2.5, -2][index % 3]}deg)`,
           }}
         >
-          <AppDoodle id={app.id} accent={app.accent} />
+          <img
+            src={app.icon}
+            alt={app.name + ' icon'}
+            width={62}
+            height={62}
+            style={{ display: 'block', borderRadius: '22%' }}
+          />
         </div>
-        <span style={{ fontSize: 34 }} aria-hidden="true">
-          {app.emoji}
-        </span>
       </div>
 
       <h3
@@ -180,37 +164,82 @@ function StickyNote({ app, index, reduce }) {
       <p style={{ fontSize: 19, fontStyle: 'italic', margin: '0 0 8px', opacity: 0.85 }}>{app.tagline}</p>
       <p style={{ fontSize: 17, lineHeight: 1.35, margin: '0 0 14px' }}>{app.blurb}</p>
 
-      <ul style={{ listStyle: 'none', margin: '0 0 18px', padding: 0, display: 'grid', gap: 7 }}>
+      <ul style={{ listStyle: 'none', margin: '0 0 16px', padding: 0, display: 'grid', gap: 7 }}>
         {app.bullets.map((b) => (
           <li key={b} style={{ display: 'flex', gap: 8, fontSize: 16.5, lineHeight: 1.2 }}>
-            <span aria-hidden="true" style={{ color: app.accent, fontWeight: 700 }}>
-              ✓
-            </span>
+            <CheckMark color={app.accent} />
             <span>{b}</span>
           </li>
         ))}
       </ul>
 
-      {/* hand-drawn download button */}
+      {/* live demo, taped into the page like a clipping */}
+      {Demo && (
+        <div
+          style={{
+            position: 'relative',
+            margin: '0 0 18px',
+            padding: '20px 14px 14px',
+            background: '#fffdf5',
+            border: `2px dashed rgba(43,43,43,0.45)`,
+            borderRadius: ROUGH[index % 3],
+          }}
+        >
+          <span
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              top: -14,
+              left: 18,
+              fontFamily: HEADING_FONT,
+              fontSize: 19,
+              background: app.accent,
+              color: INK,
+              padding: '1px 10px 2px',
+              border: `2px solid ${INK}`,
+              borderRadius: ROUGH[(index + 1) % 3],
+              transform: 'rotate(-2deg)',
+            }}
+          >
+            try it
+          </span>
+          <Demo tone="light" />
+        </div>
+      )}
+
+      {/* see the full demo, drawn as an underlined sketch link */}
       <a
-        href="#"
-        className="sketch-btn"
+        href={app.site}
+        className="sketch-link"
+        {...(app.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
         style={{
-          display: 'inline-block',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 8,
           textDecoration: 'none',
           color: INK,
           background: app.accent,
           fontFamily: HEADING_FONT,
-          fontSize: 26,
-          padding: '6px 22px 8px',
+          fontSize: 25,
+          padding: '5px 18px 7px',
           border: `2.5px solid ${INK}`,
           borderRadius: ROUGH[(index + 2) % 3],
           boxShadow: '3px 4px 0 rgba(43,43,43,0.3)',
         }}
       >
-        ⬇ Download
+        See the full demo
+        <InlineArrow color={INK} />
       </a>
     </motion.div>
+  )
+}
+
+// Hand-scribbled check mark for the feature list.
+function CheckMark({ color }) {
+  return (
+    <svg viewBox="0 0 20 20" width="17" height="17" style={{ flex: '0 0 auto', marginTop: 2 }} aria-hidden="true">
+      <path d="M3 11 C 5 13, 7 16, 9 17 C 12 11, 15 5, 18 2" fill="none" stroke={color} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   )
 }
 
@@ -260,12 +289,13 @@ export default function Variant9() {
           0%,100% { transform: translateY(0) rotate(-3deg); }
           50% { transform: translateY(-7px) rotate(-3deg); }
         }
-        .sketch-btn { transition: transform .15s ease, box-shadow .15s ease; }
-        .sketch-btn:hover { transform: translate(-1px,-2px); box-shadow: 5px 7px 0 rgba(43,43,43,0.35); }
-        .sketch-btn:active { transform: translate(2px,3px); box-shadow: 1px 1px 0 rgba(43,43,43,0.3); }
+        .sketch-link { cursor: pointer; transition: transform .15s ease, box-shadow .15s ease; }
+        .sketch-link:hover { transform: translate(-1px,-2px); box-shadow: 5px 7px 0 rgba(43,43,43,0.35); }
+        .sketch-link:active { transform: translate(2px,3px); box-shadow: 1px 1px 0 rgba(43,43,43,0.3); }
+        .sketch-link:focus-visible { outline: 3px solid #2b2b2b; outline-offset: 3px; }
         .doodle-star { animation: wiggle 3.5s ease-in-out infinite; transform-origin: center; }
         @media (prefers-reduced-motion: reduce) {
-          .doodle-star, .floaty-note { animation: none !important; }
+          .doodle-star, .floaty-note, .sketch-note { animation: none !important; }
         }
       `}</style>
 
@@ -367,7 +397,7 @@ export default function Variant9() {
           }}
         >
           Three small, sharp tools that live up in your menu bar and quietly make
-          your Mac nicer. No accounts, no fuss — just little fixes, sketched into
+          your Mac nicer. No accounts, no fuss, just little fixes sketched into
           existence.
         </p>
 
@@ -452,7 +482,7 @@ export default function Variant9() {
           <Squiggle color="#2ec4b6" reduce={reduce} />
         </div>
         <p style={{ fontSize: 18, marginTop: 10, opacity: 0.85 }}>
-          TalTools — doodled & built for macOS. Thanks for flipping through the
+          TalTools, doodled and built for macOS. Thanks for flipping through the
           sketchbook.
         </p>
       </footer>

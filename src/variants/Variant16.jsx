@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
+
+const DEMOS = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo }
 
 const SANS =
   '"Nunito Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif'
@@ -194,10 +197,11 @@ function Bokeh() {
   )
 }
 
-/* ---------- Glossy orb icon ---------- */
-function Orb({ accent, emoji, size = 96 }) {
+/* ---------- Glossy water orb (pure CSS, no emoji) ---------- */
+function Orb({ accent = '#3aa0ff', size = 96 }) {
   const { r, g, b } = hexToRgb(accent)
   const dark = `rgb(${Math.max(0, r - 60)}, ${Math.max(0, g - 60)}, ${Math.max(0, b - 60)})`
+  const light = `rgb(${Math.min(255, r + 60)}, ${Math.min(255, g + 60)}, ${Math.min(255, b + 60)})`
   return (
     <div
       style={{
@@ -205,12 +209,9 @@ function Orb({ accent, emoji, size = 96 }) {
         width: size,
         height: size,
         borderRadius: '50%',
-        background: `radial-gradient(circle at 50% 120%, ${rgba(accent, 0.95)}, ${rgba(dark, 0.95)} 70%)`,
+        background: `radial-gradient(circle at 38% 30%, ${rgba(light, 0.95)} 0%, ${rgba(accent, 0.95)} 46%, ${rgba(dark, 0.95)} 78%)`,
         boxShadow: `0 10px 22px ${rgba(dark, 0.45)}, inset 0 -10px 18px ${rgba(dark, 0.6)}, inset 0 4px 10px rgba(255,255,255,0.55)`,
         border: `1px solid ${rgba(dark, 0.5)}`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         flexShrink: 0,
       }}
     >
@@ -219,10 +220,10 @@ function Orb({ accent, emoji, size = 96 }) {
         aria-hidden
         style={{
           position: 'absolute',
-          top: '6%',
-          left: '14%',
-          width: '72%',
-          height: '46%',
+          top: '7%',
+          left: '15%',
+          width: '70%',
+          height: '44%',
           borderRadius: '50%',
           background:
             'linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.05))',
@@ -230,16 +231,75 @@ function Orb({ accent, emoji, size = 96 }) {
           pointerEvents: 'none',
         }}
       />
+      {/* small specular dot */}
       <span
+        aria-hidden
         style={{
-          position: 'relative',
-          fontSize: size * 0.44,
-          lineHeight: 1,
-          filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.25))',
+          position: 'absolute',
+          bottom: '16%',
+          right: '20%',
+          width: '14%',
+          height: '14%',
+          borderRadius: '50%',
+          background:
+            'radial-gradient(circle, rgba(255,255,255,0.9), rgba(255,255,255,0))',
+          pointerEvents: 'none',
         }}
-      >
-        {emoji}
-      </span>
+      />
+    </div>
+  )
+}
+
+/* ---------- Real app icon set in a glossy water bubble ---------- */
+function IconOrb({ app, size = 72 }) {
+  const { r, g, b } = hexToRgb(app.accent)
+  const dark = `rgb(${Math.max(0, r - 60)}, ${Math.max(0, g - 60)}, ${Math.max(0, b - 60)})`
+  const icon = Math.round(size * 0.64)
+  return (
+    <div
+      style={{
+        position: 'relative',
+        width: size,
+        height: size,
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: `radial-gradient(circle at 38% 28%, rgba(255,255,255,0.95), ${rgba(app.accent, 0.4)} 70%, ${rgba(dark, 0.55)})`,
+        boxShadow: `0 10px 20px ${rgba(dark, 0.4)}, inset 0 -8px 16px ${rgba(dark, 0.45)}, inset 0 3px 9px rgba(255,255,255,0.7)`,
+        border: '1px solid rgba(255,255,255,0.7)',
+        flexShrink: 0,
+      }}
+    >
+      <img
+        src={app.icon}
+        alt={app.name + ' icon'}
+        width={icon}
+        height={icon}
+        style={{
+          borderRadius: '22%',
+          display: 'block',
+          position: 'relative',
+          zIndex: 1,
+          boxShadow: '0 3px 8px rgba(20,60,90,0.35)',
+        }}
+      />
+      {/* glassy top sheen over the bubble */}
+      <span
+        aria-hidden
+        style={{
+          position: 'absolute',
+          top: '6%',
+          left: '12%',
+          width: '76%',
+          height: '40%',
+          borderRadius: '50%',
+          background:
+            'linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0))',
+          pointerEvents: 'none',
+          zIndex: 2,
+        }}
+      />
     </div>
   )
 }
@@ -247,6 +307,7 @@ function Orb({ accent, emoji, size = 96 }) {
 /* ---------- App card (glossy aqua with reflection) ---------- */
 function AppCard({ app, i, reduced }) {
   const [hover, setHover] = useState(false)
+  const Demo = DEMOS[app.id]
   const { r, g, b } = hexToRgb(app.accent)
   const tint = rgba(app.accent, 0.14)
   const tintHover = rgba(app.accent, 0.24)
@@ -305,7 +366,7 @@ function AppCard({ app, i, reduced }) {
 
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <Orb accent={app.accent} emoji={app.emoji} size={72} />
+          <IconOrb app={app} size={72} />
           <div>
             <h3
               style={{
@@ -390,9 +451,74 @@ function AppCard({ app, i, reduced }) {
           ))}
         </ul>
 
-        <GlossButton accent={app.accent} small>
-          Download
-        </GlossButton>
+        {/* live interactive demo (only on the real surface, not the mirror) */}
+        {!reflection && Demo && (
+          <div
+            style={{
+              margin: '0 0 18px',
+              borderRadius: 18,
+              padding: 12,
+              background:
+                'linear-gradient(160deg, rgba(255,255,255,0.78), rgba(255,255,255,0.5))',
+              border: '1px solid rgba(255,255,255,0.85)',
+              boxShadow:
+                'inset 0 1px 0 rgba(255,255,255,0.9), 0 4px 12px rgba(40,90,140,0.16)',
+            }}
+          >
+            <Demo tone="light" />
+          </div>
+        )}
+
+        {!reflection && (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 14,
+          }}
+        >
+          <GlossButton accent={app.accent} small>
+            Download
+          </GlossButton>
+          <a
+            href={app.site}
+            {...(app.external
+              ? { target: '_blank', rel: 'noopener noreferrer' }
+              : {})}
+            className="aero-demolink"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              textDecoration: 'none',
+              fontFamily: SANS,
+              fontWeight: 800,
+              fontSize: 13,
+              color: dark,
+              cursor: 'pointer',
+            }}
+          >
+            See the full demo
+            <svg
+              aria-hidden
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              style={{ flexShrink: 0 }}
+            >
+              <path
+                d="M5 12h13M13 6l6 6-6 6"
+                stroke={app.accent}
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </a>
+        </div>
+        )}
       </div>
     </div>
   )
@@ -481,6 +607,15 @@ export default function Variant16() {
           outline: 3px solid rgba(255,255,255,0.9);
           outline-offset: 2px;
         }
+        .aero-demolink {
+          transition: gap 0.18s ease, opacity 0.18s ease;
+        }
+        .aero-demolink:hover { opacity: 0.82; gap: 9px !important; }
+        .aero-demolink:focus-visible {
+          outline: 3px solid rgba(255,255,255,0.95);
+          outline-offset: 3px;
+          border-radius: 8px;
+        }
       `}</style>
 
       <Bokeh />
@@ -527,7 +662,7 @@ export default function Variant16() {
             transition={{ duration: 0.6 }}
             className="aero-hero-orb"
           >
-            <Orb accent="#3aa0ff" emoji="🫧" size={104} />
+            <Orb accent="#3aa0ff" size={104} />
           </motion.div>
 
           <motion.div

@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
+
+const DEMO_FOR = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo }
 
 const DISPLAY = '"Bangers", "Comic Sans MS", system-ui, sans-serif'
 const BODY = '"Comic Neue", "Comic Sans MS", system-ui, sans-serif'
@@ -159,6 +162,8 @@ function AppPanel({ app, idx, reduced }) {
   const bursts = ['BAM!', 'POW!', 'ZAP!']
   const burstColors = ['#ff2b2b', '#1f7bff', '#ffe600']
   const burstText = ['#fff', '#fff', '#000']
+  const Demo = DEMO_FOR[app.id]
+  const linkProps = app.external ? { target: '_blank', rel: 'noopener noreferrer' } : {}
   return (
     <motion.article
       initial={reduced ? false : { opacity: 0, y: 60, rotate: idx % 2 ? 2 : -2 }}
@@ -207,13 +212,25 @@ function AppPanel({ app, idx, reduced }) {
           viewport={{ once: true, amount: 0.5 }}
           transition={{ type: 'spring', stiffness: 200, damping: 11, delay: 0.18 }}
           style={{
-            fontSize: 'clamp(72px, 14vw, 120px)',
-            lineHeight: 1,
-            filter: 'drop-shadow(4px 4px 0 #000)',
             zIndex: 2,
+            display: 'grid',
+            placeItems: 'center',
+            filter: 'drop-shadow(5px 5px 0 #000)',
           }}
         >
-          {app.emoji}
+          <img
+            src={app.icon}
+            alt={app.name + ' icon'}
+            width={120}
+            height={120}
+            style={{
+              width: 'clamp(84px, 16vw, 120px)',
+              height: 'clamp(84px, 16vw, 120px)',
+              borderRadius: '22%',
+              border: '4px solid #000',
+              display: 'block',
+            }}
+          />
         </motion.div>
         {/* panel number tag */}
         <div
@@ -298,28 +315,92 @@ function AppPanel({ app, idx, reduced }) {
           </ul>
         </div>
 
-        <motion.a
-          href="#"
-          whileHover={reduced ? {} : { scale: 1.06, rotate: -1.5 }}
-          whileTap={reduced ? {} : { scale: 0.95 }}
+        {/* live demo framed like a comic inset panel */}
+        <div>
+          <div
+            style={{
+              fontFamily: DISPLAY,
+              fontSize: 24,
+              letterSpacing: '1px',
+              color: '#1f7bff',
+              WebkitTextStroke: '1px #000',
+              marginBottom: 8,
+            }}
+          >
+            LIVE ACTION
+          </div>
+          <div
+            style={{
+              border: '4px solid #000',
+              boxShadow: `5px 5px 0 ${app.accent}`,
+              background: '#fff',
+              padding: 12,
+            }}
+          >
+            <Demo tone="light" />
+          </div>
+        </div>
+
+        <div
           style={{
             marginTop: 'auto',
-            alignSelf: 'flex-start',
-            display: 'inline-block',
-            fontFamily: DISPLAY,
-            fontSize: 24,
-            letterSpacing: '1px',
-            color: '#fff',
-            background: '#000',
-            border: '4px solid #000',
-            padding: '10px 24px',
-            textDecoration: 'none',
-            boxShadow: `5px 5px 0 ${app.accent}`,
-            textShadow: '2px 2px 0 #ff2b2b',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: 14,
+            paddingTop: 4,
           }}
         >
-          DOWNLOAD ↓
-        </motion.a>
+          <motion.a
+            href={app.site}
+            {...linkProps}
+            whileHover={reduced ? {} : { scale: 1.06, rotate: -1.5 }}
+            whileTap={reduced ? {} : { scale: 0.95 }}
+            className="cmc-focus cmc-cta"
+            style={{
+              display: 'inline-block',
+              fontFamily: DISPLAY,
+              fontSize: 24,
+              letterSpacing: '1px',
+              color: '#fff',
+              background: '#000',
+              border: '4px solid #000',
+              padding: '10px 24px',
+              textDecoration: 'none',
+              cursor: 'pointer',
+              boxShadow: `5px 5px 0 ${app.accent}`,
+              textShadow: '2px 2px 0 #ff2b2b',
+            }}
+          >
+            DOWNLOAD ↓
+          </motion.a>
+
+          <a
+            href={app.site}
+            {...linkProps}
+            className="cmc-focus cmc-fulldemo"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              fontFamily: BODY,
+              fontWeight: 700,
+              fontSize: 15,
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px',
+              color: '#000',
+              textDecoration: 'none',
+              cursor: 'pointer',
+              borderBottom: '3px solid #000',
+              padding: '2px 0',
+            }}
+          >
+            See the full demo
+            <span aria-hidden="true" className="cmc-arrow" style={{ display: 'inline-block', fontWeight: 900 }}>
+              →
+            </span>
+          </a>
+        </div>
       </div>
     </motion.article>
   )
@@ -389,8 +470,17 @@ export default function Variant17() {
           pointer-events: none;
           z-index: 1;
         }
+        .cmc-focus:focus-visible {
+          outline: 4px solid #1f7bff;
+          outline-offset: 3px;
+        }
+        .cmc-fulldemo:hover .cmc-arrow {
+          transform: translateX(4px);
+        }
+        .cmc-arrow { transition: transform 0.18s ease; }
         @media (prefers-reduced-motion: reduce) {
           .cmc-speedlines { animation: none; }
+          .cmc-arrow { transition: none; }
         }
       `}</style>
 
@@ -430,7 +520,7 @@ export default function Variant17() {
             style={{ position: 'absolute', inset: 0, background: '#1f7bff', opacity: 1, zIndex: 0 }}
           />
           <div style={{ position: 'relative', zIndex: 2 }}>
-            <Caption accent="#ffe600">Issue #17 — The TalTools Files</Caption>
+            <Caption accent="#ffe600">Issue #17, The TalTools Files</Caption>
             <h1
               style={{
                 fontFamily: DISPLAY,

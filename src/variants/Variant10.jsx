@@ -6,14 +6,21 @@ import {
   useSpring,
 } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
 
 // ---------------------------------------------------------------------------
 // Variant 10 — "Cinematic Scroll"
 // A scroll-driven depth journey. The viewer glides forward through layered
 // parallax scenes against a deep dusk/space gradient. Each of the three apps
 // emerges from the distance as its own scene, tied to its scroll range.
-// Self-contained. Imports only from react + framer-motion.
+// Self-contained. Imports only from react + framer-motion + shared data/demos.
 // ---------------------------------------------------------------------------
+
+const DEMO_BY_ID = {
+  natcho: NatchoDemo,
+  flickey: FlicKeyDemo,
+  tally: TallyDemo,
+}
 
 const DISPLAY =
   "'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
@@ -142,6 +149,8 @@ function AppScene({ app, index, reduced }) {
   )
 
   const left = index % 2 === 0
+  const Demo = DEMO_BY_ID[app.id]
+  const demoTone = 'dark'
 
   return (
     <section
@@ -209,20 +218,20 @@ function AppScene({ app, index, reduced }) {
               marginBottom: 18,
             }}
           >
-            <div
+            <img
+              src={app.icon}
+              alt={app.name + ' icon'}
+              width={62}
+              height={62}
               style={{
                 width: 62,
                 height: 62,
-                borderRadius: 16,
-                display: 'grid',
-                placeItems: 'center',
-                fontSize: 32,
-                background: `linear-gradient(145deg, ${app.accent}, ${app.accent}88)`,
+                borderRadius: '22%',
+                display: 'block',
+                flex: '0 0 auto',
                 boxShadow: `0 12px 30px -8px ${app.accent}aa`,
               }}
-            >
-              {app.emoji}
-            </div>
+            />
             <div>
               <div
                 style={{
@@ -299,29 +308,71 @@ function AppScene({ app, index, reduced }) {
             ))}
           </ul>
 
-          <a
-            href="#"
+          <div
             style={{
-              display: 'inline-flex',
+              display: 'flex',
+              flexWrap: 'wrap',
               alignItems: 'center',
-              gap: 10,
-              padding: '13px 24px',
-              borderRadius: 999,
-              fontFamily: DISPLAY,
-              fontWeight: 700,
-              fontSize: 15,
-              color: '#0b1026',
-              textDecoration: 'none',
-              background: `linear-gradient(135deg, ${app.accent}, #fff)`,
-              boxShadow: `0 16px 40px -12px ${app.accent}`,
+              gap: '16px 22px',
             }}
           >
-            Download {app.name}
-            <span aria-hidden>↓</span>
-          </a>
+            <a
+              href={app.site}
+              {...(app.external
+                ? { target: '_blank', rel: 'noopener noreferrer' }
+                : {})}
+              className="cine-link"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '13px 24px',
+                borderRadius: 999,
+                fontFamily: DISPLAY,
+                fontWeight: 700,
+                fontSize: 15,
+                color: '#0b1026',
+                textDecoration: 'none',
+                cursor: 'pointer',
+                background: `linear-gradient(135deg, ${app.accent}, #fff)`,
+                boxShadow: `0 16px 40px -12px ${app.accent}`,
+              }}
+            >
+              Get {app.name}
+              <span aria-hidden>↓</span>
+            </a>
+
+            <a
+              href={app.site}
+              {...(app.external
+                ? { target: '_blank', rel: 'noopener noreferrer' }
+                : {})}
+              className="cine-link"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 7,
+                fontFamily: BODY,
+                fontWeight: 600,
+                fontSize: 14,
+                color: '#fff',
+                textDecoration: 'none',
+                cursor: 'pointer',
+                opacity: 0.85,
+              }}
+            >
+              See the full demo
+              <span
+                aria-hidden
+                style={{ color: app.accent, fontSize: 16, lineHeight: 1 }}
+              >
+                →
+              </span>
+            </a>
+          </div>
         </div>
 
-        {/* Big cinematic tagline */}
+        {/* Big cinematic tagline + live interactive demo */}
         <motion.div
           style={{
             flex: '1 1 320px',
@@ -356,6 +407,24 @@ function AppScene({ app, index, reduced }) {
           >
             {app.tagline}
           </h2>
+
+          {Demo && (
+            <div
+              style={{
+                marginTop: 'clamp(22px, 3vw, 30px)',
+                borderRadius: 22,
+                padding: 'clamp(14px, 2vw, 20px)',
+                background:
+                  'linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02))',
+                border: '1px solid rgba(255,255,255,0.12)',
+                boxShadow: `0 30px 90px -36px ${app.accent}66`,
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+              }}
+            >
+              <Demo tone={demoTone} />
+            </div>
+          )}
         </motion.div>
       </motion.div>
     </section>
@@ -698,8 +767,20 @@ export default function Variant10() {
           0%   { transform: translateX(0) translateY(0); }
           100% { transform: translateX(40px) translateY(-30px); }
         }
+        .cine-link {
+          transition: transform 0.18s ease, opacity 0.18s ease,
+            box-shadow 0.18s ease;
+        }
+        .cine-link:hover { transform: translateY(-2px); opacity: 1; }
+        .cine-link:focus-visible {
+          outline: 2px solid #fff;
+          outline-offset: 3px;
+          border-radius: 999px;
+        }
         @media (prefers-reduced-motion: reduce) {
           * { scroll-behavior: auto !important; }
+          .cine-link { transition: none; }
+          .cine-link:hover { transform: none; }
         }
       `}</style>
     </div>
@@ -772,7 +853,7 @@ function CtaScene({ reduced }) {
             color: 'rgba(233,238,255,0.82)',
           }}
         >
-          Native, local, and unobtrusive — built to disappear until you need
+          Native, local, and unobtrusive, built to disappear until you need
           them. Pick one and bring a little calm to your Mac.
         </p>
         <div
@@ -786,24 +867,35 @@ function CtaScene({ reduced }) {
           {APPS.map((app) => (
             <a
               key={app.id}
-              href="#"
+              href={app.site}
+              {...(app.external
+                ? { target: '_blank', rel: 'noopener noreferrer' }
+                : {})}
+              className="cine-link"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: 10,
-                padding: '14px 26px',
+                gap: 11,
+                padding: '12px 22px 12px 14px',
                 borderRadius: 999,
                 fontFamily: DISPLAY,
                 fontWeight: 700,
                 fontSize: 15,
                 textDecoration: 'none',
+                cursor: 'pointer',
                 color: '#fff',
                 background: 'rgba(255,255,255,0.06)',
                 border: `1px solid ${app.accent}88`,
                 boxShadow: `0 0 30px -10px ${app.accent}`,
               }}
             >
-              <span aria-hidden>{app.emoji}</span>
+              <img
+                src={app.icon}
+                alt={app.name + ' icon'}
+                width={30}
+                height={30}
+                style={{ borderRadius: '22%', display: 'block' }}
+              />
               {app.name}
             </a>
           ))}
@@ -816,7 +908,7 @@ function CtaScene({ reduced }) {
             color: 'rgba(255,255,255,0.4)',
           }}
         >
-          TalTools — crafted with care.
+          TalTools, crafted with care.
         </div>
       </motion.div>
     </section>

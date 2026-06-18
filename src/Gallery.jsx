@@ -22,6 +22,11 @@ const V17 = lazy(() => import('./variants/Variant17.jsx'))
 const V18 = lazy(() => import('./variants/Variant18.jsx'))
 const V19 = lazy(() => import('./variants/Variant19.jsx'))
 const V20 = lazy(() => import('./variants/Variant20.jsx'))
+const V21 = lazy(() => import('./variants/Variant21.jsx'))
+const V22 = lazy(() => import('./variants/Variant22.jsx'))
+const V23 = lazy(() => import('./variants/Variant23.jsx'))
+const V24 = lazy(() => import('./variants/Variant24.jsx'))
+const V25 = lazy(() => import('./variants/Variant25.jsx'))
 
 const DESIGNS = [
   { hash: 'v1', name: 'Aurora Glass', desc: 'Dreamy frosted glass · soft aurora light · elegant', sw: ['#c4b5fd', '#a5f3fc', '#fbcfe8'], C: V1 },
@@ -44,6 +49,11 @@ const DESIGNS = [
   { hash: 'v18', name: 'Botanical', desc: 'Riso botanical · plants grow as you scroll', sw: ['#2f5d3a', '#e8e0cf', '#e08e45'], C: V18 },
   { hash: 'v19', name: 'Mission Control', desc: 'Live ops dashboard · gauges · telemetry readouts', sw: ['#05101f', '#00e5ff', '#ff6b35'], C: V19 },
   { hash: 'v20', name: 'Origami', desc: 'Folded paper-craft · facets · fold-open animations', sw: ['#ff6f91', '#f7b267', '#5e60ce'], C: V20 },
+  { hash: 'v21', name: 'Raycast Dark Pro', desc: 'Sleek dark dev-tool · violet glow · glassy cards', sw: ['#08080c', '#7c5cff', '#4cc9f0'], C: V21 },
+  { hash: 'v22', name: 'Cupertino Light', desc: 'Apple-style product page · airy · elegant', sw: ['#ffffff', '#0071e3', '#f5f5f7'], C: V22 },
+  { hash: 'v23', name: 'Bento Mosaic', desc: 'Modern bento grid · feature tiles · live demos', sw: ['#111827', '#6366f1', '#f3f4f6'], C: V23 },
+  { hash: 'v24', name: 'Warm Studio', desc: 'Boutique editorial · warm serif · refined', sw: ['#efe7d8', '#1c1917', '#c2683f'], C: V24 },
+  { hash: 'v25', name: 'Spotlight ⌘K', desc: 'macOS Spotlight palette · type to explore', sw: ['#0b0b12', '#a78bfa', '#22d3ee'], C: V25 },
   { hash: 'og', name: 'Confetti Lab', desc: 'The first playful build (bonus)', sw: ['#ffb703', '#ff5d5d', '#2ec4b6'], C: Original },
 ]
 

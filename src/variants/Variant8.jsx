@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react'
 import { motion, useMotionValue, useSpring, useReducedMotion } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
+
+// Map each app to its shared interactive demo.
+const DEMOS = {
+  natcho: NatchoDemo,
+  flickey: FlicKeyDemo,
+  tally: TallyDemo,
+}
 
 const FONT = "'Quicksand', system-ui, -apple-system, sans-serif"
 
@@ -80,7 +88,7 @@ export default function Variant8() {
         position: 'relative',
       }}
     >
-      {/* The classic SVG goo filter — unique id so it won't collide. */}
+      {/* The classic SVG goo filter, unique id so it won't collide. */}
       <svg
         aria-hidden="true"
         style={{ position: 'absolute', width: 0, height: 0 }}
@@ -119,9 +127,17 @@ export default function Variant8() {
         }
         .tt-card-blob { animation: ttMorph 12s ease-in-out infinite; }
         .tt-card:hover .tt-card-blob { animation-duration: 4s; }
+        .tt-arrow { transition: transform 0.2s ease; }
+        .tt-demolink:hover .tt-arrow { transform: translateX(4px); }
+        .tt-focusable:focus-visible {
+          outline: 3px solid #fff;
+          outline-offset: 3px;
+          border-radius: 999px;
+        }
         @media (prefers-reduced-motion: reduce) {
           .tt-drift, .tt-card-blob, .tt-cursor-core { animation: none !important; }
           .tt-card:hover .tt-card-blob { animation: none !important; }
+          .tt-arrow { transition: none !important; }
         }
       `}</style>
 
@@ -256,7 +272,7 @@ export default function Variant8() {
             }}
           >
             Three small, fast, native apps that melt into your menu bar and quietly
-            make your Mac nicer to live in.
+            make your Mac nicer to live in. Each asks for barely any permissions.
           </motion.p>
 
           <motion.a
@@ -266,7 +282,9 @@ export default function Variant8() {
             transition={{ duration: 0.6, delay: 0.2 }}
             whileHover={{ scale: 1.06 }}
             whileTap={{ scale: 0.96 }}
+            className="tt-focusable"
             style={{
+              cursor: 'pointer',
               display: 'inline-block',
               padding: '16px 40px',
               borderRadius: 999,
@@ -297,6 +315,10 @@ export default function Variant8() {
         >
           {APPS.map((app, i) => {
             const c = PALETTE[i % PALETTE.length]
+            const Demo = DEMOS[app.id]
+            const linkProps = app.external
+              ? { target: '_blank', rel: 'noopener noreferrer' }
+              : {}
             return (
               <motion.div
                 key={app.id}
@@ -341,25 +363,34 @@ export default function Variant8() {
 
                   <div
                     style={{
-                      fontSize: 54,
-                      lineHeight: 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 16,
                       marginBottom: 18,
-                      filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.25))',
                     }}
                   >
-                    {app.emoji}
+                    <img
+                      src={app.icon}
+                      alt={app.name + ' icon'}
+                      width={64}
+                      height={64}
+                      style={{
+                        borderRadius: '22%',
+                        flex: '0 0 auto',
+                        filter: 'drop-shadow(0 6px 16px rgba(0,0,0,0.35))',
+                      }}
+                    />
+                    <h3
+                      style={{
+                        margin: 0,
+                        fontSize: 30,
+                        fontWeight: 700,
+                        letterSpacing: '-0.01em',
+                      }}
+                    >
+                      {app.name}
+                    </h3>
                   </div>
-
-                  <h3
-                    style={{
-                      margin: '0 0 4px',
-                      fontSize: 30,
-                      fontWeight: 700,
-                      letterSpacing: '-0.01em',
-                    }}
-                  >
-                    {app.name}
-                  </h3>
                   <p
                     style={{
                       margin: '0 0 14px',
@@ -417,23 +448,90 @@ export default function Variant8() {
                     ))}
                   </ul>
 
-                  <a
-                    href="#"
+                  {/* Live interactive demo, nested in a dark glass well so the
+                      macOS-styled popover reads clearly against the vivid blob. */}
+                  {Demo && (
+                    <div
+                      style={{
+                        marginBottom: 24,
+                        padding: 14,
+                        borderRadius: 22,
+                        background: 'rgba(8,2,20,0.55)',
+                        border: '1px solid rgba(255,255,255,0.16)',
+                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.12)',
+                        backdropFilter: 'blur(6px)',
+                        WebkitBackdropFilter: 'blur(6px)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Demo tone="dark" />
+                    </div>
+                  )}
+
+                  <div
                     style={{
                       marginTop: 'auto',
-                      alignSelf: 'flex-start',
-                      padding: '12px 28px',
-                      borderRadius: 999,
-                      fontWeight: 700,
-                      fontSize: 15,
-                      textDecoration: 'none',
-                      color: c,
-                      background: '#fff',
-                      boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      alignItems: 'center',
+                      gap: 14,
                     }}
                   >
-                    Download {app.name}
-                  </a>
+                    <a
+                      href={app.site}
+                      {...linkProps}
+                      className="tt-focusable"
+                      style={{
+                        cursor: 'pointer',
+                        padding: '12px 28px',
+                        borderRadius: 999,
+                        fontWeight: 700,
+                        fontSize: 15,
+                        textDecoration: 'none',
+                        color: c,
+                        background: '#fff',
+                        boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
+                      }}
+                    >
+                      Download {app.name}
+                    </a>
+
+                    <a
+                      href={app.site}
+                      {...linkProps}
+                      className="tt-focusable tt-demolink"
+                      style={{
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 6,
+                        fontWeight: 700,
+                        fontSize: 14,
+                        textDecoration: 'none',
+                        color: '#fff',
+                      }}
+                    >
+                      See the full demo
+                      <svg
+                        className="tt-arrow"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        aria-hidden="true"
+                        style={{ flex: '0 0 auto' }}
+                      >
+                        <path
+                          d="M5 12h14M13 6l6 6-6 6"
+                          stroke="currentColor"
+                          strokeWidth="2.4"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </a>
+                  </div>
                 </div>
               </motion.div>
             )
@@ -463,7 +561,7 @@ export default function Variant8() {
               margin: 0,
             }}
           >
-            TalTools — one human, three menu-bar apps.
+            TalTools, one human, three menu-bar apps.
           </p>
         </footer>
       </div>

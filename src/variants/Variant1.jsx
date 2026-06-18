@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
+
+const DEMOS = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo }
 
 const SERIF = '"Fraunces", "Times New Roman", serif'
 const SANS = '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
@@ -72,6 +75,10 @@ function AppCard({ app, index, reduced }) {
   const rotateX = useTransform(sy, [-0.5, 0.5], reduced ? [0, 0] : [8, -8])
   const rotateY = useTransform(sx, [-0.5, 0.5], reduced ? [0, 0] : [-8, 8])
   const [hover, setHover] = useState(false)
+  const Demo = DEMOS[app.id]
+  const linkProps = app.external
+    ? { href: app.site, target: '_blank', rel: 'noopener noreferrer' }
+    : { href: app.site }
 
   function onMove(e) {
     if (reduced || !ref.current) return
@@ -118,23 +125,17 @@ function AppCard({ app, index, reduced }) {
         }}
       >
         <div style={{ transform: 'translateZ(40px)' }}>
-          <div
+          <img
+            src={app.icon}
+            alt={app.name + ' icon'}
+            width={64}
+            height={64}
             style={{
-              width: 64,
-              height: 64,
-              borderRadius: 18,
-              display: 'grid',
-              placeItems: 'center',
-              fontSize: 32,
-              background: `linear-gradient(140deg, ${hexToRgba(app.accent, 0.25)}, ${hexToRgba(app.accent, 0.08)})`,
-              border: `1px solid ${hexToRgba(app.accent, 0.35)}`,
-              boxShadow: `0 8px 24px -8px ${hexToRgba(app.accent, 0.5)}`,
+              borderRadius: '22%',
+              display: 'block',
+              boxShadow: `0 10px 28px -10px ${hexToRgba(app.accent, 0.55)}`,
             }}
-          >
-            <span role="img" aria-label={app.name}>
-              {app.emoji}
-            </span>
-          </div>
+          />
           <h3
             style={{
               fontFamily: SERIF,
@@ -174,27 +175,54 @@ function AppCard({ app, index, reduced }) {
             ))}
           </ul>
 
+          {Demo && (
+            <div
+              style={{
+                marginTop: 24,
+                borderRadius: 18,
+                overflow: 'hidden',
+                border: `1px solid ${hexToRgba(app.accent, 0.22)}`,
+                background: 'rgba(255,255,255,0.4)',
+                boxShadow: `0 14px 36px -22px ${hexToRgba(app.accent, 0.6)}`,
+                padding: 16,
+              }}
+            >
+              <Demo tone="light" />
+            </div>
+          )}
+
           <motion.a
-            href="#"
-            whileHover={reduced ? {} : { scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
+            {...linkProps}
+            whileHover={reduced ? {} : { x: 3 }}
+            className="tt-demo-link"
             style={{
-              marginTop: 26,
+              marginTop: 22,
               display: 'inline-flex',
+              alignSelf: 'flex-start',
               alignItems: 'center',
-              justifyContent: 'center',
               gap: 8,
-              padding: '13px 22px',
+              padding: '11px 18px',
               borderRadius: 14,
               textDecoration: 'none',
               fontWeight: 700,
               fontSize: 15,
-              color: '#fff',
-              background: `linear-gradient(135deg, ${app.accent}, ${hexToRgba(app.accent, 0.78)})`,
-              boxShadow: `0 12px 30px -10px ${hexToRgba(app.accent, 0.7)}`,
+              color: app.accent,
+              background: hexToRgba(app.accent, 0.12),
+              border: `1px solid ${hexToRgba(app.accent, 0.3)}`,
+              cursor: 'pointer',
             }}
           >
-            Download ↓
+            See the full demo
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style={{ flex: '0 0 auto' }}>
+              <path
+                d="M5 12h13M13 6l6 6-6 6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </motion.a>
         </div>
       </motion.article>
@@ -260,6 +288,13 @@ export default function Variant1() {
         @media (prefers-reduced-motion: reduce) {
           .tt-grad-text { animation: none; }
           html { scroll-behavior: auto; }
+        }
+        a, button { cursor: pointer; }
+        .tt-demo-link:focus-visible,
+        .tt-nav-link:focus-visible,
+        .tt-cta:focus-visible {
+          outline: 2px solid #7c5cff;
+          outline-offset: 3px;
         }
         .tt-cards {
           display: grid;
@@ -327,6 +362,7 @@ export default function Variant1() {
             <a
               href="#apps"
               onClick={(e) => scrollTo(e, '#apps')}
+              className="tt-nav-link"
               style={{
                 textDecoration: 'none',
                 color: '#4a4166',
@@ -334,6 +370,7 @@ export default function Variant1() {
                 fontSize: 14,
                 padding: '8px 12px',
                 borderRadius: 10,
+                cursor: 'pointer',
               }}
             >
               The Lab
@@ -341,6 +378,7 @@ export default function Variant1() {
             <a
               href="#apps"
               onClick={(e) => scrollTo(e, '#apps')}
+              className="tt-nav-link"
               style={{
                 textDecoration: 'none',
                 color: '#fff',
@@ -350,6 +388,7 @@ export default function Variant1() {
                 borderRadius: 12,
                 background: 'linear-gradient(135deg, #7c5cff, #2ec4b6)',
                 boxShadow: '0 10px 24px -10px rgba(124,92,255,0.7)',
+                cursor: 'pointer',
               }}
             >
               Get the apps
@@ -437,6 +476,7 @@ export default function Variant1() {
             <motion.a
               href="#apps"
               onClick={(e) => scrollTo(e, '#apps')}
+              className="tt-cta"
               whileHover={reduced ? {} : { scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
               style={{
@@ -448,6 +488,7 @@ export default function Variant1() {
                 color: '#fff',
                 background: 'linear-gradient(135deg, #ffb703, #7c5cff 60%, #2ec4b6)',
                 boxShadow: '0 18px 40px -14px rgba(124,92,255,0.65)',
+                cursor: 'pointer',
               }}
             >
               Explore the lab
@@ -455,6 +496,7 @@ export default function Variant1() {
             <motion.a
               href="#apps"
               onClick={(e) => scrollTo(e, '#apps')}
+              className="tt-cta"
               whileHover={reduced ? {} : { scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
               style={{
@@ -469,6 +511,7 @@ export default function Variant1() {
                 WebkitBackdropFilter: 'blur(14px)',
                 border: '1px solid rgba(255,255,255,0.8)',
                 boxShadow: '0 12px 30px -18px rgba(60,50,90,0.5)',
+                cursor: 'pointer',
               }}
             >
               Why menu-bar?
@@ -527,7 +570,7 @@ export default function Variant1() {
               Made with care for macOS.
             </p>
             <p style={{ color: '#6a6088', fontSize: 14, margin: '10px 0 0' }}>
-              © {new Date().getFullYear()} TalTools — Natcho · FlicKey · Tally
+              © {new Date().getFullYear()} TalTools. Natcho, FlicKey, Tally.
             </p>
           </div>
         </footer>

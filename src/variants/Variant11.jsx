@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
+
+const DEMO_COMP = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo }
 
 const MONO = '"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace'
 const SANS = '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
@@ -171,7 +174,7 @@ function Callout({ index, text, side = 'right' }) {
 }
 
 /* ====================================================================== */
-/*  Diagrams — one simple SVG line drawing per app                        */
+/*  Diagrams: one simple SVG line drawing per app                         */
 /* ====================================================================== */
 
 function NatchoDiagram({ reduced, accent }) {
@@ -305,7 +308,9 @@ function AppSheet({ app, num, reduced }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, amount: 0.2 })
   const Diagram = DIAGRAMS[app.id] || NatchoDiagram
+  const Demo = DEMO_COMP[app.id]
   const sheetNo = String(num).padStart(2, '0')
+  const linkProps = app.external ? { target: '_blank', rel: 'noopener noreferrer' } : {}
   return (
     <motion.section
       ref={ref}
@@ -330,15 +335,35 @@ function AppSheet({ app, num, reduced }) {
         <span key={i} aria-hidden="true" style={{ position: 'absolute', width: 14, height: 14, borderTop: `2px solid ${app.accent}`, borderLeft: `2px solid ${app.accent}`, transform: c.r, ...c }} />
       ))}
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: 12, alignItems: 'baseline', marginBottom: 18 }}>
-        <div>
-          <div style={{ fontFamily: MONO, fontSize: 11, letterSpacing: 2, color: BP_CYAN }}>
-            FIG. {sheetNo} — DETAIL
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: 12, alignItems: 'flex-start', marginBottom: 18 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <span
+            aria-hidden="true"
+            style={{
+              flex: '0 0 auto',
+              position: 'relative',
+              padding: 5,
+              border: `1px dashed ${BP_LINE}`,
+              background: 'rgba(4,20,40,0.5)',
+            }}
+          >
+            <img
+              src={app.icon}
+              alt=""
+              width={52}
+              height={52}
+              style={{ display: 'block', width: 52, height: 52, borderRadius: '22%' }}
+            />
+          </span>
+          <div>
+            <div style={{ fontFamily: MONO, fontSize: 11, letterSpacing: 2, color: BP_CYAN }}>
+              FIG. {sheetNo} · DETAIL
+            </div>
+            <h2 style={{ fontFamily: SANS, fontSize: 'clamp(26px, 4vw, 40px)', fontWeight: 800, color: BP_INK, margin: '4px 0 2px', letterSpacing: -0.5 }}>
+              {app.name}
+            </h2>
+            <div style={{ fontFamily: MONO, fontSize: 14, color: app.accent }}>{app.tagline}</div>
           </div>
-          <h2 style={{ fontFamily: SANS, fontSize: 'clamp(26px, 4vw, 40px)', fontWeight: 800, color: BP_INK, margin: '4px 0 2px', letterSpacing: -0.5 }}>
-            <span style={{ marginRight: 10 }}>{app.emoji}</span>{app.name}
-          </h2>
-          <div style={{ fontFamily: MONO, fontSize: 14, color: app.accent }}>{app.tagline}</div>
         </div>
         <div style={{ fontFamily: MONO, fontSize: 10, color: BP_CYAN, opacity: 0.7, textAlign: 'right' }}>
           PART No.<br />TT-{app.id.slice(0, 3).toUpperCase()}-{sheetNo}
@@ -369,28 +394,67 @@ function AppSheet({ app, num, reduced }) {
               <Callout key={i} index={String(i + 1).padStart(2, '0')} text={b} />
             ))}
           </div>
-          <a
-            href="#"
-            className="bp-dl"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 10,
-              fontFamily: MONO,
-              fontSize: 13,
-              letterSpacing: 1,
-              color: BP_BG,
-              background: app.accent,
-              padding: '11px 20px',
-              border: `1px solid ${app.accent}`,
-              textDecoration: 'none',
-              fontWeight: 700,
-            }}
-          >
-            ↓ DOWNLOAD · {app.name.toUpperCase()}
-          </a>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16 }}>
+            <a
+              href={app.site}
+              {...linkProps}
+              className="bp-dl"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 10,
+                fontFamily: MONO,
+                fontSize: 13,
+                letterSpacing: 1,
+                color: BP_BG,
+                background: app.accent,
+                padding: '11px 20px',
+                border: `1px solid ${app.accent}`,
+                textDecoration: 'none',
+                fontWeight: 700,
+              }}
+            >
+              ↓ GET · {app.name.toUpperCase()}
+            </a>
+            <a
+              href={app.site}
+              {...linkProps}
+              className="bp-demo-link"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                fontFamily: MONO,
+                fontSize: 12,
+                letterSpacing: 0.5,
+                color: BP_CYAN,
+                textDecoration: 'none',
+              }}
+            >
+              <span style={{ borderBottom: `1px solid ${BP_CYAN}`, paddingBottom: 1 }}>See the full demo</span>
+              <svg width="16" height="10" viewBox="0 0 16 10" aria-hidden="true" className="bp-demo-arrow" style={{ overflow: 'visible' }}>
+                <path d="M0 5 H13 M9 1 L13 5 L9 9" stroke={BP_CYAN} strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
+
+      {/* interactive specimen panel */}
+      {Demo && (
+        <div style={{ marginTop: 'clamp(20px, 3vw, 32px)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+            <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: 2, color: BP_CYAN }}>
+              FIG. {sheetNo}.A · LIVE SPECIMEN
+            </span>
+            <span aria-hidden="true" style={{ flex: 1, height: 1, background: BP_LINE, opacity: 0.5 }} />
+            <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: 1.5, color: BP_CYAN, opacity: 0.7 }}>INTERACTIVE</span>
+          </div>
+          <div style={{ border: `1px dashed ${BP_LINE}`, padding: 'clamp(16px, 3vw, 26px)', background: 'rgba(4,20,40,0.45)' }}>
+            <Demo tone="dark" />
+          </div>
+        </div>
+      )}
     </motion.section>
   )
 }
@@ -417,9 +481,17 @@ export default function Variant11() {
           0% { transform: translateY(-100%); }
           100% { transform: translateY(2000px); }
         }
-        .bp-dl { transition: transform .15s ease, box-shadow .15s ease, filter .15s ease; }
+        .bp-dl { cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, filter .15s ease; }
         .bp-dl:hover { transform: translateY(-2px); filter: brightness(1.08); box-shadow: 0 10px 24px rgba(0,0,0,0.4); }
         .bp-dl:focus-visible { outline: 2px solid ${BP_INK}; outline-offset: 3px; }
+        .bp-demo-link { cursor: pointer; transition: filter .15s ease; }
+        .bp-demo-link:hover { filter: brightness(1.25); }
+        .bp-demo-link:hover .bp-demo-arrow { transform: translateX(3px); }
+        .bp-demo-arrow { transition: transform .15s ease; }
+        .bp-demo-link:focus-visible { outline: 2px solid ${BP_CYAN}; outline-offset: 3px; }
+        @media (prefers-reduced-motion: reduce) {
+          .bp-dl, .bp-demo-link, .bp-demo-arrow { transition: none !important; }
+        }
         @media (max-width: 760px) {
           .bp-sheet-grid { grid-template-columns: 1fr !important; }
         }

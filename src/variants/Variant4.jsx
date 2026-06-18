@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { APPS } from '../apps.js'
+import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
 
 // ── Palette ────────────────────────────────────────────────────────────────
 const BG = '#2d1b69'
@@ -15,8 +16,15 @@ const BODY = '"Courier New", ui-monospace, monospace'
 // Per-level theming derived from the shared APPS data.
 const LEVEL_COLORS = [PINK, YELLOW, CYAN]
 
+// Shared interactive demo per app id. Rendered inside the pixel dialog frame.
+const DEMOS = {
+  natcho: NatchoDemo,
+  flickey: FlicKeyDemo,
+  tally: TallyDemo,
+}
+
 // ── A chunky CSS-pixel button that "presses" down ───────────────────────────
-function PixelButton({ children, onClick, color = PINK, textColor = '#fff', style, href }) {
+function PixelButton({ children, onClick, color = PINK, textColor = '#fff', style, href, external }) {
   const [down, setDown] = useState(false)
   const shadow = down
     ? `0 0 0 4px ${DARK}, 0 0 0 8px ${color}`
@@ -48,14 +56,15 @@ function PixelButton({ children, onClick, color = PINK, textColor = '#fff', styl
     onTouchEnd: () => setDown(false),
   }
   if (href) {
+    const ext = external ? { target: '_blank', rel: 'noopener noreferrer' } : {}
     return (
-      <a href={href} style={common} {...handlers} onClick={onClick}>
+      <a href={href} className="v4-btn" style={common} {...handlers} {...ext} onClick={onClick}>
         {children}
       </a>
     )
   }
   return (
-    <button type="button" style={common} {...handlers} onClick={onClick}>
+    <button type="button" className="v4-btn" style={common} {...handlers} onClick={onClick}>
       {children}
     </button>
   )
@@ -92,6 +101,39 @@ function Sprite({ color = YELLOW, size = 6 }) {
         marginRight: 10 * size,
         marginBottom: 7 * size,
         imageRendering: 'pixelated',
+      }}
+    />
+  )
+}
+
+// A blocky pixel arrow built from CSS box-shadows (no emoji, no external image).
+function PixelArrow({ color = '#fff', size = 3 }) {
+  // 5x5-ish chevron pointing right.
+  const grid = [
+    '10000',
+    '01000',
+    '00100',
+    '01000',
+    '10000',
+  ]
+  const shadows = []
+  grid.forEach((row, y) => {
+    row.split('').forEach((c, x) => {
+      if (c === '1') shadows.push(`${x * size}px ${y * size}px 0 0 ${color}`)
+    })
+  })
+  return (
+    <span
+      aria-hidden
+      style={{
+        display: 'inline-block',
+        width: size,
+        height: size,
+        marginLeft: size * 3,
+        marginRight: size * 5,
+        marginBottom: size * 4,
+        verticalAlign: 'middle',
+        boxShadow: shadows.join(','),
       }}
     />
   )
@@ -157,6 +199,12 @@ export default function Variant4() {
         @keyframes v4-stars2 { from { background-position: 0 0 } to { background-position: 0 -1000px } }
         @keyframes v4-coin { 0%,100% { transform: translateY(0) rotate(0) } 50% { transform: translateY(-4px) rotate(180deg) } }
         @keyframes v4-pulse { 0%,100% { text-shadow: 0 0 0 ${PINK} } 50% { text-shadow: 0 0 16px ${PINK}, 0 0 28px ${PINK} } }
+        .v4-btn { cursor: pointer; }
+        .v4-btn:focus-visible,
+        .v4-level:focus-visible {
+          outline: 3px dashed ${CYAN};
+          outline-offset: 5px;
+        }
         @media (prefers-reduced-motion: reduce) {
           .v4-anim, .v4-stars1, .v4-stars2 { animation: none !important }
         }
@@ -268,7 +316,7 @@ export default function Variant4() {
               </span>
             </PixelButton>
             <p style={{ fontFamily: PIXEL, fontSize: 'clamp(7px,1.8vw,9px)', color: CYAN, letterSpacing: 1, lineHeight: 2 }}>
-              © 2026 TALTOOLS · 3 LEVELS · 0 PERMISSIONS
+              © 2026 TALTOOLS · 3 LEVELS · BARELY ANY PERMISSIONS
             </p>
           </motion.div>
         )}
@@ -300,6 +348,8 @@ export default function Variant4() {
                     <motion.button
                       type="button"
                       key={app.id}
+                      className="v4-level"
+                      aria-label={'Play level ' + (i + 1) + ': ' + app.name}
                       onClick={() => pick(i)}
                       initial={{ opacity: 0, y: 24 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -325,9 +375,22 @@ export default function Variant4() {
                       </div>
                       <div
                         className="v4-anim"
-                        style={{ fontSize: 'clamp(40px,11vw,60px)', margin: '14px 0', imageRendering: 'pixelated', animation: 'v4-bob 1.8s ease-in-out infinite', animationDelay: `${i * 0.25}s` }}
+                        style={{ margin: '14px 0', display: 'flex', justifyContent: 'center', animation: 'v4-bob 1.8s ease-in-out infinite', animationDelay: `${i * 0.25}s` }}
                       >
-                        {app.emoji}
+                        <img
+                          src={app.icon}
+                          alt={app.name + ' icon'}
+                          width={60}
+                          height={60}
+                          style={{
+                            width: 'clamp(48px,13vw,64px)',
+                            height: 'clamp(48px,13vw,64px)',
+                            borderRadius: '22%',
+                            // pixel-art drop shadow to seat the icon in the arcade frame
+                            filter: `drop-shadow(3px 3px 0 ${DARK})`,
+                            imageRendering: 'auto',
+                          }}
+                        />
                       </div>
                       <div style={{ fontFamily: PIXEL, fontSize: 'clamp(11px,3vw,15px)', color, letterSpacing: 1, textTransform: 'uppercase', lineHeight: 1.5 }}>
                         {app.name}
@@ -359,7 +422,18 @@ export default function Variant4() {
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: 'clamp(28px,8vw,44px)' }}>{APPS[selected].emoji}</span>
+                      <img
+                        src={APPS[selected].icon}
+                        alt={APPS[selected].name + ' icon'}
+                        width={48}
+                        height={48}
+                        style={{
+                          width: 'clamp(40px,11vw,52px)',
+                          height: 'clamp(40px,11vw,52px)',
+                          borderRadius: '22%',
+                          filter: `drop-shadow(2px 2px 0 ${BG})`,
+                        }}
+                      />
                       <div>
                         <div style={{ fontFamily: PIXEL, fontSize: 'clamp(12px,3.4vw,18px)', color: LEVEL_COLORS[selected % 3], letterSpacing: 1, textTransform: 'uppercase', lineHeight: 1.5 }}>
                           {APPS[selected].name}
@@ -383,12 +457,42 @@ export default function Variant4() {
                       ))}
                     </ul>
 
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 26 }}>
-                      <PixelButton href="#" color={YELLOW} textColor={DARK}>
-                        🪙 Insert Coin · Download
+                    {/* Bonus stage: the real interactive demo, framed in pixel chrome */}
+                    {(() => {
+                      const app = APPS[selected]
+                      const Demo = DEMOS[app.id]
+                      if (!Demo) return null
+                      const color = LEVEL_COLORS[selected % 3]
+                      return (
+                        <div style={{ marginTop: 26 }}>
+                          <div style={{ fontFamily: PIXEL, fontSize: 'clamp(7px,1.8vw,9px)', color, letterSpacing: 1, marginBottom: 12 }}>
+                            ★ BONUS STAGE · TRY IT ★
+                          </div>
+                          <div
+                            style={{
+                              background: BG,
+                              padding: 'clamp(12px,4vw,20px)',
+                              boxShadow: `0 0 0 4px ${DARK}, 0 0 0 7px ${color}`,
+                            }}
+                          >
+                            <Demo tone="dark" />
+                          </div>
+                        </div>
+                      )
+                    })()}
+
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 26, alignItems: 'center' }}>
+                      <PixelButton
+                        href={APPS[selected].site}
+                        color={YELLOW}
+                        textColor={DARK}
+                        external={APPS[selected].external}
+                      >
+                        See the full demo
+                        <PixelArrow color={DARK} />
                       </PixelButton>
                       <PixelButton onClick={() => setSelected(null)} color={DARK} textColor="#fff" style={{ boxShadow: `0 0 0 4px ${BG}, 0 0 0 8px ${CYAN}` }}>
-                        ✕ Back to levels
+                        Back to levels
                       </PixelButton>
                     </div>
                   </motion.div>
