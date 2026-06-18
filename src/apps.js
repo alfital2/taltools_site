@@ -13,7 +13,7 @@ export const APPS = [
     accent: '#ffb703',
     emoji: '🌮',
     icon: natchoIcon,
-    site: '/natcho',
+    site: '/natcho/',
     external: false,
     bullets: ['Minimal permissions', 'Optional rounded corners', 'Multi-display aware', '0.6 MB, notarized'],
   },

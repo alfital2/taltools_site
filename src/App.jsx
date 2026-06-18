@@ -23,7 +23,7 @@ const APPS = [
     blurb:
       'Hides your MacBook camera notch behind a perfectly black bar. Crispy rounded corners optional. Asks for barely any permissions.',
     accent: ACCENT.natcho,
-    site: '/natcho',
+    site: '/natcho/',
     external: false,
   },
   {

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Natcho</title>
+    <link>https://alfital2.github.io/natcho-site/appcast.xml</link>
+    <description>Updates for Natcho.</description>
+    <language>en</language>
+    <item>
+      <title>Natcho 0.1.2</title>
+      <pubDate>Thu, 18 Jun 2026 22:44:48 +0000</pubDate>
+      <sparkle:version>3</sparkle:version>
+      <sparkle:shortVersionString>0.1.2</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <link>https://alfital2.github.io/natcho-site/</link>
+      <enclosure url="https://github.com/alfital2/natcho-site/releases/download/v0.1.2/Natcho.zip" type="application/octet-stream" sparkle:edSignature="7lgz2f5ylEy2yV4/avCpmEO6Nfnlm0UTF8jv/ImD7DNX0Svl2gDU3HcgbzBh7RYIDM7jFAH/TrJbksX3mjonDQ==" length="1527088" />
+    </item>
+  </channel>
+</rss>
