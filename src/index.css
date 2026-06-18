@@ -1,0 +1,107 @@
+@import 'tailwindcss';
+
+/* ---- Design tokens (from ui-ux-pro-max: playful / vibrant / Fredoka+Nunito) ---- */
+@theme {
+  --font-display: 'Fredoka', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink: #1b1233;
+  --color-cream: #fff7ec;
+  --color-cheese: #ffb703;
+  --color-salsa: #ff5d5d;
+  --color-guac: #2ec4b6;
+  --color-grape: #7c5cff;
+  --color-sky: #4cc9f0;
+  --color-bubble: #ff7ad9;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--color-cream);
+  color: var(--color-ink);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hide the default cursor only on devices that actually have a fine pointer,
+   so touch users are unaffected. */
+@media (pointer: fine) {
+  body.custom-cursor,
+  body.custom-cursor * {
+    cursor: none;
+  }
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* ---- Animated gradient text ---- */
+.text-rainbow {
+  background: linear-gradient(
+    100deg,
+    var(--color-salsa),
+    var(--color-cheese),
+    var(--color-guac),
+    var(--color-grape),
+    var(--color-salsa)
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: slide-bg 6s linear infinite;
+}
+
+@keyframes slide-bg {
+  to {
+    background-position: 300% 0;
+  }
+}
+
+/* ---- Floaty blob keyframes ---- */
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -30px) scale(1.1); }
+  66% { transform: translate(-30px, 25px) scale(0.95); }
+}
+.animate-blob { animation: blob 14s ease-in-out infinite; }
+
+@keyframes wobble {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-bob { animation: bob 3s ease-in-out infinite; }
+
+/* dotted grid backdrop */
+.dot-grid {
+  background-image: radial-gradient(rgba(27, 18, 51, 0.08) 1.5px, transparent 1.5px);
+  background-size: 26px 26px;
+}
+
+/* chunky cartoon shadow */
+.shadow-pop { box-shadow: 8px 8px 0 0 var(--color-ink); }
+.shadow-pop-sm { box-shadow: 4px 4px 0 0 var(--color-ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
