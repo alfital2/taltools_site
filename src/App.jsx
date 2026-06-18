@@ -392,7 +392,10 @@ function NatchoDemo() {
   const [round, setRound] = useState(true)
   return (
     <div className="rounded-2xl border-2 border-ink bg-gradient-to-br from-sky/40 to-grape/30 p-5">
-      <div className="relative mx-auto aspect-[16/10] w-full max-w-sm overflow-hidden rounded-xl ring-2 ring-ink" style={MAC_WALLPAPER}>
+      <div
+        className={`relative mx-auto aspect-[16/10] w-full max-w-sm overflow-hidden ring-2 ring-ink transition-all duration-300 ${round ? 'rounded-2xl' : 'rounded-none'}`}
+        style={MAC_WALLPAPER}
+      >
         {/* layer 1: menu-bar background strip. Goes solid black when "hidden" so the
             notch blends into it. No blur here, so nothing smears the notch. */}
         <motion.div
@@ -419,15 +422,8 @@ function NatchoDemo() {
           </span>
         </div>
 
-        {/* layer 4: rounded screen corners */}
-        {round && (
-          <>
-            <span className="absolute left-0 top-0 z-40 h-3 w-3 rounded-tl-xl shadow-[inset_4px_4px_0_black]" />
-            <span className="absolute right-0 top-0 z-40 h-3 w-3 rounded-tr-xl shadow-[inset_-4px_4px_0_black]" />
-            <span className="absolute bottom-0 left-0 z-40 h-3 w-3 rounded-bl-xl shadow-[inset_4px_-4px_0_black]" />
-            <span className="absolute bottom-0 right-0 z-40 h-3 w-3 rounded-br-xl shadow-[inset_-4px_-4px_0_black]" />
-          </>
-        )}
+        {/* the screen's corners themselves round/unround via the container's
+            border-radius above, exactly like Natcho's "rounded corners" toggle */}
       </div>
 
       <div className="mt-4 flex flex-wrap justify-center gap-3">
