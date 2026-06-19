@@ -592,7 +592,6 @@ export default function Variant26() {
       style={{
         position: 'relative',
         width: '100%',
-        overflowX: 'hidden',
         background: SKY_MID,
         color: INK,
         fontFamily: TEXT,
@@ -891,8 +890,11 @@ export default function Variant26() {
       {/* ---------------- Keyframes & shared CSS ---------------- */}
       <style>{`
         /* Snap firmly to each scene so the journey feels like a short deck, not endless scrolling */
-        html { scroll-snap-type: y mandatory; scroll-padding-top: 0; }
-        .dl-snap { scroll-snap-align: center; scroll-snap-stop: always; }
+        /* html is the scroll container, so the snap must live here (not on an
+           inner div, whose overflow would silently capture the scroll).
+           overflow-x:hidden on html wins the scroll-container over body. */
+        html { scroll-snap-type: y mandatory; scroll-padding-top: 0; overflow-x: hidden; }
+        .dl-snap { scroll-snap-align: center; }
         @keyframes dl-twinkle {
           0%, 100% { opacity: 0.2; transform: scale(0.85); }
           50%      { opacity: 0.9; transform: scale(1.2); }
