@@ -248,13 +248,14 @@ function AppScene({ app, index, reduced }) {
   return (
     <section
       ref={ref}
+      className="dl-snap"
       style={{
         position: 'relative',
-        minHeight: '160vh',
+        minHeight: '110vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '0 5vw',
+        padding: '8vh 5vw',
       }}
       aria-labelledby={`dl-${app.id}-title`}
     >
@@ -780,6 +781,7 @@ export default function Variant26() {
       <div style={{ position: 'relative', zIndex: 10 }}>
         {/* HERO scene */}
         <section
+          className="dl-snap"
           style={{
             minHeight: '100vh',
             display: 'flex',
@@ -888,6 +890,9 @@ export default function Variant26() {
 
       {/* ---------------- Keyframes & shared CSS ---------------- */}
       <style>{`
+        /* Snap each scene into view so the journey feels deliberate, not endless */
+        html { scroll-snap-type: y proximity; scroll-padding-top: 0; }
+        .dl-snap { scroll-snap-align: center; }
         @keyframes dl-twinkle {
           0%, 100% { opacity: 0.2; transform: scale(0.85); }
           50%      { opacity: 0.9; transform: scale(1.2); }
@@ -909,6 +914,7 @@ export default function Variant26() {
         .dl-link:hover .dl-arrow { transform: translateX(3px); }
         @media (prefers-reduced-motion: reduce) {
           * { scroll-behavior: auto !important; }
+          html { scroll-snap-type: none; }
           .dl-link { transition: none; }
           .dl-link:hover { transform: none; }
         }
@@ -936,8 +942,9 @@ function CtaScene({ reduced, year }) {
   return (
     <section
       ref={ref}
+      className="dl-snap"
       style={{
-        minHeight: '110vh',
+        minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
