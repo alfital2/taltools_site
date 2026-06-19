@@ -251,11 +251,11 @@ function AppScene({ app, index, reduced }) {
       className="dl-snap"
       style={{
         position: 'relative',
-        minHeight: '110vh',
+        minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '8vh 5vw',
+        padding: '6vh 5vw',
       }}
       aria-labelledby={`dl-${app.id}-title`}
     >
@@ -890,9 +890,9 @@ export default function Variant26() {
 
       {/* ---------------- Keyframes & shared CSS ---------------- */}
       <style>{`
-        /* Snap each scene into view so the journey feels deliberate, not endless */
-        html { scroll-snap-type: y proximity; scroll-padding-top: 0; }
-        .dl-snap { scroll-snap-align: center; }
+        /* Snap firmly to each scene so the journey feels like a short deck, not endless scrolling */
+        html { scroll-snap-type: y mandatory; scroll-padding-top: 0; }
+        .dl-snap { scroll-snap-align: center; scroll-snap-stop: always; }
         @keyframes dl-twinkle {
           0%, 100% { opacity: 0.2; transform: scale(0.85); }
           50%      { opacity: 0.9; transform: scale(1.2); }
