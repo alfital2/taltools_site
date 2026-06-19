@@ -27,6 +27,7 @@ const V22 = lazy(() => import('./variants/Variant22.jsx'))
 const V23 = lazy(() => import('./variants/Variant23.jsx'))
 const V24 = lazy(() => import('./variants/Variant24.jsx'))
 const V25 = lazy(() => import('./variants/Variant25.jsx'))
+const V26 = lazy(() => import('./variants/Variant26.jsx'))
 
 const DESIGNS = [
   { hash: 'v1', name: 'Aurora Glass', desc: 'Dreamy frosted glass · soft aurora light · elegant', sw: ['#c4b5fd', '#a5f3fc', '#fbcfe8'], C: V1 },
@@ -54,6 +55,7 @@ const DESIGNS = [
   { hash: 'v23', name: 'Bento Mosaic', desc: 'Modern bento grid · feature tiles · live demos', sw: ['#111827', '#6366f1', '#f3f4f6'], C: V23 },
   { hash: 'v24', name: 'Warm Studio', desc: 'Boutique editorial · warm serif · refined', sw: ['#efe7d8', '#1c1917', '#c2683f'], C: V24 },
   { hash: 'v25', name: 'Spotlight ⌘K', desc: 'macOS Spotlight palette · type to explore', sw: ['#0b0b12', '#a78bfa', '#22d3ee'], C: V25 },
+  { hash: 'v26', name: 'Daylight Glide', desc: 'Cinematic scroll journey · bright Cupertino-light palette', sw: ['#eaf3ff', '#0071e3', '#ffffff'], C: V26 },
   { hash: 'og', name: 'Confetti Lab', desc: 'The first playful build (bonus)', sw: ['#ffb703', '#ff5d5d', '#2ec4b6'], C: Original },
 ]
 
