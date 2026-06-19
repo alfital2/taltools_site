@@ -166,55 +166,80 @@ function Arrow({ color }) {
 }
 
 // Googly-eyes wordmark — the two "o"s of "Tools" become eyes whose pupils
-// track the cursor (and blink). Degrades to plain centered pupils when the
-// user prefers reduced motion.
+// track the cursor (and blink). A single rAF loop eases each pupil toward its
+// target, so motion stays buttery instead of snapping on every event.
+// Degrades to plain centered pupils when the user prefers reduced motion.
 function GooglyWordmark({ reduced }) {
-  const pupils = useRef([])
-  pupils.current = []
-  const addPupil = (el) => {
-    if (el && !pupils.current.includes(el)) pupils.current.push(el)
-  }
+  const rootRef = useRef(null)
 
   useEffect(() => {
-    if (reduced) return
+    const root = rootRef.current
+    if (!root) return
+    const eyes = Array.from(root.querySelectorAll('[data-eye]')).map((eye) => ({
+      eye,
+      pupil: eye.querySelector('[data-pupil]'),
+      x: 0,
+      y: 0,
+    }))
+
+    if (reduced) {
+      eyes.forEach((o) => o.pupil && (o.pupil.style.transform = 'translate(0,0)'))
+      return
+    }
+
+    let mx = window.innerWidth / 2
+    let my = window.innerHeight / 3
     const onMove = (e) => {
-      for (const pupil of pupils.current) {
-        const eye = pupil.parentElement
-        if (!eye) continue
-        const r = eye.getBoundingClientRect()
-        const dx = e.clientX - (r.left + r.width / 2)
-        const dy = e.clientY - (r.top + r.height / 2)
-        const ang = Math.atan2(dy, dx)
-        const max = r.width * 0.17
-        const off = Math.min(max, Math.hypot(dx, dy) * 0.4)
-        pupil.style.transform = `translate(${Math.cos(ang) * off}px, ${
-          Math.sin(ang) * off
-        }px)`
-      }
+      mx = e.clientX
+      my = e.clientY
     }
     window.addEventListener('pointermove', onMove, { passive: true })
-    return () => window.removeEventListener('pointermove', onMove)
+
+    let raf = 0
+    const tick = () => {
+      for (const o of eyes) {
+        const r = o.eye.getBoundingClientRect()
+        const dx = mx - (r.left + r.width / 2)
+        const dy = my - (r.top + r.height / 2)
+        const ang = Math.atan2(dy, dx)
+        const max = r.width * 0.18
+        const off = Math.min(max, Math.hypot(dx, dy) * 0.45)
+        const tx = Math.cos(ang) * off
+        const ty = Math.sin(ang) * off
+        // ease toward target for smooth, stutter-free tracking
+        o.x += (tx - o.x) * 0.16
+        o.y += (ty - o.y) * 0.16
+        if (o.pupil) o.pupil.style.transform = `translate(${o.x}px, ${o.y}px)`
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('pointermove', onMove)
+    }
   }, [reduced])
 
   const eye = (key) => (
     <span
       key={key}
+      data-eye
       className={reduced ? 'dl-eye' : 'dl-eye dl-eye-blink'}
       aria-hidden
       style={{
         display: 'inline-block',
-        width: '0.66em',
-        height: '0.66em',
+        width: '0.64em',
+        height: '0.64em',
         borderRadius: '50%',
         background: '#fff',
         border: '0.05em solid currentColor',
         position: 'relative',
-        verticalAlign: '-0.02em',
-        margin: '0 0.005em',
+        verticalAlign: '-0.015em',
+        margin: '0 0.004em',
       }}
     >
       <span
-        ref={addPupil}
+        data-pupil
         style={{
           position: 'absolute',
           width: '0.3em',
@@ -225,19 +250,87 @@ function GooglyWordmark({ reduced }) {
           top: '50%',
           marginLeft: '-0.15em',
           marginTop: '-0.15em',
-          transition: 'transform 0.08s ease-out',
+          willChange: 'transform',
         }}
       />
     </span>
   )
 
   return (
-    <span aria-hidden>
-      Tal{'T'}
+    <span ref={rootRef} aria-hidden>
+      TalT
       {eye('o1')}
       {eye('o2')}
-      {'ls'}
+      ls
     </span>
+  )
+}
+
+// The three apps, drawn as their own silhouettes rather than plain dots:
+// Natcho — a tortilla-chip triangle · FlicKey — a keyboard keycap ·
+// Tally — a progress ring. A quiet signature that the lab holds three tools.
+function AppTrio() {
+  return (
+    <div
+      role="img"
+      aria-label="Three little Mac tools: Natcho, FlicKey and Tally"
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 22,
+        marginTop: 26,
+      }}
+    >
+      {/* Natcho — rounded tortilla-chip triangle */}
+      <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
+        <polygon
+          points="14,5.5 23.5,22 4.5,22"
+          fill="#ffb703"
+          stroke="#ffb703"
+          strokeWidth="3.6"
+          strokeLinejoin="round"
+        />
+      </svg>
+
+      {/* FlicKey — a keyboard keycap */}
+      <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
+        <rect x="4.5" y="4.5" width="19" height="19" rx="6" fill="#7c5cff" />
+        <rect
+          x="7.4"
+          y="6.6"
+          width="13.2"
+          height="12.4"
+          rx="4"
+          fill="#ffffff"
+          fillOpacity="0.24"
+        />
+      </svg>
+
+      {/* Tally — a progress ring */}
+      <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
+        <circle
+          cx="14"
+          cy="14"
+          r="8.6"
+          fill="none"
+          stroke="#2ec4b6"
+          strokeOpacity="0.28"
+          strokeWidth="3.4"
+        />
+        <circle
+          cx="14"
+          cy="14"
+          r="8.6"
+          fill="none"
+          stroke="#2ec4b6"
+          strokeWidth="3.4"
+          strokeLinecap="round"
+          strokeDasharray="17 54"
+          transform="rotate(-90 14 14)"
+        />
+      </svg>
+    </div>
   )
 }
 
@@ -882,6 +975,7 @@ export default function Variant26() {
             >
               <GooglyWordmark reduced={reduced} />
             </h1>
+            <AppTrio />
             <p
               style={{
                 fontFamily: TEXT,
@@ -892,8 +986,9 @@ export default function Variant26() {
                 color: SUBTLE,
               }}
             >
-              Three small, sharp menu-bar apps. Scroll to glide through a calm,
-              sunlit landscape and meet each one as it rises into view.
+              Little Mac apps that fix the small, annoying stuff. Each one lives
+              in your menu bar, does its one job well, and otherwise stays out of
+              your way.
             </p>
           </motion.div>
 
@@ -968,6 +1063,12 @@ export default function Variant26() {
           96%           { transform: scaleY(0.08); }
         }
         .dl-eye-blink { animation: dl-blink 4.5s infinite; }
+        .dl-trio {
+          display: block;
+          filter: drop-shadow(0 4px 10px rgba(20,60,130,0.14));
+          transition: transform 0.22s cubic-bezier(.2,.7,.2,1);
+        }
+        .dl-trio:hover { transform: translateY(-4px) scale(1.06); }
         @media (prefers-reduced-motion: reduce) {
           .dl-scroller { scroll-behavior: auto; }
           .dl-link { transition: none; }
