@@ -192,45 +192,6 @@ function Check({ color }) {
 // but rendered on a light, softly shadowed Cupertino surface.
 // ===========================================================================
 function AppScene({ app, index, reduced }) {
-  const ref = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  })
-
-  const D = reduced ? 0 : 1 // distance multiplier
-
-  // Reveal envelope: glides up from below, holds, drifts away.
-  const scale = useTransform(
-    scrollYProgress,
-    [0, 0.4, 0.6, 1],
-    reduced ? [1, 1, 1, 1] : [0.78, 1, 1, 1.06]
-  )
-  const opacity = useTransform(
-    scrollYProgress,
-    [0, 0.22, 0.5, 0.78, 1],
-    [0, 1, 1, 1, 0]
-  )
-  const y = useTransform(scrollYProgress, [0, 0.5, 1], [110 * D, 0, -110 * D])
-  const blur = useTransform(
-    scrollYProgress,
-    [0, 0.25, 0.75, 1],
-    reduced ? [0, 0, 0, 0] : [10, 0, 0, 10]
-  )
-  const filter = useTransform(blur, (b) => `blur(${b}px)`)
-
-  // The tagline arrives slightly before the card.
-  const titleX = useTransform(
-    scrollYProgress,
-    [0.05, 0.4],
-    reduced ? [0, 0] : [index % 2 === 0 ? -70 : 70, 0]
-  )
-  const titleOpacity = useTransform(
-    scrollYProgress,
-    [0.08, 0.32, 0.7, 0.92],
-    [0, 1, 1, 0]
-  )
-
   const left = index % 2 === 0
   const Demo = DEMO_BY_ID[app.id]
   const ac = app.accent
@@ -247,7 +208,6 @@ function AppScene({ app, index, reduced }) {
 
   return (
     <section
-      ref={ref}
       className="dl-snap"
       style={{
         position: 'relative',
@@ -273,6 +233,10 @@ function AppScene({ app, index, reduced }) {
       />
 
       <motion.div
+        initial={reduced ? false : { opacity: 0, y: 64, scale: 0.93 }}
+        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+        viewport={{ amount: 0.4 }}
+        transition={{ duration: 0.7, ease: [0.2, 0.7, 0.3, 1] }}
         style={{
           position: 'relative',
           width: 'min(1040px, 100%)',
@@ -282,11 +246,7 @@ function AppScene({ app, index, reduced }) {
           alignItems: 'center',
           justifyContent: 'center',
           flexDirection: left ? 'row' : 'row-reverse',
-          opacity,
-          y,
-          scale,
-          filter,
-          willChange: 'transform, opacity, filter',
+          willChange: 'transform, opacity',
         }}
       >
         {/* The emerging light scene card */}
@@ -473,11 +433,13 @@ function AppScene({ app, index, reduced }) {
 
         {/* Big tagline + live interactive demo */}
         <motion.div
+          initial={reduced ? false : { opacity: 0, x: left ? -50 : 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ amount: 0.4 }}
+          transition={{ duration: 0.6, ease: [0.2, 0.7, 0.3, 1], delay: 0.08 }}
           style={{
             flex: '1 1 320px',
             minWidth: 0,
-            x: titleX,
-            opacity: titleOpacity,
           }}
         >
           <div
@@ -551,10 +513,11 @@ function AppScene({ app, index, reduced }) {
 export default function Variant26() {
   useDaylightFonts()
   const reduced = useReducedMotion()
-  const rootRef = useRef(null)
+  const scrollRef = useRef(null)
 
-  // Page-level scroll progress (whole document).
-  const { scrollYProgress } = useScroll()
+  // Scroll progress of our OWN dedicated scroll container (not the viewport, so
+  // the scroll-snap is reliable and independent of body/html overflow quirks).
+  const { scrollYProgress } = useScroll({ container: scrollRef })
   const progress = useSpring(scrollYProgress, {
     stiffness: 120,
     damping: 30,
@@ -588,10 +551,11 @@ export default function Variant26() {
 
   return (
     <div
-      ref={rootRef}
       style={{
         position: 'relative',
         width: '100%',
+        height: '100vh',
+        overflow: 'hidden',
         background: SKY_MID,
         color: INK,
         fontFamily: TEXT,
@@ -776,8 +740,19 @@ export default function Variant26() {
         }}
       />
 
-      {/* ---------------- Foreground content (scrolls over the world) ----- */}
-      <div style={{ position: 'relative', zIndex: 10 }}>
+      {/* ---------------- Foreground content: OUR scroll container ----- */}
+      <div
+        ref={scrollRef}
+        className="dl-scroller"
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          height: '100vh',
+          overflowY: 'scroll',
+          overflowX: 'hidden',
+          scrollSnapType: 'y mandatory',
+        }}
+      >
         {/* HERO scene */}
         <section
           className="dl-snap"
@@ -890,11 +865,10 @@ export default function Variant26() {
       {/* ---------------- Keyframes & shared CSS ---------------- */}
       <style>{`
         /* Snap firmly to each scene so the journey feels like a short deck, not endless scrolling */
-        /* html is the scroll container, so the snap must live here (not on an
-           inner div, whose overflow would silently capture the scroll).
-           overflow-x:hidden on html wins the scroll-container over body. */
-        html { scroll-snap-type: y mandatory; scroll-padding-top: 0; overflow-x: hidden; }
-        .dl-snap { scroll-snap-align: center; }
+        /* The snap lives on our own .dl-scroller container (set inline), so each
+           scene magnet-pulls into place regardless of body/html overflow. */
+        .dl-snap { scroll-snap-align: start; scroll-snap-stop: always; }
+        .dl-scroller { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
         @keyframes dl-twinkle {
           0%, 100% { opacity: 0.2; transform: scale(0.85); }
           50%      { opacity: 0.9; transform: scale(1.2); }
@@ -915,8 +889,7 @@ export default function Variant26() {
         .dl-arrow { transition: transform 0.2s ease; }
         .dl-link:hover .dl-arrow { transform: translateX(3px); }
         @media (prefers-reduced-motion: reduce) {
-          * { scroll-behavior: auto !important; }
-          html { scroll-snap-type: none; }
+          .dl-scroller { scroll-behavior: auto; }
           .dl-link { transition: none; }
           .dl-link:hover { transform: none; }
         }
@@ -929,21 +902,8 @@ export default function Variant26() {
 // Final call-to-action scene
 // ===========================================================================
 function CtaScene({ reduced, year }) {
-  const ref = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end end'],
-  })
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [0, 1])
-  const scale = useTransform(
-    scrollYProgress,
-    [0, 0.6],
-    reduced ? [1, 1] : [0.86, 1]
-  )
-
   return (
     <section
-      ref={ref}
       className="dl-snap"
       style={{
         minHeight: '100vh',
@@ -955,7 +915,13 @@ function CtaScene({ reduced, year }) {
         textAlign: 'center',
       }}
     >
-      <motion.div style={{ opacity, scale, maxWidth: 740 }}>
+      <motion.div
+        initial={reduced ? false : { opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ amount: 0.4 }}
+        transition={{ duration: 0.7, ease: [0.2, 0.7, 0.3, 1] }}
+        style={{ maxWidth: 740 }}
+      >
         <div
           style={{
             fontFamily: TEXT,
