@@ -137,16 +137,16 @@ const fallback = (label) => (
 export default function Gallery() {
   const hash = useHash()
 
-  // The live site: root shows the chosen design (Confetti Lab).
+  // The live site: root shows the chosen design (Daylight Glide).
   if (hash === '') {
-    return <Suspense fallback={fallback('TalTools')}><Original /></Suspense>
+    return <Suspense fallback={fallback('TalTools')}><V26 /></Suspense>
   }
 
   // The design gallery is kept available for browsing/picking.
   if (hash === 'gallery') return <Picker />
 
   const current = DESIGNS.find((d) => d.hash === hash)
-  if (!current) return <Suspense fallback={fallback('TalTools')}><Original /></Suspense>
+  if (!current) return <Suspense fallback={fallback('TalTools')}><V26 /></Suspense>
 
   const C = current.C
   return (

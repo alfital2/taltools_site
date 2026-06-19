@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 /* =========================================================================
@@ -13,8 +13,9 @@ import { motion, AnimatePresence } from 'framer-motion'
  *     bottom corners round; crisp (non-blurred) notch.
  *   - FlicKey: three examples, each a real wrong-layout mapping to a DIFFERENT
  *     language (only one Hebrew).
- *   - Tally: real menu-bar popover, two concentric segmented rings (cyan used /
- *     green remaining), static inner ring, and the session ring + number +
+ *   - Tally: real menu-bar popover, two concentric rings each drawn as a faint
+ *     full-circle track + a colored progress arc proportional to usage (green
+ *     outer / cyan inner), cyan reset dots, and the session ring + number +
  *     menu-bar mini-ring escalate green -> orange (>=60%) -> red (>=90%).
  * ========================================================================= */
 
@@ -179,29 +180,29 @@ function severity(pct, base) {
   return base
 }
 
-function GaugeRing({ r, pct, usedColor = T_CYAN }) {
+function GaugeRing({ r, pct, color = T_GREEN }) {
   const c = 2 * Math.PI * r
-  const GAP = 8
-  const used = (c * pct) / 100
-  const rem = c - used
+  const prog = Math.min(Math.max(pct, 0), 100)
   return (
     <>
-      <circle cx="60" cy="60" r={r} fill="none" stroke={usedColor} strokeWidth="6" strokeLinecap="round" strokeDasharray={`${Math.max(used - GAP, 0.001)} ${c}`} strokeDashoffset={-GAP / 2} />
-      <circle cx="60" cy="60" r={r} fill="none" stroke={T_GREEN} strokeWidth="6" strokeLinecap="round" strokeDasharray={`${Math.max(rem - GAP, 0.001)} ${c}`} strokeDashoffset={-(used + GAP / 2)} />
+      {/* faint full-circle track */}
+      <circle cx="60" cy="60" r={r} fill="none" stroke="rgba(255,255,255,0.09)" strokeWidth="6" />
+      {/* colored progress arc, proportional to the percentage */}
+      <circle cx="60" cy="60" r={r} fill="none" stroke={color} strokeWidth="6" strokeLinecap="round" strokeDasharray={`${Math.max((c * prog) / 100, 0.001)} ${c}`} />
     </>
   )
 }
 
-function TallyGauge({ pct, innerPct, label, reset, dot, outerColor = T_CYAN, numberColor = T_GREEN }) {
+function TallyGauge({ pct, innerPct, label, reset, dot = T_CYAN, outerColor = T_GREEN, numberColor = T_GREEN }) {
   return (
     <div className="flex flex-col items-center">
       <div className="relative h-32 w-32">
         <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
-          <GaugeRing r={46} pct={pct} usedColor={outerColor} />
-          <GaugeRing r={31} pct={innerPct} />
+          <GaugeRing r={46} pct={pct} color={outerColor} />
+          <GaugeRing r={31} pct={innerPct} color={T_CYAN} />
         </svg>
         <div className="absolute inset-0 grid place-content-center text-center leading-none">
-          <span className="text-xl font-bold" style={{ color: numberColor }}>{pct}%</span>
+          <span className="text-xl font-bold" style={{ color: numberColor }}>{Math.round(pct)}%</span>
           <span className="mt-1 text-[10px] font-semibold text-white/55">{label}</span>
         </div>
       </div>
@@ -229,15 +230,38 @@ function MiniRing({ pct }) {
 }
 
 export function TallyDemo({ className = '' }) {
-  const [session, setSession] = useState(28)
-  const weekly = 33
+  // Usage fills on its own to demonstrate consumption over a working day. Each
+  // ring climbs at its own pace (the inner rings are NOT tied to the outer ones)
+  // and gently resets when it tops out, mirroring the real reset windows.
+  const [session, setSession] = useState(12)
+  const [sessionInner, setSessionInner] = useState(5)
+  const [weekly, setWeekly] = useState(8)
+  // Weekly inner ring is intentionally static — it does not climb.
+  const weeklyInner = 21
+
+  useEffect(() => {
+    const reduce =
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (reduce) return
+    // Independent step sizes -> the climbing rings drift out of sync over time.
+    const climb = (set, step, floor) =>
+      set((v) => (v >= 100 ? floor : v + step))
+    const id = setInterval(() => {
+      climb(setSession, 0.8, 6)
+      climb(setSessionInner, 0.3, 2)
+      climb(setWeekly, 0.22, 4)
+    }, 500)
+    return () => clearInterval(id)
+  }, [])
+
   return (
     <div className={`rounded-2xl p-5 ${className}`} style={{ background: 'linear-gradient(135deg,#2a2350,#352a63 45%,#214a82)' }}>
       <div className="mb-2 flex items-center justify-end gap-3 rounded-lg bg-black/30 px-3 py-1.5 text-[11px] font-bold text-white/85 backdrop-blur">
         <span className="rounded px-1.5 py-0.5 text-white" style={{ background: 'rgba(124,92,255,0.8)' }}>EN</span>
         <span className="flex items-center gap-1" style={{ color: severity(session, '#ffffff') }}>
           <MiniRing pct={session} />
-          {session}%
+          {Math.round(session)}%
         </span>
         <WifiGlyph />
         <BatteryGlyph />
@@ -247,14 +271,13 @@ export function TallyDemo({ className = '' }) {
         <div className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 rounded-[2px] border-l border-t border-white/10" style={{ background: 'rgba(22,24,44,0.96)' }} />
         <div className="rounded-2xl border border-white/10 p-5 shadow-lg" style={{ background: 'rgba(22,24,44,0.96)', backdropFilter: 'blur(10px)' }}>
           <div className="flex items-start justify-around gap-4">
-            <TallyGauge pct={session} innerPct={64} label="session" reset="1h 55m" dot="#f0a500" outerColor={severity(session, T_CYAN)} numberColor={severity(session, T_GREEN)} />
-            <TallyGauge pct={weekly} innerPct={47} label="weekly" reset="12h 25m" dot={T_CYAN} />
+            <TallyGauge pct={session} innerPct={sessionInner} label="session" reset="1h 55m" dot={T_CYAN} outerColor={severity(session, T_GREEN)} numberColor={severity(session, T_GREEN)} />
+            <TallyGauge pct={weekly} innerPct={weeklyInner} label="weekly" reset="12h 25m" dot={T_CYAN} />
           </div>
           <div className="mt-4 border-t border-white/10 pt-2 text-center text-[11px] font-semibold text-white/45">Plan: Max (5x) · Updated just now</div>
         </div>
       </div>
-      <input type="range" min="0" max="100" value={session} onChange={(e) => setSession(+e.target.value)} aria-label="Simulated session usage percentage" className="mt-4 w-full" style={{ accentColor: '#2ec4b6' }} />
-      <p className="text-center text-sm font-semibold text-white/55">Drag to simulate a busy day.</p>
+      <p className="mt-4 text-center text-sm font-semibold text-white/55">Live — your usage fills as you work.</p>
     </div>
   )
 }

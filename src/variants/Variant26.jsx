@@ -165,6 +165,82 @@ function Arrow({ color }) {
   )
 }
 
+// Googly-eyes wordmark — the two "o"s of "Tools" become eyes whose pupils
+// track the cursor (and blink). Degrades to plain centered pupils when the
+// user prefers reduced motion.
+function GooglyWordmark({ reduced }) {
+  const pupils = useRef([])
+  pupils.current = []
+  const addPupil = (el) => {
+    if (el && !pupils.current.includes(el)) pupils.current.push(el)
+  }
+
+  useEffect(() => {
+    if (reduced) return
+    const onMove = (e) => {
+      for (const pupil of pupils.current) {
+        const eye = pupil.parentElement
+        if (!eye) continue
+        const r = eye.getBoundingClientRect()
+        const dx = e.clientX - (r.left + r.width / 2)
+        const dy = e.clientY - (r.top + r.height / 2)
+        const ang = Math.atan2(dy, dx)
+        const max = r.width * 0.17
+        const off = Math.min(max, Math.hypot(dx, dy) * 0.4)
+        pupil.style.transform = `translate(${Math.cos(ang) * off}px, ${
+          Math.sin(ang) * off
+        }px)`
+      }
+    }
+    window.addEventListener('pointermove', onMove, { passive: true })
+    return () => window.removeEventListener('pointermove', onMove)
+  }, [reduced])
+
+  const eye = (key) => (
+    <span
+      key={key}
+      className={reduced ? 'dl-eye' : 'dl-eye dl-eye-blink'}
+      aria-hidden
+      style={{
+        display: 'inline-block',
+        width: '0.66em',
+        height: '0.66em',
+        borderRadius: '50%',
+        background: '#fff',
+        border: '0.05em solid currentColor',
+        position: 'relative',
+        verticalAlign: '-0.02em',
+        margin: '0 0.005em',
+      }}
+    >
+      <span
+        ref={addPupil}
+        style={{
+          position: 'absolute',
+          width: '0.3em',
+          height: '0.3em',
+          borderRadius: '50%',
+          background: 'currentColor',
+          left: '50%',
+          top: '50%',
+          marginLeft: '-0.15em',
+          marginTop: '-0.15em',
+          transition: 'transform 0.08s ease-out',
+        }}
+      />
+    </span>
+  )
+
+  return (
+    <span aria-hidden>
+      Tal{'T'}
+      {eye('o1')}
+      {eye('o2')}
+      {'ls'}
+    </span>
+  )
+}
+
 function Check({ color }) {
   return (
     <svg
@@ -235,7 +311,7 @@ function AppScene({ app, index, reduced }) {
       <motion.div
         initial={reduced ? false : { opacity: 0, y: 64, scale: 0.93 }}
         whileInView={{ opacity: 1, y: 0, scale: 1 }}
-        viewport={{ amount: 0.4 }}
+        viewport={{ amount: 0.4, once: true }}
         transition={{ duration: 0.7, ease: [0.2, 0.7, 0.3, 1] }}
         style={{
           position: 'relative',
@@ -435,7 +511,7 @@ function AppScene({ app, index, reduced }) {
         <motion.div
           initial={reduced ? false : { opacity: 0, x: left ? -50 : 50 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ amount: 0.4 }}
+          viewport={{ amount: 0.4, once: true }}
           transition={{ duration: 0.6, ease: [0.2, 0.7, 0.3, 1], delay: 0.08 }}
           style={{
             flex: '1 1 320px',
@@ -750,7 +826,6 @@ export default function Variant26() {
           height: '100vh',
           overflowY: 'scroll',
           overflowX: 'hidden',
-          scrollSnapType: 'y mandatory',
         }}
       >
         {/* HERO scene */}
@@ -794,6 +869,7 @@ export default function Variant26() {
               A lab of tiny Mac tools
             </span>
             <h1
+              aria-label="TalTools"
               style={{
                 fontFamily: DISPLAY,
                 fontWeight: 800,
@@ -804,7 +880,7 @@ export default function Variant26() {
                 color: INK,
               }}
             >
-              TalTools
+              <GooglyWordmark reduced={reduced} />
             </h1>
             <p
               style={{
@@ -864,11 +940,10 @@ export default function Variant26() {
 
       {/* ---------------- Keyframes & shared CSS ---------------- */}
       <style>{`
-        /* Snap firmly to each scene so the journey feels like a short deck, not endless scrolling */
-        /* The snap lives on our own .dl-scroller container (set inline), so each
-           scene magnet-pulls into place regardless of body/html overflow. */
-        .dl-snap { scroll-snap-align: start; scroll-snap-stop: always; }
-        .dl-scroller { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+        /* Free scrolling — magnetic scroll-snap was removed because it stuttered
+           on mouse wheels (the discrete ticks fought the snap re-targeting). */
+        .dl-snap { scroll-snap-align: none; }
+        .dl-scroller { -webkit-overflow-scrolling: touch; }
         @keyframes dl-twinkle {
           0%, 100% { opacity: 0.2; transform: scale(0.85); }
           50%      { opacity: 0.9; transform: scale(1.2); }
@@ -888,6 +963,11 @@ export default function Variant26() {
         }
         .dl-arrow { transition: transform 0.2s ease; }
         .dl-link:hover .dl-arrow { transform: translateX(3px); }
+        @keyframes dl-blink {
+          0%, 92%, 100% { transform: scaleY(1); }
+          96%           { transform: scaleY(0.08); }
+        }
+        .dl-eye-blink { animation: dl-blink 4.5s infinite; }
         @media (prefers-reduced-motion: reduce) {
           .dl-scroller { scroll-behavior: auto; }
           .dl-link { transition: none; }
@@ -918,7 +998,7 @@ function CtaScene({ reduced, year }) {
       <motion.div
         initial={reduced ? false : { opacity: 0, scale: 0.9 }}
         whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ amount: 0.4 }}
+        viewport={{ amount: 0.4, once: true }}
         transition={{ duration: 0.7, ease: [0.2, 0.7, 0.3, 1] }}
         style={{ maxWidth: 740 }}
       >
