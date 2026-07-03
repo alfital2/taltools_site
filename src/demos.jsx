@@ -236,7 +236,7 @@ export function TallyDemo({ className = '' }) {
   const [session, setSession] = useState(12)
   const [sessionInner, setSessionInner] = useState(5)
   const [weekly, setWeekly] = useState(8)
-  // Weekly inner ring is intentionally static — it does not climb.
+  // Weekly inner ring is intentionally static - it does not climb.
   const weeklyInner = 21
 
   useEffect(() => {
@@ -277,10 +277,214 @@ export function TallyDemo({ className = '' }) {
           <div className="mt-4 border-t border-white/10 pt-2 text-center text-[11px] font-semibold text-white/45">Plan: Max (5x) · Updated just now</div>
         </div>
       </div>
-      <p className="mt-4 text-center text-sm font-semibold text-white/55">Live — your usage fills as you work.</p>
+      <p className="mt-4 text-center text-sm font-semibold text-white/55">Live - your usage fills as you work.</p>
+    </div>
+  )
+}
+
+/* ====================  GUITAR STUDIO  ==================== */
+// A live amp head: a brushed-dark control panel of amber rotary knobs (the amp
+// EQ), a swinging VU needle, and a cabinet with a live signal waveform + power
+// LED - Guitar Studio's own dark, amber-accented rig. Self-contained; the motion
+// loop is deterministic (sine-driven, no randomness) and halts under
+// prefers-reduced-motion, settling on a clean static rig.
+const GS_AMBER = '#f0b429'
+const GS_AMBER_HI = '#ff9f0a'
+const GS_GREEN = '#32d74b'
+
+// The amp's controls. `base` is the resting value (0..1); `wob` is how much it
+// gently drifts so the rig reads as live rather than frozen.
+const GS_KNOBS = [
+  { label: 'Gain', base: 0.68, wob: 0.05 },
+  { label: 'Bass', base: 0.55, wob: 0.02 },
+  { label: 'Mid', base: 0.48, wob: 0.02 },
+  { label: 'Treble', base: 0.62, wob: 0.03 },
+  { label: 'Reverb', base: 0.34, wob: 0.04 },
+]
+
+// polar point with 0deg = 12 o'clock, increasing clockwise
+function gsPolar(cx, cy, r, deg) {
+  const a = ((deg - 90) * Math.PI) / 180
+  return [cx + r * Math.cos(a), cy + r * Math.sin(a)]
+}
+function gsArc(cx, cy, r, a0, a1) {
+  const [x0, y0] = gsPolar(cx, cy, r, a0)
+  const [x1, y1] = gsPolar(cx, cy, r, a1)
+  const large = Math.abs(a1 - a0) > 180 ? 1 : 0
+  return `M${x0} ${y0} A${r} ${r} 0 ${large} 1 ${x1} ${y1}`
+}
+
+// A single skeuomorphic amp knob with an amber value arc + pointer.
+function GsKnob({ value, label }) {
+  const va = -135 + value * 270 // -135 (min) .. +135 (max)
+  const [px, py] = gsPolar(28, 28, 15, va)
+  return (
+    <div className="flex flex-col items-center gap-1.5">
+      <svg width="52" height="52" viewBox="0 0 56 56" aria-hidden>
+        {/* metal knob body */}
+        <circle cx="28" cy="28" r="16" fill="#0f0f11" stroke="rgba(255,255,255,0.14)" strokeWidth="1" />
+        <circle cx="28" cy="24.5" r="13" fill="rgba(255,255,255,0.05)" />
+        {/* faint full track */}
+        <path d={gsArc(28, 28, 20, -135, 135)} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="3" strokeLinecap="round" />
+        {/* amber value arc */}
+        <path d={gsArc(28, 28, 20, -135, va)} fill="none" stroke={GS_AMBER} strokeWidth="3" strokeLinecap="round" style={{ filter: `drop-shadow(0 0 3px ${GS_AMBER})` }} />
+        {/* pointer */}
+        <line x1="28" y1="28" x2={px} y2={py} stroke="#fff" strokeWidth="2" strokeLinecap="round" />
+        <circle cx="28" cy="28" r="2.2" fill="rgba(255,255,255,0.5)" />
+      </svg>
+      <span className="font-mono text-[9px] font-bold uppercase tracking-[0.12em]" style={{ color: 'rgba(255,255,255,0.45)' }}>
+        {label}
+      </span>
+    </div>
+  )
+}
+
+export function GuitarStudioDemo({ className = '' }) {
+  const [knobs, setKnobs] = useState(() => GS_KNOBS.map((k) => k.base))
+  const [vu, setVu] = useState(0.4) // 0..1 needle position
+  const [ms, setMs] = useState(6.8)
+  const [wave, setWave] = useState('')
+
+  useEffect(() => {
+    const W = 300
+    const H = 44
+    const buildWave = (t, amp) => {
+      const pts = []
+      for (let x = 0; x <= W; x += 6) {
+        const y =
+          H / 2 +
+          amp *
+            (Math.sin(x / 13 + t / 3) * 10 +
+              Math.sin(x / 5 - t / 2) * 5 +
+              Math.sin(x / 27 + t) * 6)
+        pts.push(`${x},${y.toFixed(1)}`)
+      }
+      return pts.join(' ')
+    }
+    const reduce =
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (reduce) {
+      setWave(buildWave(0, 0.5))
+      setVu(0.5)
+      return
+    }
+    let t = 0
+    const id = setInterval(() => {
+      t += 1
+      // knobs breathe subtly around their resting value
+      setKnobs(GS_KNOBS.map((k, i) => Math.max(0, Math.min(1, k.base + Math.sin(t / 22 + i * 1.3) * k.wob))))
+      // VU needle swings with the signal envelope
+      const env = 0.45 + 0.4 * Math.abs(Math.sin(t / 5)) + 0.1 * Math.sin(t / 2)
+      setVu(Math.max(0, Math.min(1, env)))
+      // round-trip latency wobbles in a plausible low range
+      setMs(6.6 + Math.sin(t / 13) * 1.5 + Math.sin(t / 4) * 0.3)
+      // live signal waveform, amplitude tracking the envelope
+      setWave(buildWave(t, 0.6 + env * 0.7))
+    }, 60)
+    return () => clearInterval(id)
+  }, [])
+
+  // VU needle angle: -42deg (low) .. +42deg (hot)
+  const vuAngle = -42 + vu * 84
+  const [nx, ny] = gsPolar(50, 46, 34, vuAngle)
+  const vuHot = vu > 0.82
+
+  return (
+    <div
+      className={`rounded-2xl p-5 ${className}`}
+      style={{
+        background: 'linear-gradient(180deg,#26262b 0%,#1a1a1e 58%,#151517 100%)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
+      }}
+    >
+      {/* window chrome */}
+      <div className="mb-4 flex items-center gap-3">
+        <div className="flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-full" style={{ background: '#ff5f57' }} />
+          <span className="h-2.5 w-2.5 rounded-full" style={{ background: '#febc2e' }} />
+          <span className="h-2.5 w-2.5 rounded-full" style={{ background: '#28c840' }} />
+        </div>
+        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: 'rgba(255,255,255,0.42)' }}>
+          Guitar Studio
+        </span>
+        <span className="ml-auto flex items-center gap-1.5 font-mono text-[11px] font-semibold" style={{ color: 'rgba(255,255,255,0.7)' }}>
+          <motion.span
+            className="h-2 w-2 rounded-full"
+            style={{ background: GS_GREEN, boxShadow: `0 0 8px ${GS_GREEN}` }}
+            animate={{ opacity: [1, 0.35, 1] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          LIVE
+          <span style={{ color: GS_AMBER }}>{ms.toFixed(1)} ms</span>
+        </span>
+      </div>
+
+      {/* amp control panel: knobs + VU meter */}
+      <div
+        className="flex items-center justify-between gap-3 rounded-xl px-3 py-4"
+        style={{
+          background: 'linear-gradient(180deg,#232327,#171719)',
+          border: '1px solid rgba(255,255,255,0.07)',
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
+        }}
+      >
+        <div className="flex flex-1 items-start justify-between">
+          {knobs.map((v, i) => (
+            <GsKnob key={GS_KNOBS[i].label} value={v} label={GS_KNOBS[i].label} />
+          ))}
+        </div>
+        {/* VU meter */}
+        <div
+          className="rounded-md px-2 pt-2 pb-1"
+          style={{ background: 'linear-gradient(180deg,#f3ead0,#d8caa4)', border: '1px solid rgba(0,0,0,0.35)' }}
+        >
+          <svg width="88" height="50" viewBox="0 0 100 52" aria-hidden>
+            <path d={gsArc(50, 46, 34, -42, 42)} fill="none" stroke="rgba(0,0,0,0.35)" strokeWidth="1.5" />
+            <path d={gsArc(50, 46, 34, 20, 42)} fill="none" stroke={GS_AMBER_HI} strokeWidth="2.4" />
+            <line x1="50" y1="46" x2={nx} y2={ny} stroke={vuHot ? '#c02618' : '#1c1c1c'} strokeWidth="1.8" strokeLinecap="round" />
+            <circle cx="50" cy="46" r="2.4" fill="#1c1c1c" />
+          </svg>
+          <div className="text-center font-mono text-[7px] font-bold uppercase tracking-[0.15em]" style={{ color: 'rgba(0,0,0,0.5)' }}>
+            VU
+          </div>
+        </div>
+      </div>
+
+      {/* cabinet: live waveform + power LED */}
+      <div
+        className="mt-3 flex items-center gap-3 rounded-xl px-4 py-3"
+        style={{ background: 'linear-gradient(180deg,#141416,#0c0c0d)', border: '1px solid rgba(255,255,255,0.06)' }}
+      >
+        <span
+          className="font-semibold italic"
+          style={{ fontFamily: 'Georgia, serif', fontSize: 17, color: 'rgba(255,255,255,0.72)' }}
+        >
+          Studio
+        </span>
+        <svg viewBox="0 0 300 44" preserveAspectRatio="none" width="100%" height="34" style={{ flex: 1, overflow: 'visible' }} aria-hidden>
+          <polyline points={wave} fill="none" stroke={GS_AMBER} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ filter: `drop-shadow(0 0 3px ${GS_AMBER})` }} />
+        </svg>
+        <div className="flex flex-col items-center gap-1">
+          <motion.span
+            className="h-3 w-3 rounded-full"
+            style={{ background: GS_GREEN, boxShadow: `0 0 10px ${GS_GREEN}` }}
+            animate={{ opacity: [1, 0.55, 1] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <span className="font-mono text-[7px] font-bold uppercase tracking-[0.15em]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            Power
+          </span>
+        </div>
+      </div>
+
+      <p className="mt-4 text-center text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.5)' }}>
+        Live - dial in the amp, stack your pedals, and play.
+      </p>
     </div>
   )
 }
 
 /* Convenience: map app id -> its demo component. */
-export const DEMOS = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo }
+export const DEMOS = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo, guitar: GuitarStudioDemo }

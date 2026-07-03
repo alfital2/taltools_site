@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { APPS } from '../apps.js'
-import { NatchoDemo, FlicKeyDemo, TallyDemo } from '../demos.jsx'
+import { NatchoDemo, FlicKeyDemo, TallyDemo, GuitarStudioDemo } from '../demos.jsx'
 
 // ---------------------------------------------------------------------------
-// Variant 26 — "Daylight Glide"
+// Variant 26 - "Daylight Glide"
 // Variant10's cinematic, scroll-driven parallax journey transplanted into the
 // bright, airy Cupertino-Light world of Variant22. Instead of gliding through a
 // dark dusk/space sky, the viewer glides through a calm, sunlit landscape:
@@ -35,6 +35,7 @@ const DEMO_BY_ID = {
   natcho: NatchoDemo,
   flickey: FlicKeyDemo,
   tally: TallyDemo,
+  guitar: GuitarStudioDemo,
 }
 
 // ---------- color helpers (from Cupertino-Light) ----------
@@ -165,7 +166,7 @@ function Arrow({ color }) {
   )
 }
 
-// Googly-eyes wordmark — the two "o"s of "Tools" become eyes whose pupils
+// Googly-eyes wordmark - the two "o"s of "Tools" become eyes whose pupils
 // track the cursor (and blink). A single rAF loop eases each pupil toward its
 // target, so motion stays buttery instead of snapping on every event.
 // Degrades to plain centered pupils when the user prefers reduced motion.
@@ -267,13 +268,13 @@ function GooglyWordmark({ reduced }) {
 }
 
 // The three apps, drawn as their own silhouettes rather than plain dots:
-// Natcho — a tortilla-chip triangle · FlicKey — a keyboard keycap ·
-// Tally — a progress ring. A quiet signature that the lab holds three tools.
+// Natcho - a tortilla-chip triangle · FlicKey - a keyboard keycap ·
+// Tally - a progress ring. A quiet signature that the lab holds three tools.
 function AppTrio() {
   return (
     <div
       role="img"
-      aria-label="Three little Mac tools: Natcho, FlicKey and Tally"
+      aria-label="Four little tools: Natcho, FlicKey, Tally and Guitar Studio"
       style={{
         display: 'flex',
         justifyContent: 'center',
@@ -282,7 +283,7 @@ function AppTrio() {
         marginTop: 26,
       }}
     >
-      {/* Natcho — rounded tortilla-chip triangle */}
+      {/* Natcho - rounded tortilla-chip triangle */}
       <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
         <polygon
           points="14,5.5 23.5,22 4.5,22"
@@ -293,7 +294,7 @@ function AppTrio() {
         />
       </svg>
 
-      {/* FlicKey — a keyboard keycap */}
+      {/* FlicKey - a keyboard keycap */}
       <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
         <rect x="4.5" y="4.5" width="19" height="19" rx="6" fill="#7c5cff" />
         <rect
@@ -307,7 +308,7 @@ function AppTrio() {
         />
       </svg>
 
-      {/* Tally — a progress ring */}
+      {/* Tally - a progress ring */}
       <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
         <circle
           cx="14"
@@ -328,6 +329,14 @@ function AppTrio() {
           strokeLinecap="round"
           strokeDasharray="17 54"
           transform="rotate(-90 14 14)"
+        />
+      </svg>
+
+      {/* Guitar Studio - a guitar pick */}
+      <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
+        <path
+          d="M14 5 C18.4 5 21 7.6 21 11.2 C21 15.8 16.6 20.4 14 22 C11.4 20.4 7 15.8 7 11.2 C7 7.6 9.6 5 14 5 Z"
+          fill="#f0b429"
         />
       </svg>
     </div>
@@ -370,6 +379,8 @@ function AppScene({ app, index, reduced }) {
       ? 'Menu bar · Usage'
       : app.id === 'flickey'
       ? 'Menu bar · Typing'
+      : app.id === 'guitar'
+      ? 'Web · Guitar'
       : 'Menu bar · Display'
   const linkProps = app.external
     ? { target: '_blank', rel: 'noopener noreferrer' }
@@ -574,29 +585,31 @@ function AppScene({ app, index, reduced }) {
                 boxShadow: '0 10px 26px -10px rgba(0,0,0,0.45)',
               }}
             >
-              Get {app.name}
+              {app.id === 'guitar' ? 'Launch Guitar Studio' : `Get ${app.name}`}
               <Arrow color="#fff" />
             </a>
 
-            <a
-              href={app.site}
-              {...linkProps}
-              className="dl-link dl-fulldemo"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 7,
-                fontFamily: DISPLAY,
-                fontWeight: 700,
-                fontSize: 15,
-                color: acText,
-                textDecoration: 'none',
-                cursor: 'pointer',
-              }}
-            >
-              See the full demo
-              <Arrow color={acText} />
-            </a>
+            {app.id !== 'guitar' && (
+              <a
+                href={app.site}
+                {...linkProps}
+                className="dl-link dl-fulldemo"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 7,
+                  fontFamily: DISPLAY,
+                  fontWeight: 700,
+                  fontSize: 15,
+                  color: acText,
+                  textDecoration: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                See the full demo
+                <Arrow color={acText} />
+              </a>
+            )}
           </div>
         </div>
 
@@ -751,7 +764,7 @@ export default function Variant26() {
           }}
         />
 
-        {/* Warm light pooling at the horizon — swells as you travel */}
+        {/* Warm light pooling at the horizon - swells as you travel */}
         <motion.div
           style={{
             position: 'absolute',
@@ -764,7 +777,7 @@ export default function Variant26() {
           }}
         />
 
-        {/* Far motes — slowest, faint sunlit specks */}
+        {/* Far motes - slowest, faint sunlit specks */}
         <motion.div
           style={{ position: 'absolute', inset: '-10% 0', y: motesFarY }}
         >
@@ -789,7 +802,7 @@ export default function Variant26() {
           ))}
         </motion.div>
 
-        {/* Distant soft clouds — pastel drifting bands */}
+        {/* Distant soft clouds - pastel drifting bands */}
         <motion.div
           style={{ position: 'absolute', inset: '-15% -10%', y: cloudsY }}
         >
@@ -820,7 +833,7 @@ export default function Variant26() {
           ))}
         </motion.div>
 
-        {/* Mid rolling ridge — soft daylight hill, SVG */}
+        {/* Mid rolling ridge - soft daylight hill, SVG */}
         <motion.div
           style={{
             position: 'absolute',
@@ -845,7 +858,7 @@ export default function Variant26() {
           </svg>
         </motion.div>
 
-        {/* Near foreground ridge — softest warm-white, fastest */}
+        {/* Near foreground ridge - softest warm-white, fastest */}
         <motion.div
           style={{
             position: 'absolute',
@@ -959,7 +972,7 @@ export default function Variant26() {
                   background: `linear-gradient(135deg, ${BLUE}, #59b4ff)`,
                 }}
               />
-              A lab of tiny Mac tools
+              A lab of tiny tools
             </span>
             <h1
               aria-label="TalTools"
@@ -986,9 +999,9 @@ export default function Variant26() {
                 color: SUBTLE,
               }}
             >
-              Little Mac apps that fix the small, annoying stuff. Each one lives
-              in your menu bar, does its one job well, and otherwise stays out of
-              your way.
+              Little tools that fix the small, annoying stuff. Most live in your
+              menu bar, one lives in a browser tab - each does its one job well
+              and otherwise stays out of your way.
             </p>
           </motion.div>
 
@@ -1035,7 +1048,7 @@ export default function Variant26() {
 
       {/* ---------------- Keyframes & shared CSS ---------------- */}
       <style>{`
-        /* Free scrolling — magnetic scroll-snap was removed because it stuttered
+        /* Free scrolling - magnetic scroll-snap was removed because it stuttered
            on mouse wheels (the discrete ticks fought the snap re-targeting). */
         .dl-snap { scroll-snap-align: none; }
         .dl-scroller { -webkit-overflow-scrolling: touch; }
@@ -1126,9 +1139,9 @@ function CtaScene({ reduced, year }) {
             color: INK,
           }}
         >
-          Three tools.
+          Four tools.
           <br />
-          One quiet menu bar.
+          One calmer setup.
         </h2>
         <p
           style={{
@@ -1140,9 +1153,9 @@ function CtaScene({ reduced, year }) {
             color: SUBTLE,
           }}
         >
-          Native, local, and unobtrusive, built to disappear until you need them.
-          No clutter, no accounts, minimal permissions. Pick one and bring a
-          little calm to your Mac.
+          Local, unobtrusive, and built to disappear until you need them. No
+          clutter, no accounts, minimal permissions. Pick one and bring a little
+          calm to your setup.
         </p>
         <div
           style={{
@@ -1196,7 +1209,7 @@ function CtaScene({ reduced, year }) {
             color: SUBTLE,
           }}
         >
-          TalTools · Small Mac utilities, made with care · © {year}
+          TalTools · Small utilities, made with care · © {year}
         </div>
       </motion.div>
     </section>

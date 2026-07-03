@@ -1,0 +1,39 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Guitar Studio icon">
+  <defs>
+    <radialGradient id="gtile" cx="30%" cy="22%" r="95%">
+      <stop offset="0%" stop-color="#2c2c31"/>
+      <stop offset="55%" stop-color="#1e1e22"/>
+      <stop offset="100%" stop-color="#141416"/>
+    </radialGradient>
+    <linearGradient id="gpick" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%" stop-color="#ffe08a"/>
+      <stop offset="42%" stop-color="#f0b429"/>
+      <stop offset="100%" stop-color="#cf8f00"/>
+    </linearGradient>
+    <radialGradient id="gglow" cx="50%" cy="42%" r="60%">
+      <stop offset="0%" stop-color="#ff9f0a" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#ff9f0a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- dark studio tile (clipped to a rounded square by the site) -->
+  <rect width="512" height="512" rx="0" fill="url(#gtile)"/>
+
+  <!-- warm amber glow behind the pick -->
+  <circle cx="256" cy="238" r="180" fill="url(#gglow)"/>
+
+  <!-- guitar pick -->
+  <path d="M256 120 C332 120 376 164 376 224 C376 302 302 378 256 406 C210 378 136 302 136 224 C136 164 180 120 256 120 Z"
+        fill="url(#gpick)"/>
+
+  <!-- soft top highlight on the pick -->
+  <path d="M256 120 C332 120 376 164 376 224 C376 258 362 292 340 322 C300 250 244 196 168 176 C186 142 216 120 256 120 Z"
+        fill="#ffffff" fill-opacity="0.20"/>
+
+  <!-- three strings crossing the pick (guitar cue) -->
+  <g stroke="#141416" stroke-opacity="0.28" stroke-width="7" stroke-linecap="round">
+    <line x1="214" y1="150" x2="214" y2="392"/>
+    <line x1="256" y1="140" x2="256" y2="402"/>
+    <line x1="298" y1="150" x2="298" y2="392"/>
+  </g>
+</svg>

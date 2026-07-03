@@ -2,6 +2,7 @@
 import natchoIcon from './assets/icons/natcho.png'
 import flickeyIcon from './assets/icons/flickey.png'
 import tallyIcon from './assets/icons/tally.png'
+import guitarIcon from './assets/icons/guitar.svg'
 
 export const APPS = [
   {
@@ -42,5 +43,18 @@ export const APPS = [
     site: 'https://tallyrate.site',
     external: true,
     bullets: ['Session + weekly windows', 'Reset countdowns', 'Threshold notifications', 'Secure Keychain login'],
+  },
+  {
+    id: 'guitar',
+    name: 'Guitar Studio',
+    tagline: 'Plug in. Your browser is the amp.',
+    blurb:
+      'A whole guitar rig in a browser tab: amp sim, a pedal chain, a built-in tuner and low-latency monitoring. Plug into your interface, press start, and play. Nothing to install, no account.',
+    accent: '#f0b429',
+    emoji: '🎸',
+    icon: guitarIcon,
+    site: 'https://alfital2.github.io/guitar-web/',
+    external: true,
+    bullets: ['Amp sim + pedal chain', 'Built-in chromatic tuner', 'Low-latency monitoring', 'Runs in the browser - nothing to install'],
   },
 ]
