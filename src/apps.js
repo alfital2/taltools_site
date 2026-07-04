@@ -3,6 +3,7 @@ import natchoIcon from './assets/icons/natcho.png'
 import flickeyIcon from './assets/icons/flickey.png'
 import tallyIcon from './assets/icons/tally.png'
 import guitarIcon from './assets/icons/guitar.svg'
+import poofIcon from './assets/icons/poof.png'
 
 export const APPS = [
   {
@@ -56,5 +57,18 @@ export const APPS = [
     site: 'https://alfital2.github.io/guitar-web/',
     external: true,
     bullets: ['Amp sim + pedal chain', 'Built-in chromatic tuner', 'Low-latency monitoring', 'Runs in the browser - nothing to install'],
+  },
+  {
+    id: 'poof',
+    name: 'Poof',
+    tagline: 'Region in, GIF out. Poof.',
+    blurb:
+      'Press Cmd+Shift+2, drag a region, press Esc. An animated GIF of that region lands on your clipboard. Nothing is written to disk.',
+    accent: '#ff4436',
+    emoji: '💨',
+    icon: poofIcon,
+    site: 'https://github.com/alfital2/poof/releases/latest/download/Poof.app.zip',
+    external: true,
+    bullets: ['One hotkey, no window', 'Straight to clipboard', 'No files left behind', 'Screen Recording only'],
   },
 ]

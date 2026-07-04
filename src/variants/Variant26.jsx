@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { APPS } from '../apps.js'
-import { NatchoDemo, FlicKeyDemo, TallyDemo, GuitarStudioDemo } from '../demos.jsx'
+import { NatchoDemo, FlicKeyDemo, TallyDemo, GuitarStudioDemo, PoofDemo } from '../demos.jsx'
 
 // ---------------------------------------------------------------------------
 // Variant 26 - "Daylight Glide"
@@ -36,6 +36,7 @@ const DEMO_BY_ID = {
   flickey: FlicKeyDemo,
   tally: TallyDemo,
   guitar: GuitarStudioDemo,
+  poof: PoofDemo,
 }
 
 // ---------- color helpers (from Cupertino-Light) ----------
@@ -381,6 +382,8 @@ function AppScene({ app, index, reduced }) {
       ? 'Menu bar · Typing'
       : app.id === 'guitar'
       ? 'Web · Guitar'
+      : app.id === 'poof'
+      ? 'Menu bar · Capture'
       : 'Menu bar · Display'
   const linkProps = app.external
     ? { target: '_blank', rel: 'noopener noreferrer' }
@@ -589,7 +592,7 @@ function AppScene({ app, index, reduced }) {
               <Arrow color="#fff" />
             </a>
 
-            {app.id !== 'guitar' && (
+            {app.id !== 'guitar' && app.id !== 'poof' && (
               <a
                 href={app.site}
                 {...linkProps}

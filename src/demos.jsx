@@ -487,4 +487,67 @@ export function GuitarStudioDemo({ className = '' }) {
 }
 
 /* Convenience: map app id -> its demo component. */
-export const DEMOS = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo, guitar: GuitarStudioDemo }
+/* ---------- Poof: select a region, it poofs to the clipboard as a GIF ---------- */
+export function PoofDemo({ tone = 'light', className = '' }) {
+  const [phase, setPhase] = useState('idle') // idle | recording | done
+  const dark = tone === 'dark'
+  const accent = '#ff4436'
+  const screen = dark ? '#181c2b' : '#eef1f7'
+  const label = phase === 'idle' ? 'Select a region' : phase === 'recording' ? 'Stop (Esc)' : 'Again'
+  const next = () => setPhase((p) => (p === 'idle' ? 'recording' : p === 'recording' ? 'done' : 'idle'))
+
+  return (
+    <div className={className}>
+      <div
+        className="relative mx-auto aspect-[16/10] w-full max-w-sm overflow-hidden rounded-xl ring-1 ring-black/15"
+        style={{ background: screen }}
+      >
+        {/* a little motion, so a GIF makes sense */}
+        <motion.div
+          className="absolute top-1/2 h-9 w-9 -translate-y-1/2 rounded-full"
+          style={{ background: 'linear-gradient(135deg,#7fb1ff,#9b7bff)' }}
+          animate={{ x: [36, 210, 36] }}
+          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        {/* pulsing capture frame - sharp corners, breathing glow, just like the app */}
+        {phase === 'recording' && (
+          <motion.div
+            className="absolute"
+            style={{ left: '16%', top: '18%', width: '68%', height: '64%', border: `2px solid ${accent}` }}
+            animate={{ boxShadow: [`0 0 0px ${accent}`, `0 0 18px ${accent}`, `0 0 0px ${accent}`] }}
+            transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        )}
+        <AnimatePresence>
+          {phase === 'done' && (
+            <motion.div
+              key="done"
+              initial={{ scale: 0.7, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              <div className="rounded-lg bg-black/80 px-3 py-2 text-sm font-semibold text-white">
+                GIF copied to clipboard
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+      <div className="mt-4 flex justify-center">
+        <button
+          onClick={next}
+          className="cursor-pointer rounded-lg px-4 py-2 text-sm font-bold text-white shadow-sm transition-transform hover:-translate-y-0.5"
+          style={{ background: accent }}
+        >
+          {label}
+        </button>
+      </div>
+      <p className={`mt-3 text-center text-xs ${dark ? 'text-white/60' : 'text-slate-500'}`}>
+        Grab a region, press Esc, the GIF poofs onto your clipboard.
+      </p>
+    </div>
+  )
+}
+
+export const DEMOS = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo, guitar: GuitarStudioDemo, poof: PoofDemo }
