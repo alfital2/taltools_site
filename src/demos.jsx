@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 /* =========================================================================
@@ -487,37 +487,111 @@ export function GuitarStudioDemo({ className = '' }) {
 }
 
 /* Convenience: map app id -> its demo component. */
-/* ---------- Poof: select a region, it poofs to the clipboard as a GIF ---------- */
+/* ---------- Poof: draw a region, it poofs to the clipboard as a GIF ----------
+ * Interactive, mirrors the real app: press Select, the preview dims with a
+ * crosshair, you DRAG your own region (clear inside, dim outside), release to
+ * record (coral frame with a breathing glow), then it lands on the clipboard. */
 export function PoofDemo({ tone = 'light', className = '' }) {
-  const [phase, setPhase] = useState('idle') // idle | recording | done
+  const [phase, setPhase] = useState('idle') // idle | selecting | recording | done
+  const [rect, setRect] = useState(null) // {x,y,w,h} in preview px
+  const screenRef = useRef(null)
+  const startRef = useRef(null)
   const dark = tone === 'dark'
   const accent = '#ff4436'
   const screen = dark ? '#181c2b' : '#eef1f7'
-  const label = phase === 'idle' ? 'Select a region' : phase === 'recording' ? 'Stop (Esc)' : 'Again'
-  const next = () => setPhase((p) => (p === 'idle' ? 'recording' : p === 'recording' ? 'done' : 'idle'))
+
+  const rel = (e) => {
+    const r = screenRef.current.getBoundingClientRect()
+    return {
+      x: Math.min(Math.max(e.clientX - r.left, 0), r.width),
+      y: Math.min(Math.max(e.clientY - r.top, 0), r.height),
+    }
+  }
+  const onDown = (e) => {
+    if (phase !== 'selecting') return
+    e.preventDefault()
+    const p = rel(e)
+    startRef.current = p
+    setRect({ x: p.x, y: p.y, w: 0, h: 0 })
+    screenRef.current.setPointerCapture?.(e.pointerId)
+  }
+  const onMove = (e) => {
+    if (phase !== 'selecting' || !startRef.current) return
+    const p = rel(e)
+    const s = startRef.current
+    setRect({ x: Math.min(s.x, p.x), y: Math.min(s.y, p.y), w: Math.abs(p.x - s.x), h: Math.abs(p.y - s.y) })
+  }
+  const onUp = (e) => {
+    if (phase !== 'selecting' || !startRef.current) return
+    const p = rel(e)
+    const s = startRef.current
+    startRef.current = null
+    const fr = { x: Math.min(s.x, p.x), y: Math.min(s.y, p.y), w: Math.abs(p.x - s.x), h: Math.abs(p.y - s.y) }
+    if (fr.w < 26 || fr.h < 22) { setRect(null); return } // too small - keep selecting
+    setRect(fr)
+    setPhase('recording')
+    setTimeout(() => setPhase('done'), 1600)
+  }
+
+  const reset = () => { setRect(null); startRef.current = null }
+  const button =
+    phase === 'idle'
+      ? { label: 'Select a region', onClick: () => { reset(); setPhase('selecting') } }
+      : phase === 'selecting'
+      ? { label: 'Cancel', onClick: () => { reset(); setPhase('idle') } }
+      : phase === 'recording'
+      ? { label: 'Stop (Esc)', onClick: () => setPhase('done') }
+      : { label: 'Again', onClick: () => { reset(); setPhase('idle') } }
+  const caption =
+    phase === 'selecting' ? 'Drag on the preview to draw a region.'
+    : phase === 'recording' ? 'Recording. Press Esc to stop.'
+    : phase === 'done' ? 'The GIF is on your clipboard, ready to paste.'
+    : 'Grab a region, press Esc, the GIF poofs onto your clipboard.'
 
   return (
     <div className={className}>
       <div
-        className="relative mx-auto aspect-[16/10] w-full max-w-sm overflow-hidden rounded-xl ring-1 ring-black/15"
-        style={{ background: screen }}
+        ref={screenRef}
+        onPointerDown={onDown}
+        onPointerMove={onMove}
+        onPointerUp={onUp}
+        className={`relative mx-auto aspect-[16/10] w-full max-w-sm select-none overflow-hidden rounded-xl ring-1 ring-black/15 ${
+          phase === 'selecting' ? 'cursor-crosshair' : ''
+        }`}
+        style={{ background: screen, touchAction: 'none' }}
       >
-        {/* a little motion, so a GIF makes sense */}
+        {/* motion worth capturing (shows through the clear region) */}
         <motion.div
-          className="absolute top-1/2 h-9 w-9 -translate-y-1/2 rounded-full"
+          className="pointer-events-none absolute top-1/2 h-9 w-9 -translate-y-1/2 rounded-full"
           style={{ background: 'linear-gradient(135deg,#7fb1ff,#9b7bff)' }}
           animate={{ x: [36, 210, 36] }}
           transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
         />
-        {/* pulsing capture frame - sharp corners, breathing glow, just like the app */}
-        {phase === 'recording' && (
+
+        {/* full dim while selecting before the drag starts */}
+        {phase === 'selecting' && !rect && (
+          <div className="pointer-events-none absolute inset-0" style={{ background: 'rgba(0,0,0,0.38)' }} />
+        )}
+
+        {/* the region: dim-outside while selecting, breathing coral glow while recording */}
+        {rect && (phase === 'selecting' || phase === 'recording' || phase === 'done') && (
           <motion.div
-            className="absolute"
-            style={{ left: '16%', top: '18%', width: '68%', height: '64%', border: `2px solid ${accent}` }}
-            animate={{ boxShadow: [`0 0 0px ${accent}`, `0 0 18px ${accent}`, `0 0 0px ${accent}`] }}
-            transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+            className="pointer-events-none absolute"
+            style={{
+              left: rect.x, top: rect.y, width: rect.w, height: rect.h,
+              border: `2px solid ${accent}`,
+              boxShadow: phase === 'selecting' ? '0 0 0 9999px rgba(0,0,0,0.38)' : undefined,
+            }}
+            animate={
+              phase === 'recording'
+                ? { boxShadow: [`0 0 0px ${accent}`, `0 0 16px ${accent}`, `0 0 0px ${accent}`] }
+                : {}
+            }
+            transition={phase === 'recording' ? { duration: 1.4, repeat: Infinity, ease: 'easeInOut' } : {}}
           />
         )}
+
+        {/* copied confirmation */}
         <AnimatePresence>
           {phase === 'done' && (
             <motion.div
@@ -525,7 +599,7 @@ export function PoofDemo({ tone = 'light', className = '' }) {
               initial={{ scale: 0.7, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 flex items-center justify-center"
+              className="pointer-events-none absolute inset-0 flex items-center justify-center"
             >
               <div className="rounded-lg bg-black/80 px-3 py-2 text-sm font-semibold text-white">
                 GIF copied to clipboard
@@ -534,18 +608,17 @@ export function PoofDemo({ tone = 'light', className = '' }) {
           )}
         </AnimatePresence>
       </div>
+
       <div className="mt-4 flex justify-center">
         <button
-          onClick={next}
+          onClick={button.onClick}
           className="cursor-pointer rounded-lg px-4 py-2 text-sm font-bold text-white shadow-sm transition-transform hover:-translate-y-0.5"
           style={{ background: accent }}
         >
-          {label}
+          {button.label}
         </button>
       </div>
-      <p className={`mt-3 text-center text-xs ${dark ? 'text-white/60' : 'text-slate-500'}`}>
-        Grab a region, press Esc, the GIF poofs onto your clipboard.
-      </p>
+      <p className={`mt-3 text-center text-xs ${dark ? 'text-white/60' : 'text-slate-500'}`}>{caption}</p>
     </div>
   )
 }

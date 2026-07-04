@@ -61,14 +61,14 @@ export const APPS = [
   {
     id: 'poof',
     name: 'Poof',
-    tagline: 'Region in, GIF out. Poof.',
+    tagline: 'Show your AI agent a video.',
     blurb:
-      'Press Cmd+Shift+2, drag a region, press Esc. An animated GIF of that region lands on your clipboard. Nothing is written to disk.',
+      'Press Cmd+Shift+2, drag a region, press Esc. An animated GIF of that region lands on your clipboard, ready to paste into Claude or any AI chat so your agent can see what moved.',
     accent: '#ff4436',
     emoji: '💨',
     icon: poofIcon,
     site: 'https://github.com/alfital2/poof/releases/latest/download/Poof.app.zip',
     external: true,
-    bullets: ['One hotkey, no window', 'Straight to clipboard', 'No files left behind', 'Screen Recording only'],
+    bullets: ['Paste into any AI chat', 'One hotkey, no window', 'Straight to clipboard', 'Screen Recording only'],
   },
 ]
