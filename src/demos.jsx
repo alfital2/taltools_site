@@ -545,8 +545,8 @@ export function PoofDemo({ tone = 'light', className = '' }) {
   const caption =
     phase === 'selecting' ? 'Drag on the preview to draw a region.'
     : phase === 'recording' ? 'Recording. Press Esc to stop.'
-    : phase === 'done' ? 'The GIF is on your clipboard, ready to paste.'
-    : 'Grab a region, press Esc, the GIF poofs onto your clipboard.'
+    : phase === 'done' ? 'Dropped into your agent - it reads every frame.'
+    : 'Grab a region, press Esc, then drag it into your agent.'
 
   return (
     <div className={className}>
@@ -599,10 +599,13 @@ export function PoofDemo({ tone = 'light', className = '' }) {
               initial={{ scale: 0.7, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="pointer-events-none absolute inset-0 flex items-center justify-center"
+              className="pointer-events-none absolute inset-0 flex items-center justify-center px-4"
             >
-              <div className="rounded-lg bg-black/80 px-3 py-2 text-sm font-semibold text-white">
-                GIF copied to clipboard
+              <div className="w-full max-w-[15rem] rounded-lg bg-black/85 px-3 py-2 text-left shadow-lg">
+                <div className="font-mono text-[11px] leading-snug text-white/90">
+                  for context, view this gif file at{' '}
+                  <span className="text-white/45">~/…/poof.gif</span>
+                </div>
               </div>
             </motion.div>
           )}

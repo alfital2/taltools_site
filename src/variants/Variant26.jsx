@@ -275,7 +275,7 @@ function AppTrio() {
   return (
     <div
       role="img"
-      aria-label="Four little tools: Natcho, FlicKey, Tally and Guitar Studio"
+      aria-label="Five little tools: Natcho, FlicKey, Tally, Guitar Studio and Poof"
       style={{
         display: 'flex',
         justifyContent: 'center',
@@ -339,6 +339,17 @@ function AppTrio() {
           d="M14 5 C18.4 5 21 7.6 21 11.2 C21 15.8 16.6 20.4 14 22 C11.4 20.4 7 15.8 7 11.2 C7 7.6 9.6 5 14 5 Z"
           fill="#f0b429"
         />
+      </svg>
+
+      {/* Poof - a little puff of smoke */}
+      <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
+        <g fill="#ff4436">
+          <circle cx="9.5" cy="16" r="5" />
+          <circle cx="17.5" cy="16" r="5.5" />
+          <circle cx="13" cy="12" r="5.2" />
+          <circle cx="20" cy="13.5" r="3.8" />
+          <rect x="7.5" y="14.5" width="14" height="6" rx="3" />
+        </g>
       </svg>
     </div>
   )

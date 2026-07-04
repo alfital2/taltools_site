@@ -61,14 +61,14 @@ export const APPS = [
   {
     id: 'poof',
     name: 'Poof',
-    tagline: 'Show your AI agent a video.',
+    tagline: 'Show your coding agent what moved.',
     blurb:
-      'Press Cmd+Shift+2, drag a region, press Esc. An animated GIF of that region lands on your clipboard, ready to paste into Claude or any AI chat so your agent can see what moved.',
+      'Press Cmd+Shift+2, drag a region, press Esc. Then drag the clip into Claude Code, Cursor, or any file-reading agent - it drops a note pointing at the recording, and your agent reads every frame instead of one flat screenshot.',
     accent: '#ff4436',
     emoji: '💨',
     icon: poofIcon,
     site: 'https://github.com/alfital2/poof/releases/latest/download/Poof.app.zip',
     external: true,
-    bullets: ['Paste into any AI chat', 'One hotkey, no window', 'Straight to clipboard', 'Screen Recording only'],
+    bullets: ['Your agent reads every frame', 'Perfect for showing UI and interactions', 'One hotkey, no window', 'Keeps a GIF for humans too'],
   },
 ]
