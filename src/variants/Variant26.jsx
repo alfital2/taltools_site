@@ -268,89 +268,105 @@ function GooglyWordmark({ reduced }) {
   )
 }
 
-// The three apps, drawn as their own silhouettes rather than plain dots:
-// Natcho - a tortilla-chip triangle · FlicKey - a keyboard keycap ·
-// Tally - a progress ring. A quiet signature that the lab holds three tools.
+// The five apps, drawn as their own silhouettes rather than plain dots, each a
+// button that jumps to its scene with a playful name tooltip on hover:
+// Natcho - tortilla-chip triangle · FlicKey - keycap · Tally - progress ring ·
+// Guitar Studio - a pick · Poof - a puff of smoke.
+function TrioGlyph({ id, name, children }) {
+  const go = () => {
+    const el = document.getElementById(`app-${id}`)
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+  return (
+    <button
+      type="button"
+      onClick={go}
+      aria-label={`Jump to ${name}`}
+      className="group relative grid h-9 w-9 cursor-pointer place-items-center rounded-full border-0 bg-transparent p-0 transition-transform duration-200 hover:-translate-y-1 active:translate-y-0"
+    >
+      {children}
+      <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 scale-90 whitespace-nowrap rounded-md bg-slate-900 px-2 py-1 text-[11px] font-semibold text-white opacity-0 shadow-lg transition-all duration-150 group-hover:scale-100 group-hover:opacity-100">
+        {name}
+        <span className="absolute left-1/2 top-full h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 rounded-[1px] bg-slate-900" />
+      </span>
+    </button>
+  )
+}
+
 function AppTrio() {
   return (
     <div
-      role="img"
-      aria-label="Five little tools: Natcho, FlicKey, Tally, Guitar Studio and Poof"
+      role="group"
+      aria-label="Jump to a tool: Natcho, FlicKey, Tally, Guitar Studio or Poof"
       style={{
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: 22,
+        gap: 12,
         marginTop: 26,
       }}
     >
-      {/* Natcho - rounded tortilla-chip triangle */}
-      <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
-        <polygon
-          points="14,5.5 23.5,22 4.5,22"
-          fill="#ffb703"
-          stroke="#ffb703"
-          strokeWidth="3.6"
-          strokeLinejoin="round"
-        />
-      </svg>
+      <TrioGlyph id="natcho" name="Notch? Nacho problem.">
+        {/* Natcho - rounded tortilla-chip triangle */}
+        <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
+          <polygon
+            points="14,5.5 23.5,22 4.5,22"
+            fill="#ffb703"
+            stroke="#ffb703"
+            strokeWidth="3.6"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </TrioGlyph>
 
-      {/* FlicKey - a keyboard keycap */}
-      <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
-        <rect x="4.5" y="4.5" width="19" height="19" rx="6" fill="#7c5cff" />
-        <rect
-          x="7.4"
-          y="6.6"
-          width="13.2"
-          height="12.4"
-          rx="4"
-          fill="#ffffff"
-          fillOpacity="0.24"
-        />
-      </svg>
+      <TrioGlyph id="flickey" name="FlicKey">
+        {/* FlicKey - a keyboard keycap */}
+        <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
+          <rect x="4.5" y="4.5" width="19" height="19" rx="6" fill="#7c5cff" />
+          <rect x="7.4" y="6.6" width="13.2" height="12.4" rx="4" fill="#ffffff" fillOpacity="0.24" />
+        </svg>
+      </TrioGlyph>
 
-      {/* Tally - a progress ring */}
-      <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
-        <circle
-          cx="14"
-          cy="14"
-          r="8.6"
-          fill="none"
-          stroke="#2ec4b6"
-          strokeOpacity="0.28"
-          strokeWidth="3.4"
-        />
-        <circle
-          cx="14"
-          cy="14"
-          r="8.6"
-          fill="none"
-          stroke="#2ec4b6"
-          strokeWidth="3.4"
-          strokeLinecap="round"
-          strokeDasharray="17 54"
-          transform="rotate(-90 14 14)"
-        />
-      </svg>
+      <TrioGlyph id="tally" name="Tally">
+        {/* Tally - a progress ring */}
+        <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
+          <circle cx="14" cy="14" r="8.6" fill="none" stroke="#2ec4b6" strokeOpacity="0.28" strokeWidth="3.4" />
+          <circle
+            cx="14"
+            cy="14"
+            r="8.6"
+            fill="none"
+            stroke="#2ec4b6"
+            strokeWidth="3.4"
+            strokeLinecap="round"
+            strokeDasharray="17 54"
+            transform="rotate(-90 14 14)"
+          />
+        </svg>
+      </TrioGlyph>
 
-      {/* Guitar Studio - a guitar pick */}
-      <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
-        <path
-          d="M14 5 C18.4 5 21 7.6 21 11.2 C21 15.8 16.6 20.4 14 22 C11.4 20.4 7 15.8 7 11.2 C7 7.6 9.6 5 14 5 Z"
-          fill="#f0b429"
-        />
-      </svg>
+      <TrioGlyph id="guitar" name="Guitar Studio">
+        {/* Guitar Studio - a guitar pick */}
+        <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
+          <path
+            d="M14 5 C18.4 5 21 7.6 21 11.2 C21 15.8 16.6 20.4 14 22 C11.4 20.4 7 15.8 7 11.2 C7 7.6 9.6 5 14 5 Z"
+            fill="#f0b429"
+          />
+        </svg>
+      </TrioGlyph>
 
-      {/* Poof - a little puff of smoke */}
-      <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
-        <g fill="#ff4436">
-          <circle cx="9.5" cy="16" r="5" />
-          <circle cx="17.5" cy="16" r="5.5" />
-          <circle cx="13" cy="12" r="5.2" />
-          <circle cx="20" cy="13.5" r="3.8" />
-          <rect x="7.5" y="14.5" width="14" height="6" rx="3" />
-        </g>
-      </svg>
+      <TrioGlyph id="poof" name="Poof!">
+        {/* Poof - a little puff of smoke */}
+        <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
+          <g fill="#ff4436">
+            <circle cx="9.5" cy="16" r="5" />
+            <circle cx="17.5" cy="16" r="5.5" />
+            <circle cx="13" cy="12" r="5.2" />
+            <circle cx="20" cy="13.5" r="3.8" />
+            <rect x="7.5" y="14.5" width="14" height="6" rx="3" />
+          </g>
+        </svg>
+      </TrioGlyph>
     </div>
   )
 }
@@ -402,6 +418,7 @@ function AppScene({ app, index, reduced }) {
 
   return (
     <section
+      id={`app-${app.id}`}
       className="dl-snap"
       style={{
         position: 'relative',
@@ -410,6 +427,7 @@ function AppScene({ app, index, reduced }) {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '6vh 5vw',
+        scrollMarginTop: '0px',
       }}
       aria-labelledby={`dl-${app.id}-title`}
     >
@@ -1153,7 +1171,7 @@ function CtaScene({ reduced, year }) {
             color: INK,
           }}
         >
-          Four tools.
+          Five tools.
           <br />
           One calmer setup.
         </h2>
