@@ -591,22 +591,50 @@ export function PoofDemo({ tone = 'light', className = '' }) {
           />
         )}
 
-        {/* copied confirmation */}
+        {/* handoff: the clip dropped into an AI chat (Claude) */}
         <AnimatePresence>
           {phase === 'done' && (
             <motion.div
               key="done"
-              initial={{ scale: 0.7, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="pointer-events-none absolute inset-0 flex items-center justify-center px-4"
+              className="pointer-events-none absolute inset-0 flex flex-col justify-center gap-2 px-4"
+              style={{ background: 'rgba(12,14,22,0.93)' }}
             >
-              <div className="w-full max-w-[15rem] rounded-lg bg-black/85 px-3 py-2 text-left shadow-lg">
-                <div className="font-mono text-[11px] leading-snug text-white/90">
+              <div className="flex items-center gap-1.5 text-[11px] font-semibold text-white/70">
+                <span
+                  className="grid h-4 w-4 place-items-center rounded-full text-[10px] leading-none text-white"
+                  style={{ background: accent }}
+                >
+                  ✳
+                </span>
+                Claude
+              </div>
+              <motion.div
+                initial={{ y: 16, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.15, type: 'spring', stiffness: 300, damping: 22 }}
+                className="flex items-center gap-2 self-end rounded-xl bg-white/12 px-2.5 py-2"
+                style={{ maxWidth: '88%' }}
+              >
+                <div
+                  className="h-8 w-11 shrink-0 rounded"
+                  style={{ background: 'linear-gradient(135deg,#7fb1ff,#9b7bff)' }}
+                />
+                <div className="font-mono text-[10px] leading-tight text-white/85">
                   for context, view this gif file at{' '}
                   <span className="text-white/45">~/…/poof.gif</span>
                 </div>
-              </div>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.7 }}
+                className="text-[10px] text-white/55"
+              >
+                Claude opens the file and reads every frame.
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
