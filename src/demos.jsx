@@ -530,7 +530,7 @@ export function PoofDemo({ tone = 'light', className = '' }) {
     if (fr.w < 26 || fr.h < 22) { setRect(null); return } // too small - keep selecting
     setRect(fr)
     setPhase('recording')
-    setTimeout(() => setPhase('done'), 1600)
+    // Stay recording until the user presses Stop (Esc) - no auto-stop.
   }
 
   const reset = () => { setRect(null); startRef.current = null }
