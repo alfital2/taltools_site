@@ -1,12 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Padoo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Padoo">
+  <!-- Traced from the shipping app icon (AppIcon1024-dark.png): a paw pad in
+       frosted glass over a dark navy grid. Coordinates are the measured ones,
+       so this stays in register with the PNG at any size. -->
   <defs>
-    <radialGradient id="g" cx="50%" cy="42%" r="72%">
-      <stop offset="0%" stop-color="#79aaff"/>
-      <stop offset="52%" stop-color="#3d6bff"/>
-      <stop offset="100%" stop-color="#1a135f"/>
-    </radialGradient>
+    <linearGradient id="navy" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d1c40"/>
+      <stop offset="100%" stop-color="#081430"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d3ddec" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#7e94b2" stop-opacity="0.92"/>
+    </linearGradient>
+    <pattern id="grid" width="96" height="96" patternUnits="userSpaceOnUse">
+      <path d="M96 0H0v96" fill="none" stroke="#8fa6c8" stroke-opacity="0.16" stroke-width="4"/>
+    </pattern>
+    <clipPath id="plate">
+      <rect x="0" y="0" width="1024" height="1024" rx="230"/>
+    </clipPath>
   </defs>
-  <rect width="64" height="64" rx="14" fill="url(#g)"/>
-  <circle cx="25" cy="30" r="7" fill="#fdfdff"/>
-  <circle cx="42" cy="30" r="7" fill="#fdfdff"/>
+
+  <g clip-path="url(#plate)">
+    <rect width="1024" height="1024" fill="url(#navy)"/>
+    <rect width="1024" height="1024" fill="url(#grid)"/>
+    <g fill="url(#glass)">
+      <circle cx="303" cy="296" r="105"/>
+      <circle cx="511" cy="223" r="105"/>
+      <circle cx="719" cy="296" r="105"/>
+      <rect x="193" y="441" width="637" height="431" rx="150"/>
+    </g>
+  </g>
 </svg>

@@ -272,7 +272,7 @@ function GooglyWordmark({ reduced }) {
 // The six apps, drawn as their own silhouettes rather than plain dots, each a
 // button that jumps to its scene with a playful name tooltip on hover:
 // Natcho - tortilla-chip triangle · FlicKey - keycap · Tally - progress ring ·
-// Guitar Studio - a pick · Poof - a puff of smoke · Padoo - the trackpad plate.
+// Guitar Studio - a pick · Poof - a puff of smoke · Padoo - a paw pad.
 function TrioGlyph({ id, name, children }) {
   const go = () => {
     const el = document.getElementById(`app-${id}`)
@@ -370,11 +370,16 @@ function AppTrio() {
       </TrioGlyph>
 
       <TrioGlyph id="padoo" name="Padoo">
-        {/* Padoo - the trackpad plate, wearing the app icon's two dots */}
+        {/* Padoo - the paw pad from the app icon: three beads over the plate.
+            Drawn in the icon's own 1024 coordinates and scaled down, so the
+            proportions stay in register with the shipping artwork. */}
         <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
-          <rect x="4" y="5.5" width="20" height="17" rx="5" fill="#3d6bff" />
-          <circle cx="11" cy="14" r="2.7" fill="#ffffff" />
-          <circle cx="17" cy="14" r="2.7" fill="#ffffff" />
+          <g transform="translate(-2.29 -1.76) scale(0.0318)" fill="#3d6bff">
+            <circle cx="303" cy="296" r="105" />
+            <circle cx="511" cy="223" r="105" />
+            <circle cx="719" cy="296" r="105" />
+            <rect x="193" y="441" width="637" height="431" rx="150" />
+          </g>
         </svg>
       </TrioGlyph>
     </div>
