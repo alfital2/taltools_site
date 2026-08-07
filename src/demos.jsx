@@ -654,4 +654,264 @@ export function PoofDemo({ tone = 'light', className = '' }) {
   )
 }
 
-export const DEMOS = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo, guitar: GuitarStudioDemo, poof: PoofDemo }
+/* ====================  PADOO  ====================
+ * The phone's glass drives the Mac's cursor. Drag on the pad and the cursor
+ * follows; release and it clicks. Flip to Deck and the pad becomes the Mac's
+ * Dock as glass keys — pressing one brings that app forward, exactly like the
+ * real thing reads the Dock as its source of truth. Until the visitor takes
+ * over, the cursor walks a short loop by itself so the scene isn't dead.
+ */
+const PADOO_BLUE = '#3d6bff'
+const PADOO_DOCK = [
+  { name: 'Finder', color: '#4a9eff' },
+  { name: 'Notes', color: '#ffd166' },
+  { name: 'Mail', color: '#7bd389' },
+  { name: 'Music', color: '#ff8fab' },
+  { name: 'Code', color: '#a5b4fc' },
+  { name: 'Photos', color: '#5eead4' },
+]
+const PADOO_WALK = [
+  { x: 28, y: 62 },
+  { x: 56, y: 34 },
+  { x: 44, y: 54 },
+  { x: 76, y: 44 },
+  { x: 58, y: 76 },
+]
+
+export function PadooDemo({ tone = 'light', className = '' }) {
+  const [mode, setMode] = useState('pad') // 'pad' | 'deck'
+  const [pos, setPos] = useState(PADOO_WALK[0])
+  const [ripple, setRipple] = useState(null)
+  const [front, setFront] = useState(0)
+  const [taken, setTaken] = useState(false)
+  const padRef = useRef(null)
+  const dragging = useRef(false)
+  const dark = tone === 'dark'
+
+  // gentle auto-walk until the visitor drags on the glass themselves
+  useEffect(() => {
+    if (taken || mode !== 'pad') return
+    let i = 0
+    const id = setInterval(() => {
+      i = (i + 1) % PADOO_WALK.length
+      setPos(PADOO_WALK[i])
+    }, 1500)
+    return () => clearInterval(id)
+  }, [taken, mode])
+
+  const toCursor = (e) => {
+    const r = padRef.current?.getBoundingClientRect()
+    if (!r) return null
+    return {
+      x: Math.max(3, Math.min(96, ((e.clientX - r.left) / r.width) * 100)),
+      y: Math.max(8, Math.min(90, ((e.clientY - r.top) / r.height) * 100)),
+    }
+  }
+
+  const onDown = (e) => {
+    dragging.current = true
+    setTaken(true)
+    e.currentTarget.setPointerCapture?.(e.pointerId)
+    const p = toCursor(e)
+    if (p) setPos(p)
+  }
+  const onMove = (e) => {
+    if (!dragging.current) return
+    const p = toCursor(e)
+    if (p) setPos(p)
+  }
+  const onUp = () => {
+    if (!dragging.current) return
+    dragging.current = false
+    const id = Math.random()
+    setRipple({ ...pos, id })
+    setTimeout(() => setRipple((r) => (r && r.id === id ? null : r)), 520)
+  }
+
+  const btn = (active) =>
+    `cursor-pointer rounded-lg px-4 py-2 text-sm font-bold transition-transform hover:-translate-y-0.5 ${
+      active
+        ? 'text-white shadow-sm'
+        : dark
+        ? 'border border-white/25 bg-white/10 text-white'
+        : 'border border-black/15 bg-white text-slate-900'
+    }`
+
+  return (
+    <div className={className}>
+      {/* the Mac */}
+      <div
+        className="relative mx-auto aspect-[16/10] w-full max-w-sm overflow-hidden rounded-lg ring-1 ring-black/25"
+        style={MAC_WALLPAPER}
+      >
+        <div className="absolute inset-x-0 top-0 z-10 flex h-5 items-center justify-between bg-black/25 px-2 text-[8px] font-semibold text-white">
+          <span className="flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-white" />
+            {PADOO_DOCK[front].name}
+            <span className="opacity-70">File</span>
+            <span className="opacity-70">Edit</span>
+          </span>
+          <span className="flex items-center gap-1.5">
+            <WifiGlyph />
+            <span>9:41</span>
+          </span>
+        </div>
+
+        {/* the frontmost app's window */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={front}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.22 }}
+            className="absolute left-[12%] top-[26%] h-[46%] w-[52%] overflow-hidden rounded-md bg-white/90 shadow-lg"
+          >
+            <div
+              className="flex h-4 items-center gap-1 px-2"
+              style={{ background: PADOO_DOCK[front].color + '33' }}
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-[#ff5f57]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[#febc2e]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[#28c840]" />
+              <span className="ml-1 text-[7px] font-bold text-slate-600">{PADOO_DOCK[front].name}</span>
+            </div>
+            <div className="space-y-1.5 p-2">
+              <span className="block h-1.5 w-full rounded bg-slate-900/10" />
+              <span className="block h-1.5 w-3/4 rounded bg-slate-900/10" />
+              <span className="block h-1.5 w-1/2 rounded bg-slate-900/10" />
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* the Dock */}
+        <div className="absolute bottom-1 left-1/2 z-10 flex -translate-x-1/2 gap-1 rounded-lg bg-white/25 px-1.5 py-1 backdrop-blur-sm">
+          {PADOO_DOCK.map((d, i) => (
+            <span
+              key={d.name}
+              className="block h-3.5 w-3.5 rounded transition-transform"
+              style={{
+                background: d.color,
+                transform: i === front ? 'translateY(-2px) scale(1.12)' : 'none',
+                boxShadow: i === front ? '0 3px 8px rgba(0,0,0,.35)' : 'none',
+              }}
+            />
+          ))}
+        </div>
+
+        {/* the cursor Padoo is driving */}
+        <motion.span
+          className="absolute z-20 block h-3.5 w-3.5"
+          animate={{ left: `${pos.x}%`, top: `${pos.y}%` }}
+          transition={{ type: 'spring', stiffness: 460, damping: 36 }}
+          style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,.5))' }}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden>
+            <path
+              d="M4 2 L18 13 L11.4 13.4 L14.6 20.4 L11.6 21.8 L8.4 14.8 L4 19 Z"
+              fill="#fff"
+              stroke="#0d1230"
+              strokeWidth="1.3"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </motion.span>
+
+        <AnimatePresence>
+          {ripple && (
+            <motion.span
+              key={ripple.id}
+              initial={{ opacity: 0.75, scale: 0.3 }}
+              animate={{ opacity: 0, scale: 1.7 }}
+              transition={{ duration: 0.5 }}
+              className="pointer-events-none absolute z-10 block h-8 w-8 rounded-full border-2 border-white"
+              style={{ left: `${ripple.x}%`, top: `${ripple.y}%`, marginLeft: -16, marginTop: -16 }}
+            />
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* the phone */}
+      <div className="mt-4 flex justify-center">
+        <div
+          className="w-[132px] rounded-[20px] p-1.5 shadow-xl ring-1 ring-white/20"
+          style={{ background: 'linear-gradient(165deg,#101736,#0a0f24)' }}
+        >
+          {mode === 'pad' ? (
+            <div
+              ref={padRef}
+              onPointerDown={onDown}
+              onPointerMove={onMove}
+              onPointerUp={onUp}
+              onPointerCancel={onUp}
+              className="relative aspect-[1/1.9] w-full touch-none cursor-grab overflow-hidden rounded-[15px] active:cursor-grabbing"
+              style={{ background: 'radial-gradient(120% 90% at 50% 12%, #6b9dff, #1a135f 82%)' }}
+            >
+              <motion.span
+                className="absolute block h-6 w-6 rounded-full"
+                animate={{ left: `${pos.x}%`, top: `${pos.y}%` }}
+                transition={{ type: 'spring', stiffness: 460, damping: 36 }}
+                style={{
+                  marginLeft: -12,
+                  marginTop: -12,
+                  background:
+                    'radial-gradient(circle at 34% 30%, rgba(255,255,255,.95), rgba(255,255,255,.4))',
+                  boxShadow: '0 0 0 6px rgba(255,255,255,.13)',
+                }}
+              />
+              <span className="absolute inset-x-0 bottom-2 text-center text-[8px] font-bold uppercase tracking-[0.16em] text-white/50">
+                {taken ? 'trackpad' : 'drag me'}
+              </span>
+            </div>
+          ) : (
+            <div
+              className="grid aspect-[1/1.9] w-full grid-cols-2 content-center gap-1.5 rounded-[15px] p-2"
+              style={{ background: 'radial-gradient(120% 90% at 50% 12%, #6b9dff, #1a135f 82%)' }}
+            >
+              {PADOO_DOCK.map((d, i) => (
+                <button
+                  key={d.name}
+                  onClick={() => setFront(i)}
+                  aria-label={`Bring ${d.name} forward`}
+                  className="cursor-pointer rounded-lg border-0 p-0 transition-transform active:scale-95"
+                  style={{
+                    aspectRatio: '1',
+                    background: `linear-gradient(160deg, ${d.color}, ${d.color}bb)`,
+                    boxShadow:
+                      i === front
+                        ? `0 0 0 2px rgba(255,255,255,.85), 0 4px 10px rgba(0,0,0,.4)`
+                        : '0 4px 10px rgba(0,0,0,.35)',
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-wrap justify-center gap-3">
+        <button
+          onClick={() => setMode('pad')}
+          className={btn(mode === 'pad')}
+          style={mode === 'pad' ? { background: PADOO_BLUE } : undefined}
+        >
+          Trackpad
+        </button>
+        <button
+          onClick={() => setMode('deck')}
+          className={btn(mode === 'deck')}
+          style={mode === 'deck' ? { background: PADOO_BLUE } : undefined}
+        >
+          Streamer deck
+        </button>
+      </div>
+      <p className={`mt-3 text-center text-xs ${dark ? 'text-white/60' : 'text-slate-500'}`}>
+        {mode === 'pad'
+          ? 'Drag on the glass to move the cursor, let go to click.'
+          : 'Every key is an app from the Mac’s Dock, in Dock order.'}
+      </p>
+    </div>
+  )
+}
+
+export const DEMOS = { natcho: NatchoDemo, flickey: FlicKeyDemo, tally: TallyDemo, guitar: GuitarStudioDemo, poof: PoofDemo, padoo: PadooDemo }

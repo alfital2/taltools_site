@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Padoo · Support</title>
+<meta name="description" content="Support for Padoo: requirements, how to pair an iPhone with a Mac, what to do when no Mac appears, why the cursor stutters, and how to get in touch." />
+<link rel="canonical" href="https://taltools.site/padoo/support.html" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<meta name="theme-color" content="#3d6bff" />
+<style>
+  :root{
+    --blue:#3d6bff; --blue-deep:#1e2a8c; --ink:#0d1220; --sub:#5b6478;
+    --bg:#f5f8ff; --card:#ffffff; --line:rgba(13,18,32,.10);
+    --disp:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Inter,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--disp);font-size:17px;line-height:1.68;
+    -webkit-font-smoothing:antialiased;min-height:100vh;position:relative}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(46vw 46vw at 10% -10%, rgba(112,167,255,.28), transparent 62%),
+      radial-gradient(44vw 44vw at 92% 100%, rgba(61,107,255,.14), transparent 66%);}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+  nav{position:sticky;top:0;z-index:50;background:rgba(245,248,255,.80);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(13,18,32,.06)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;letter-spacing:-.02em}
+  .brand img{width:28px;height:28px;border-radius:8px;display:block}
+  .back{font-size:15px;color:var(--sub);font-weight:500}
+  .back:hover{color:var(--ink)}
+
+  main{padding:44px 0 20px}
+  h1{font-size:clamp(32px,5.4vw,50px);line-height:1.06;letter-spacing:-.035em;font-weight:800}
+  .lede{font-size:19px;color:var(--sub);margin-top:16px}
+  h2{font-size:22px;font-weight:700;letter-spacing:-.02em;margin:42px 0 12px}
+  h3{font-size:17.5px;font-weight:700;letter-spacing:-.01em;margin:0 0 6px}
+  p{margin:12px 0;color:var(--sub)}
+  p strong,li strong{color:var(--ink);font-weight:600}
+  ul,ol{margin:12px 0 12px 22px;color:var(--sub)}
+  li{margin:8px 0}
+  a.inl{color:var(--blue-deep);font-weight:600}
+  a.inl:hover{text-decoration:underline}
+
+  .contact{background:linear-gradient(155deg,#1b2354,#0d1230);color:#fff;border-radius:22px;
+    padding:28px 30px;box-shadow:0 34px 70px -40px rgba(26,19,95,.7);margin:28px 0 8px;position:relative;overflow:hidden}
+  .contact::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(60% 80% at 88% 4%, rgba(112,167,255,.30), transparent 70%)}
+  .contact > *{position:relative;z-index:1}
+  .contact h2{margin:0 0 8px;font-size:24px;color:#fff}
+  .contact p{color:rgba(255,255,255,.76);margin:8px 0}
+  .contact a.mail{display:inline-flex;align-items:center;gap:9px;margin-top:14px;font-weight:600;font-size:16px;
+    background:rgba(255,255,255,.96);color:#0d1230;border-radius:999px;padding:12px 22px;
+    transition:transform .16s ease}
+  .contact a.mail:hover{transform:translateY(-2px)}
+
+  .req{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 4px}
+  .req span{font-size:14px;font-weight:600;color:var(--blue-deep);background:rgba(61,107,255,.09);
+    border:1px solid rgba(61,107,255,.18);border-radius:999px;padding:8px 16px}
+
+  .faq{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 24px;
+    box-shadow:0 22px 50px -34px rgba(26,19,95,.5);margin:14px 0}
+  .faq p:last-child{margin-bottom:0}
+
+  footer{padding:44px 0 60px;text-align:center;border-top:1px solid rgba(13,18,32,.07);margin-top:60px}
+  .foot-in{color:var(--sub);font-size:14.5px}
+  .foot-in a{color:var(--blue-deep);font-weight:600}
+  .foot-in a:hover{text-decoration:underline}
+  .foot-in .sep{opacity:.4;margin:0 8px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-in">
+    <a class="brand" href="index.html"><img src="icon-512.png" alt="" width="28" height="28" /> Padoo</a>
+    <a class="back" href="index.html">← Back to Padoo</a>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <h1>Support</h1>
+    <p class="lede">Padoo is made by one person. Email lands in a real inbox, and a person reads it — usually within a couple of days.</p>
+
+    <div class="contact">
+      <h2>Get in touch</h2>
+      <p>Bugs, questions, feature requests, or anything that behaved strangely. If it's a connection problem, say which Mac and iPhone you have and which network path the Mac app reports.</p>
+      <a class="mail" href="mailto:alfital2@gmail.com?subject=Padoo%20support">
+        alfital2@gmail.com
+      </a>
+    </div>
+
+    <h2>What you need</h2>
+    <div class="req">
+      <span>iPhone on iOS 18 or later</span>
+      <span>Mac on macOS 15 or later</span>
+      <span>The free Padoo Mac app</span>
+      <span>Both on the same network, or a cable</span>
+    </div>
+    <p>Padoo is two halves. The iPhone app on its own has nothing to talk to — the <a class="inl" href="index.html#mac">free Mac companion app</a> is what actually moves your cursor. It is a menu bar app: no Dock icon, no window.</p>
+
+    <h2>Setting it up</h2>
+    <ol>
+      <li>Download and open the <a class="inl" href="PadooMac.dmg">Padoo Mac app</a>. It appears in your menu bar.</li>
+      <li>Grant it <strong>Accessibility</strong> permission when it asks. Without it, macOS silently refuses to let any app move the cursor — Padoo would connect and simply appear dead.</li>
+      <li>Open Padoo on your iPhone. Your Mac appears in the list.</li>
+      <li>Tap it. The Mac shows a QR code; scan it with the phone. There is a typeable fallback code too.</li>
+      <li>That's it. From then on the two devices find each other by themselves.</li>
+    </ol>
+
+    <h2>Common questions</h2>
+
+    <div class="faq">
+      <h3>My iPhone doesn't see my Mac.</h3>
+      <p>Almost always one of three things: the Mac app isn't running (check the menu bar), the two devices are on different Wi-Fi networks or different bands of a mesh, or the iPhone's <strong>Local Network</strong> permission for Padoo is off — check Settings → Padoo. Plugging the phone in with a cable also works and skips the network entirely.</p>
+    </div>
+
+    <div class="faq">
+      <h3>It connects, but nothing moves.</h3>
+      <p>That is the Accessibility permission. Open System Settings → Privacy &amp; Security → Accessibility and switch Padoo on. If it is already on, switch it off and on again — macOS occasionally keeps a stale entry after an app update.</p>
+    </div>
+
+    <div class="faq">
+      <h3>The cursor stutters.</h3>
+      <p>Open Diagnostics in the Mac app's settings. It reads your Wi-Fi channel and says in plain language what it found — usually radio contention on a crowded channel, or Low Power Mode on the iPhone quietly halving how fast it can send. Pinning the connection to a cable rules the network out entirely.</p>
+    </div>
+
+    <div class="faq">
+      <h3>The pairing code stopped working.</h3>
+      <p>The pairing window expires after two minutes, on purpose. Ask the Mac for a new code and scan again.</p>
+    </div>
+
+    <div class="faq">
+      <h3>Can I pair more than one device?</h3>
+      <p>Yes — a Mac remembers as many devices as you like, but only one may be connected at a time. Any remembered device can be revoked from the Mac, which cuts off a live session immediately.</p>
+    </div>
+
+    <div class="faq">
+      <h3>The gestures don't feel right for my hands.</h3>
+      <p>Open the Gestures tab in the Mac app. How far a tap may travel before it stops being a tap, how long the tap-then-drag window stays open, how much travel commits a three-finger swipe — all of it is tunable. The defaults are an average, and nobody's hands are the average.</p>
+    </div>
+
+    <div class="faq">
+      <h3>What happens if the link dies while I'm dragging?</h3>
+      <p>The Mac releases every held button and modifier within about a second and a half. A synthetic button-press whose sender vanished would otherwise leave the Mac dragging forever, so every exit path releases first.</p>
+    </div>
+
+    <div class="faq">
+      <h3>Does Padoo cost anything, or need an account?</h3>
+      <p>No to both. The iPhone app is free, the Mac app is free, there is no account, no sign-in, and no purchase of any kind.</p>
+    </div>
+
+    <div class="faq">
+      <h3>How do I remove it?</h3>
+      <p>Delete the iPhone app as usual, and drag the Mac app to the Trash. To clear the pairing first, revoke the device from the Mac app's Connection settings. Nothing of yours is stored anywhere else — see the <a class="inl" href="privacy.html">privacy policy</a>.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    Padoo <span class="sep">·</span> part of <a href="/">TalTools</a>
+    <span class="sep">·</span> <a href="index.html">Home</a>
+    <span class="sep">·</span> <a href="privacy.html">Privacy</a>
+    <span class="sep">·</span> <a href="mailto:alfital2@gmail.com">alfital2@gmail.com</a>
+  </div>
+</footer>
+
+</body>
+</html>

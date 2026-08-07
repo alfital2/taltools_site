@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { APPS } from '../apps.js'
-import { NatchoDemo, FlicKeyDemo, TallyDemo, GuitarStudioDemo, PoofDemo } from '../demos.jsx'
+import { NatchoDemo, FlicKeyDemo, TallyDemo, GuitarStudioDemo, PoofDemo, PadooDemo } from '../demos.jsx'
 
 // ---------------------------------------------------------------------------
 // Variant 26 - "Daylight Glide"
@@ -37,6 +37,7 @@ const DEMO_BY_ID = {
   tally: TallyDemo,
   guitar: GuitarStudioDemo,
   poof: PoofDemo,
+  padoo: PadooDemo,
 }
 
 // ---------- color helpers (from Cupertino-Light) ----------
@@ -268,10 +269,10 @@ function GooglyWordmark({ reduced }) {
   )
 }
 
-// The five apps, drawn as their own silhouettes rather than plain dots, each a
+// The six apps, drawn as their own silhouettes rather than plain dots, each a
 // button that jumps to its scene with a playful name tooltip on hover:
 // Natcho - tortilla-chip triangle · FlicKey - keycap · Tally - progress ring ·
-// Guitar Studio - a pick · Poof - a puff of smoke.
+// Guitar Studio - a pick · Poof - a puff of smoke · Padoo - the trackpad plate.
 function TrioGlyph({ id, name, children }) {
   const go = () => {
     const el = document.getElementById(`app-${id}`)
@@ -297,7 +298,7 @@ function AppTrio() {
   return (
     <div
       role="group"
-      aria-label="Jump to a tool: Natcho, FlicKey, Tally, Guitar Studio or Poof"
+      aria-label="Jump to a tool: Natcho, FlicKey, Tally, Guitar Studio, Poof or Padoo"
       style={{
         display: 'flex',
         justifyContent: 'center',
@@ -367,6 +368,15 @@ function AppTrio() {
           </g>
         </svg>
       </TrioGlyph>
+
+      <TrioGlyph id="padoo" name="Padoo">
+        {/* Padoo - the trackpad plate, wearing the app icon's two dots */}
+        <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
+          <rect x="4" y="5.5" width="20" height="17" rx="5" fill="#3d6bff" />
+          <circle cx="11" cy="14" r="2.7" fill="#ffffff" />
+          <circle cx="17" cy="14" r="2.7" fill="#ffffff" />
+        </svg>
+      </TrioGlyph>
     </div>
   )
 }
@@ -411,6 +421,8 @@ function AppScene({ app, index, reduced }) {
       ? 'Web · Guitar'
       : app.id === 'poof'
       ? 'Menu bar · Capture'
+      : app.id === 'padoo'
+      ? 'iPhone + Mac · Input'
       : 'Menu bar · Display'
   const linkProps = app.external
     ? { target: '_blank', rel: 'noopener noreferrer' }
@@ -1171,7 +1183,7 @@ function CtaScene({ reduced, year }) {
             color: INK,
           }}
         >
-          Five tools.
+          Six tools.
           <br />
           One calmer setup.
         </h2>

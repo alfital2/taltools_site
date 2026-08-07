@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Padoo">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="42%" r="72%">
+      <stop offset="0%" stop-color="#79aaff"/>
+      <stop offset="52%" stop-color="#3d6bff"/>
+      <stop offset="100%" stop-color="#1a135f"/>
+    </radialGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#g)"/>
+  <circle cx="25" cy="30" r="7" fill="#fdfdff"/>
+  <circle cx="42" cy="30" r="7" fill="#fdfdff"/>
+</svg>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Padoo · Privacy Policy</title>
+<meta name="description" content="Padoo's privacy policy. Padoo collects nothing: no analytics, no account, no servers. Its only network traffic is between your iPhone and your own Mac." />
+<link rel="canonical" href="https://taltools.site/padoo/privacy.html" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<meta name="theme-color" content="#3d6bff" />
+<style>
+  :root{
+    --blue:#3d6bff; --blue-deep:#1e2a8c; --ink:#0d1220; --sub:#5b6478;
+    --bg:#f5f8ff; --card:#ffffff; --line:rgba(13,18,32,.10);
+    --disp:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Inter,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--disp);font-size:17px;line-height:1.68;
+    -webkit-font-smoothing:antialiased;min-height:100vh;position:relative}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(46vw 46vw at 10% -10%, rgba(112,167,255,.28), transparent 62%),
+      radial-gradient(44vw 44vw at 92% 100%, rgba(61,107,255,.14), transparent 66%);}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px}
+
+  nav{position:sticky;top:0;z-index:50;background:rgba(245,248,255,.80);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(13,18,32,.06)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;letter-spacing:-.02em}
+  .brand img{width:28px;height:28px;border-radius:8px;display:block}
+  .back{font-size:15px;color:var(--sub);font-weight:500}
+  .back:hover{color:var(--ink)}
+
+  main{padding:44px 0 20px}
+  h1{font-size:clamp(32px,5.4vw,50px);line-height:1.06;letter-spacing:-.035em;font-weight:800}
+  .updated{color:var(--sub);font-size:14.5px;margin:14px 0 26px}
+  .lede{font-size:19px;color:var(--sub)}
+  h2{font-size:22px;font-weight:700;letter-spacing:-.02em;margin:38px 0 10px}
+  p{margin:12px 0;color:var(--sub)}
+  p strong,li strong{color:var(--ink);font-weight:600}
+  ul{margin:12px 0 12px 22px;color:var(--sub)}
+  li{margin:8px 0}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 24px;
+    box-shadow:0 22px 50px -34px rgba(26,19,95,.5);margin:22px 0}
+  .box p:first-child{margin-top:0}
+  .box p:last-child{margin-bottom:0}
+  a.inl{color:var(--blue-deep);font-weight:600}
+  a.inl:hover{text-decoration:underline}
+  footer{padding:44px 0 60px;text-align:center;border-top:1px solid rgba(13,18,32,.07);margin-top:60px}
+  .foot-in{color:var(--sub);font-size:14.5px}
+  .foot-in a{color:var(--blue-deep);font-weight:600}
+  .foot-in a:hover{text-decoration:underline}
+  .foot-in .sep{opacity:.4;margin:0 8px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-in">
+    <a class="brand" href="index.html"><img src="icon-512.png" alt="" width="28" height="28" /> Padoo</a>
+    <a class="back" href="index.html">← Back to Padoo</a>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated: August 2026</p>
+
+    <p class="lede">Padoo lets an iPhone act as a trackpad, air pointer, and app deck for a Mac. It consists of an iPhone app and a companion Mac app.</p>
+
+    <h2>We collect nothing</h2>
+    <div class="box">
+      <p>Padoo does <strong>not</strong> collect, store, transmit, or share any personal data. There is no analytics, no tracking, no advertising, no crash reporting service, no account, and no sign-in.</p>
+      <p>Padoo has no server. There is no backend to send anything to.</p>
+    </div>
+
+    <h2>What travels between your devices</h2>
+    <p>Padoo's only network traffic is between your iPhone and your Mac, on your own local network or over a cable. That traffic carries:</p>
+    <ul>
+      <li>Finger positions, motion readings, and button presses — the input you are making, sent so your Mac can act on it.</li>
+      <li>The icons and names of the apps in your Mac's Dock, sent to the phone so the key deck can show them.</li>
+      <li>Timing information used to measure and correct latency.</li>
+    </ul>
+    <p>None of it is recorded, and none of it is sent anywhere else. It exists for as long as it takes to move your cursor.</p>
+
+    <h2>What stays on your devices</h2>
+    <ul>
+      <li><strong>Pairing keys</strong> are generated on your devices and stored in the system <strong>keychain</strong>. They never leave.</li>
+      <li><strong>Your settings</strong> — gesture thresholds, connection preference, deck layout, calibration — are stored locally on the device they belong to.</li>
+      <li><strong>A diagnostic log</strong> may be written locally to help you troubleshoot a connection. It stays on your device and is never transmitted. You can delete it at any time.</li>
+    </ul>
+
+    <h2>Permissions, and why</h2>
+    <ul>
+      <li><strong>Local Network</strong> (iPhone) — to find your Mac and send input to it. Used for nothing else.</li>
+      <li><strong>Camera</strong> (iPhone) — used only to scan the pairing code your Mac displays. No photo is taken, stored, or transmitted.</li>
+      <li><strong>Motion sensors</strong> (iPhone) — used only while the air pointer mode is active, to work out where you are aiming.</li>
+      <li><strong>Accessibility</strong> (Mac) — required for the Mac app to move your cursor and press your keys. This is the app's core function and it is the only thing the permission is used for.</li>
+    </ul>
+
+    <h2>Children</h2>
+    <p>Padoo is rated 4+ and collects no data from anyone, including children.</p>
+
+    <h2>Changes</h2>
+    <p>If this policy ever changes, the updated version will be posted here with a new date. Padoo collecting nothing is a design decision, not a temporary state.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about this policy: <a class="inl" href="mailto:alfital2@gmail.com">alfital2@gmail.com</a></p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    Padoo <span class="sep">·</span> part of <a href="/">TalTools</a>
+    <span class="sep">·</span> <a href="index.html">Home</a>
+    <span class="sep">·</span> <a href="support.html">Support</a>
+  </div>
+</footer>
+
+</body>
+</html>

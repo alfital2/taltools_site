@@ -4,6 +4,7 @@ import flickeyIcon from './assets/icons/flickey.png'
 import tallyIcon from './assets/icons/tally.png'
 import guitarIcon from './assets/icons/guitar.svg'
 import poofIcon from './assets/icons/poof.png'
+import padooIcon from './assets/icons/padoo.png'
 
 export const APPS = [
   {
@@ -70,5 +71,18 @@ export const APPS = [
     site: 'https://github.com/alfital2/poof/releases/latest/download/Poof.app.zip',
     external: true,
     bullets: ['Your agent reads every frame', 'Perfect for showing UI and interactions', 'One hotkey, no window', 'Keeps a GIF for humans too'],
+  },
+  {
+    id: 'padoo',
+    name: 'Padoo',
+    tagline: 'Your iPhone is the trackpad your Mac was missing.',
+    blurb:
+      'Turns an iPhone into a real pointing device for a Mac: a trackpad you can also aim like a remote, plus a grid of glass keys for your Dock apps. About two milliseconds from finger to cursor. Pair once, then the two just find each other.',
+    accent: '#3d6bff',
+    emoji: '📱',
+    icon: padooIcon,
+    site: '/padoo/',
+    external: false,
+    bullets: ['Trackpad, air pointer and key deck', '~2 ms finger to cursor', 'Cable, Wi-Fi Direct or your network', 'No account, no servers'],
   },
 ]
