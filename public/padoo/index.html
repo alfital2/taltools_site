@@ -13,12 +13,14 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 <meta name="theme-color" content="#3d6bff" />
+<link rel="stylesheet" href="engine.css" />
 <style>
   :root{
     --blue:#3d6bff; --blue-deep:#1e2a8c; --sky:#70a7ff; --ink-blue:#1a135f;
     --ink:#0d1220; --sub:#5b6478; --line:rgba(13,18,32,.10);
     --bg:#f5f8ff; --card:#ffffff;
     --disp:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Inter,system-ui,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
     --maxw:1060px;
     --shadow:0 26px 60px -30px rgba(26,19,95,.45);
     --shadow-lg:0 40px 90px -36px rgba(26,19,95,.55);
@@ -47,9 +49,6 @@
   .btn.ghost{background:rgba(255,255,255,.9);color:var(--ink);border-color:var(--line);
     box-shadow:0 14px 30px -20px rgba(26,19,95,.5)}
   .btn.ghost:hover{box-shadow:0 20px 40px -20px rgba(26,19,95,.55)}
-  /* the App Store chip before launch: it looks like a button but is not one */
-  .btn.soon{cursor:default;color:var(--sub);background:rgba(255,255,255,.62)}
-  .btn.soon:hover{transform:none;box-shadow:0 14px 30px -20px rgba(26,19,95,.5)}
   .btn .apple{width:16px;height:16px;fill:currentColor}
   .btn .dl{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 
@@ -77,65 +76,6 @@
   .fine span{white-space:nowrap}
   .fine .sep{opacity:.45;margin:0 8px}
 
-  /* hero stage: a Mac display + a phone, with the cursor and the finger in sync */
-  .stage{margin:56px auto 0;max-width:760px;position:relative}
-  .mac{position:relative;aspect-ratio:16/10;border-radius:18px;overflow:hidden;
-    background:linear-gradient(150deg,#2b3a8f,#5a86ff 46%,#8fb4ff 100%);
-    border:1px solid rgba(255,255,255,.35);box-shadow:var(--shadow-lg)}
-  .mac .bar{position:absolute;top:0;left:0;right:0;height:26px;background:rgba(255,255,255,.16);
-    display:flex;align-items:center;justify-content:space-between;padding:0 12px;
-    font-size:11px;font-weight:600;color:rgba(255,255,255,.92)}
-  .mac .bar .seg{display:flex;gap:12px;align-items:center}
-  .mac .bar .m{opacity:.72;font-weight:500}
-  .win{position:absolute;left:12%;top:26%;width:52%;height:48%;border-radius:12px;
-    background:rgba(255,255,255,.90);box-shadow:0 24px 44px -20px rgba(10,20,70,.6);overflow:hidden}
-  .win .tb{height:22px;background:rgba(13,18,32,.06);display:flex;align-items:center;gap:5px;padding:0 9px}
-  .win .tb i{width:8px;height:8px;border-radius:50%;background:#ff5f57;display:block}
-  .win .tb i:nth-child(2){background:#febc2e}
-  .win .tb i:nth-child(3){background:#28c840}
-  .win .rows{padding:12px 12px 0}
-  .win .rows u{display:block;height:7px;border-radius:4px;background:rgba(13,18,32,.10);margin-bottom:8px;text-decoration:none}
-  .win .rows u:nth-child(2){width:78%}
-  .win .rows u:nth-child(3){width:56%}
-  .win .rows u:nth-child(4){width:66%}
-  .dock{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:6px;
-    padding:5px 8px;border-radius:12px;background:rgba(255,255,255,.24);backdrop-filter:blur(6px)}
-  .dock b{width:20px;height:20px;border-radius:6px;display:block;background:rgba(255,255,255,.85)}
-  .dock b:nth-child(2){background:#ffd166}.dock b:nth-child(3){background:#7bd389}
-  .dock b:nth-child(4){background:#ff8fab}.dock b:nth-child(5){background:#a5b4fc}
-  .cursor{position:absolute;width:17px;height:17px;z-index:5;
-    filter:drop-shadow(0 2px 4px rgba(10,20,70,.5));animation:glide 7s cubic-bezier(.45,.05,.35,1) infinite}
-  .cursor svg{width:100%;height:100%;display:block}
-  @keyframes glide{
-    0%   {left:22%;top:62%}
-    22%  {left:52%;top:34%}
-    40%  {left:44%;top:52%}
-    62%  {left:74%;top:44%}
-    80%  {left:58%;top:78%}
-    100% {left:22%;top:62%}
-  }
-  .phone{position:absolute;right:-6px;bottom:-44px;width:132px;aspect-ratio:1/2.03;border-radius:22px;
-    background:linear-gradient(165deg,#101736,#0a0f24);padding:6px;box-shadow:var(--shadow-lg);
-    border:1px solid rgba(255,255,255,.16);transform:rotate(-7deg)}
-  .phone .glass{position:relative;width:100%;height:100%;border-radius:17px;overflow:hidden;
-    background:radial-gradient(120% 90% at 50% 12%, #6b9dff, #1a135f 82%)}
-  .phone .finger{position:absolute;width:26px;height:26px;border-radius:50%;
-    background:radial-gradient(circle at 34% 30%, rgba(255,255,255,.95), rgba(255,255,255,.42));
-    box-shadow:0 0 0 6px rgba(255,255,255,.14);animation:touch 7s cubic-bezier(.45,.05,.35,1) infinite}
-  @keyframes touch{
-    0%   {left:18%;top:56%}
-    22%  {left:56%;top:30%}
-    40%  {left:44%;top:47%}
-    62%  {left:74%;top:40%}
-    80%  {left:52%;top:72%}
-    100% {left:18%;top:56%}
-  }
-  .phone .hint{position:absolute;left:0;right:0;bottom:12px;text-align:center;font-size:9.5px;
-    letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:600}
-  @media(max-width:720px){.phone{width:104px;right:-4px;bottom:-32px}}
-  @media(max-width:520px){.phone{display:none}}
-  @media(prefers-reduced-motion:reduce){.cursor,.phone .finger{animation:none}}
-
   /* sections */
   section{padding:96px 0 0}
   .sh{text-align:center;max-width:640px;margin:0 auto 44px}
@@ -154,6 +94,11 @@
   .card ul{margin:14px 0 0;padding-left:18px;color:var(--sub);font-size:14.5px}
   .card li{margin:5px 0}
 
+  /* the try-it demo: a plain card frame around the interactive stage,
+     matching the rest of the page rather than a separate visual system */
+  .demo-frame{background:var(--card);border:1px solid var(--line);border-radius:26px;
+    padding:clamp(20px,4vw,40px);box-shadow:var(--shadow)}
+
   /* two-up rows */
   .rows2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
   @media(max-width:860px){.rows2{grid-template-columns:1fr}}
@@ -167,7 +112,7 @@
   .panel h2{font-size:clamp(26px,4.2vw,40px);letter-spacing:-.03em;line-height:1.1;font-weight:800}
   .panel p{margin-top:14px;color:rgba(255,255,255,.74);font-size:17px;max-width:620px}
   .panel .btn.ghost{background:rgba(255,255,255,.96);color:#0d1230;border-color:transparent}
-  .panel .reqs{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+  .panel .reqs{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px}
   .panel .reqs span{font-size:13.5px;font-weight:600;color:rgba(255,255,255,.86);
     background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:7px 14px}
 
@@ -179,10 +124,6 @@
   .chips span{font-size:14px;font-weight:600;color:var(--blue-deep);background:rgba(61,107,255,.09);
     border:1px solid rgba(61,107,255,.18);border-radius:999px;padding:8px 16px}
 
-  /* closing */
-  .close{text-align:center;padding:104px 0 40px}
-  .close h2{font-size:clamp(30px,5.4vw,56px);letter-spacing:-.035em;line-height:1.04;font-weight:800}
-  .close p{margin-top:14px;color:var(--sub);font-size:17px}
   footer{padding:44px 0 60px;text-align:center;border-top:1px solid rgba(13,18,32,.07);margin-top:70px}
   .foot-in{color:var(--sub);font-size:14.5px}
   .foot-in a{color:var(--blue-deep);font-weight:600}
@@ -196,6 +137,7 @@
   <div class="wrap nav-in">
     <a class="brand" href="#top"><img src="icon-512.png" alt="" width="28" height="28" /> Padoo</a>
     <div class="nav-r">
+      <a class="lnk" href="#try">Try it</a>
       <a class="lnk" href="#modes">What it does</a>
       <a class="lnk" href="#privacy">Privacy</a>
       <a class="lnk" href="support.html">Support</a>
@@ -207,50 +149,158 @@
 <div id="top"></div>
 <header>
   <div class="wrap">
-    <h1>Your iPhone is the trackpad<br /><span class="grad">your Mac was missing.</span></h1>
-    <p class="sub">Not a remote-desktop toy. This is a <b>real pointing device</b>, engineered around latency. Pair once by scanning a code. After that the two find each other and connect over whatever path is fastest: a cable, a direct phone-to-Mac Wi-Fi link, or your normal network.</p>
+    <h1>Your iPhone is your Mac's<br /><span class="grad">best external trackpad.</span></h1>
+    <p class="sub">Padoo is <b>the best external pointing device</b>, engineered around latency. Pair once by scanning a code, and it becomes a trackpad, an air pointer, or a streamer deck for your Mac's Dock - all in one piece of glass.</p>
     <div class="cta">
       <a class="btn" href="#mac">
         <svg class="dl" viewBox="0 0 24 24" aria-hidden><path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
         Get the free Mac app
       </a>
-      <!-- The iPhone app is not released yet, so this is deliberately NOT a link:
-           https://apps.apple.com/app/id6798790976 returns 404 until Apple approves it.
-           On launch day, swap this <span> for:
-           <a class="btn ghost" href="https://apps.apple.com/app/id6798790976" target="_blank" rel="noopener"> … </a> -->
-      <span class="btn ghost soon">
+      <!-- Deliberately the plain https://apps.apple.com/app/id6798790976 form,
+           with no storefront country or ?l= language segment: apps.apple.com
+           redirects that to whichever store and language the visitor is
+           actually in, where a hardcoded /il/...?l=he would not. -->
+      <a class="btn ghost" href="https://apps.apple.com/app/id6798790976" target="_blank" rel="noopener">
         <svg class="apple" viewBox="0 0 384 512" aria-hidden><path d="M318.7 268c-.3-37 16.4-65 50.1-85.6-18.9-27-47.5-41.9-85.1-44.8-35.7-2.8-74.8 20.9-89.1 20.9-15.1 0-49.7-19.9-76.9-19.9C71.2 138.9 16 178.9 16 260.4c0 24.1 4.4 49 13.2 74.6 11.8 33.9 54.4 117.1 98.8 115.7 23.2-.6 39.6-16.5 69.8-16.5 29.3 0 44.5 16.5 69.8 16.5 44.8-.6 83.4-76.2 94.6-110.2-60.1-28.3-56.9-82.9-56.9-84.7zM256.6 84.5c19.7-23.4 17.9-44.7 17.3-52.5-17.4 1-37.5 11.8-49 25.2-12.7 14.3-20.1 32-18.5 50.9 18.8 1.4 36.1-8.3 50.2-23.6z"/></svg>
-        iPhone app coming to the App Store
-      </span>
+        Get the iPhone app
+      </a>
     </div>
     <p class="fine">
-      <span>Free</span><span class="sep">·</span><span>iOS 18+ and macOS 15+</span><span class="sep">·</span><span>No account, no servers</span>
+      <span>3-day free trial, then one purchase</span><span class="sep">·</span><span>Mac app free</span><span class="sep">·</span><span>iOS 18+ and macOS 15+</span>
     </p>
+  </div>
+</header>
 
-    <div class="stage">
-      <div class="mac">
-        <div class="bar">
-          <div class="seg"><span>Finder</span><span class="m">File</span><span class="m">Edit</span><span class="m">View</span></div>
-          <div class="seg"><span class="m">100%</span><span>9:41</span></div>
+<section id="try">
+  <div class="wrap">
+    <div class="sh">
+      <h2>Try it.</h2>
+      <p>The phone below responds to a cursor or a finger the same way the app does on a real iPhone and Mac: the same acceleration curve, the same tap threshold, the same fifteen-key deck. Drag it, tap it, switch what it is.</p>
+    </div>
+    <div class="demo-frame">
+      <div class="desk" id="desk" data-mode="pad">
+
+        <!-- the Mac -->
+        <div class="mac" id="macStage">
+          <div class="menubar">
+            <div class="mb-l">
+              <svg class="mb-apple" viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268c-.3-37 16.4-65 50.1-85.6-18.9-27-47.5-41.9-85.1-44.8-35.7-2.8-74.8 20.9-89.1 20.9-15.1 0-49.7-19.9-76.9-19.9C71.2 138.9 16 178.9 16 260.4c0 24.1 4.4 49 13.2 74.6 11.8 33.9 54.4 117.1 98.8 115.7 23.2-.6 39.6-16.5 69.8-16.5 29.3 0 44.5 16.5 69.8 16.5 44.8-.6 83.4-76.2 94.6-110.2-60.1-28.3-56.9-82.9-56.9-84.7zM256.6 84.5c19.7-23.4 17.9-44.7 17.3-52.5-17.4 1-37.5 11.8-49 25.2-12.7 14.3-20.1 32-18.5 50.9 18.8 1.4 36.1-8.3 50.2-23.6z"/></svg>
+              <b id="mbApp">Finder</b>
+              <span class="menus"><span>File</span><span>Edit</span><span>View</span><span>Window</span></span>
+            </div>
+            <div class="mb-r">
+              <svg id="mbVol" viewBox="0 0 24 24" aria-hidden="true" fill="#fff"><path d="M4 9h3.5L12 5v14l-4.5-4H4z"/><path d="M15.5 8.8a4.5 4.5 0 0 1 0 6.4" stroke="#fff" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg>
+              <span class="mb-clock" id="mbClock">Thu 28 Aug  09:41</span>
+            </div>
+          </div>
+
+          <div class="screen" id="screen">
+            <div class="spacewrap" id="spaceWrap">
+              <div class="ghostwin gw1"></div>
+              <div class="ghostwin gw2"></div>
+            </div>
+            <div class="appwin" id="appWin">
+              <div class="win-bar"><i></i><i></i><i></i><span class="wt" id="winTitle">Finder</span></div>
+              <div class="win-body" id="winBody"></div>
+            </div>
+
+            <div class="expose" id="expose" aria-hidden="true">
+              <span class="exlab" id="exLabel">Mission Control</span>
+              <div class="exgrid" id="exGrid"></div>
+            </div>
+
+            <div class="hud" id="hud" aria-hidden="true">
+              <span id="hudIcon"></span>
+              <span class="hb"><i id="hudFill"></i></span>
+            </div>
+          </div>
+
+          <div class="dock" id="dock"></div>
+
+          <!-- above the dock on purpose: the cursor has to be able to reach it -->
+          <span class="halo" id="halo"></span>
+          <span class="clickring" id="clickRing"></span>
+          <span class="mcursor" id="cursor">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 2 L18 13 L11.4 13.4 L14.6 20.4 L11.6 21.8 L8.4 14.8 L4 19 Z" fill="#fff" stroke="#0B1430" stroke-width="1.2" stroke-linejoin="round"/></svg>
+          </span>
         </div>
-        <div class="win">
-          <div class="tb"><i></i><i></i><i></i></div>
-          <div class="rows"><u></u><u></u><u></u><u></u></div>
+
+        <!-- the phone -->
+        <div class="phone" id="phone">
+          <div class="pglass">
+            <span class="notch"></span>
+
+            <div class="pchrome">
+              <span class="macchip">Tal's MacBook</span>
+              <div class="switcher" id="switcher" role="button" tabindex="0" aria-label="Switch surface">
+                <span class="swcircle" id="swCircle"></span>
+              </div>
+              <span class="appchip" id="appChip"><span class="adot">F</span><span id="appChipName">Finder</span></span>
+            </div>
+
+            <div class="strip" id="strip"></div>
+
+            <div class="psurface" id="surface">
+              <div class="sf sf-pad on" id="sfPad">
+                <p class="padhint" id="padHint">Drag to move · tap to click<br />scroll wheel to scroll</p>
+                <span class="padtouch" id="padTouch"></span>
+              </div>
+
+              <div class="sf sf-pointer" id="sfPointer">
+                <div class="ptitle"><b>Point at your Mac</b><span>Tap the middle to click.</span></div>
+                <div class="pcluster">
+                  <button class="pside" id="pDrag" type="button">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11m0-1.5a1.5 1.5 0 0 1 3 0V12m0-1a1.5 1.5 0 0 1 3 0v4.5a5.5 5.5 0 0 1-5.5 5.5H11a5 5 0 0 1-5-5v-4a1.5 1.5 0 0 1 3 0"/></svg>
+                    <span id="pDragLabel">Drag</span>
+                  </button>
+                  <div class="wheel" id="wheel">
+                    <span class="wq up" data-cmd="missionControl"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="6" rx="1.6"/><rect x="14" y="4" width="7" height="6" rx="1.6"/><rect x="8" y="14" width="8" height="6" rx="1.6"/></svg>Mission</span>
+                    <span class="wq left" data-cmd="spaceLeft"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>Space</span>
+                    <span class="wq right" data-cmd="spaceRight"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>Space</span>
+                    <span class="wq down" data-cmd="applicationWindows"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="11" rx="2"/><path d="M9 20h6"/></svg>Windows</span>
+                    <span class="hubc">Click</span>
+                  </div>
+                  <button class="pside" id="pRight" type="button">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3l13 9-5.6 1.2 2.7 6-2.6 1.1-2.7-6L5 18z"/></svg>
+                    <span>Right</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="sf sf-deck" id="sfDeck">
+                <div class="dslider" id="sBright" role="slider" aria-label="Brightness" tabindex="0">
+                  <span class="fill" id="sBrightFill"></span>
+                  <span class="sic hi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.4"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M19.4 4.6l-2.1 2.1M6.7 17.3l-2.1 2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></span>
+                  <span class="sic lo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/></svg></span>
+                </div>
+                <div class="dplate" id="dPlate"></div>
+                <div class="dslider" id="sVol" role="slider" aria-label="Volume" tabindex="0">
+                  <span class="fill" id="sVolFill"></span>
+                  <span class="sic hi"><svg viewBox="0 0 24 24"><path d="M4 9h3.5L12 5v14l-4.5-4H4z"/><path d="M15.2 8.6a4.6 4.6 0 0 1 0 6.8M17.6 6a8 8 0 0 1 0 12" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg></span>
+                  <span class="sic lo"><svg viewBox="0 0 24 24"><path d="M4 9h3.5L12 5v14l-4.5-4H4z"/></svg></span>
+                </div>
+                <span class="dgrip" id="dGrip"></span>
+              </div>
+
+              <button class="drawer" id="drawer" type="button" aria-label="Open app drawer">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7.4" height="7.4" rx="2"/><rect x="13.6" y="3" width="7.4" height="7.4" rx="2"/><rect x="3" y="13.6" width="7.4" height="7.4" rx="2"/><rect x="13.6" y="13.6" width="7.4" height="7.4" rx="2"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="dock"><b></b><b></b><b></b><b></b><b></b></div>
-        <span class="cursor">
-          <svg viewBox="0 0 24 24" aria-hidden><path d="M4 2 L18 13 L11.4 13.4 L14.6 20.4 L11.6 21.8 L8.4 14.8 L4 19 Z" fill="#fff" stroke="#0d1230" stroke-width="1.2" stroke-linejoin="round"/></svg>
-        </span>
       </div>
-      <div class="phone" aria-hidden>
-        <div class="glass">
-          <span class="finger"></span>
-          <span class="hint">trackpad</span>
-        </div>
+
+      <p class="coach" id="coach">Drag on the phone's glass - the cursor follows.</p>
+      <div class="readout">
+        <span class="rchip"><span class="live"></span> Wi-Fi Direct</span>
+        <span class="rchip">p50 <b id="roP50">2.4</b> ms</span>
+        <span class="rchip">p99 <b id="roP99">10.3</b> ms</span>
+        <span class="rchip">frames <b id="roFrames">0</b></span>
+        <span class="rchip">gain <b id="roGain">0.45</b>×</span>
       </div>
     </div>
   </div>
-</header>
+</section>
 
 <section id="modes">
   <div class="wrap">
@@ -276,15 +326,16 @@
         <p>Point the phone at the screen and the cursor follows, like a remote. A different mechanism, not the trackpad with another sensor: it sends an absolute position, so there is no acceleration curve between you and the screen.</p>
         <ul>
           <li>Relative mode works instantly</li>
-          <li>Optional calibrated mode maps your display</li>
+          <li>Nothing to calibrate - it tracks rotation, not position</li>
           <li>A halo on the Mac shows what is being tracked</li>
         </ul>
       </div>
       <div class="card">
         <div class="ic"><svg viewBox="0 0 24 24" aria-hidden><rect x="3" y="3.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3.5" width="7.5" height="7.5" rx="2"/><rect x="3" y="13" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13" width="7.5" height="7.5" rx="2"/></svg></div>
         <h3>Streamer deck</h3>
-        <p>A grid of glass keys, one per app in your Mac's Dock, in Dock order, with the real icons. Press a key and that app comes forward. The Mac reads its own Dock as the source of truth, so the deck always matches what you actually keep.</p>
+        <p>A grid of glass keys for the apps you choose, with the real icons. Press a key and that app comes forward. It's your layout - set it up once on the Mac, not a blind mirror of your Dock.</p>
         <ul>
+          <li>Choose and reorder the apps yourself</li>
           <li>Brightness and volume as live sliders</li>
           <li>Keys are modelled as glass, not pictures of buttons</li>
         </ul>
@@ -293,22 +344,27 @@
   </div>
 </section>
 
-<section id="link">
+<section id="details">
   <div class="wrap">
     <div class="sh">
-      <h2>Built for the link, not around it.</h2>
-      <p>Wireless input fails in specific, diagnosable ways. Padoo treats that as part of the product rather than as your problem.</p>
+      <h2>How it behaves.</h2>
+      <p>Three things that show up the moment you use it.</p>
     </div>
-    <div class="rows2">
+    <div class="grid">
       <div class="card">
         <div class="ic"><svg viewBox="0 0 24 24" aria-hidden><path d="M13 2.5 4.5 13.5H11l-1 8 9.5-11H13z"/></svg></div>
         <h3>About two milliseconds</h3>
-        <p>Measured finger to posted cursor event: a median of about 2.4 ms over a direct phone-to-Mac link, and under a millisecond over a cable. The connection picks the fastest available path by itself and moves between them without you thinking about it. The phone sends at 120 Hz on ProMotion devices.</p>
+        <p>Two milliseconds from finger to cursor. The phone sends at 120 Hz, and always picks the fastest path itself - cable, direct link, or your router.</p>
       </div>
       <div class="card">
-        <div class="ic"><svg viewBox="0 0 24 24" aria-hidden><path d="M12 21s7.5-4.2 7.5-10V5.6L12 3 4.5 5.6V11c0 5.8 7.5 10 7.5 10z"/><path d="M9.3 12.1l1.9 1.9 3.6-3.7"/></svg></div>
-        <h3>A link doctor, and a safe landing</h3>
-        <p>It reads your Wi-Fi channel and tells you in plain language why the cursor stuttered: radio contention, or Low Power Mode quietly halving your capture rate. If the connection dies mid-drag, the Mac releases every held button within about a second and a half, instead of leaving you stuck holding a button you cannot see.</p>
+        <div class="ic"><svg viewBox="0 0 24 24" aria-hidden><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></div>
+        <h3>Feel</h3>
+        <p>Sound and haptic fire from one pattern, on one timeline, so a click lands as a single event instead of an echo. A strip key gets its own two-note rise, so your hand can tell a button from a click without looking.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" aria-hidden><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 13h.01M18 13h.01M9.5 13h5"/></svg></div>
+        <h3>Your shortcuts</h3>
+        <p>Padoo asks your Mac what a shortcut is actually bound to, then presses that - not Apple's default. Turn it off, and it presses nothing, instead of typing into whatever you had open.</p>
       </div>
     </div>
   </div>
@@ -343,20 +399,6 @@
   </div>
 </section>
 
-<section class="close">
-  <div class="wrap">
-    <h2>Pair once. Then forget it exists.</h2>
-    <p>Scan a code, and from then on the two devices just find each other.</p>
-    <div class="cta">
-      <a class="btn" href="#mac">
-        <svg class="dl" viewBox="0 0 24 24" aria-hidden><path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
-        Get the free Mac app
-      </a>
-      <a class="btn ghost" href="support.html">Questions? Support</a>
-    </div>
-  </div>
-</section>
-
 <footer>
   <div class="wrap foot-in">
     Padoo <span class="sep">·</span> part of <a href="/">TalTools</a>
@@ -366,5 +408,6 @@
   </div>
 </footer>
 
+<script src="engine.js"></script>
 </body>
 </html>
