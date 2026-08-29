@@ -36,15 +36,15 @@ export const APPS = [
   {
     id: 'tally',
     name: 'Tally',
-    tagline: 'Your Claude usage, at a glance.',
+    tagline: 'Claude + Codex usage, at a glance.',
     blurb:
-      'Watches your Claude.ai session and weekly limits from the menu bar, with reset countdowns and gentle heads-up nudges.',
+      'Tracks Claude and Codex limits, reset windows, and live coding sessions from the menu bar — with model switching and one-click terminal jumps.',
     accent: '#2ec4b6',
     emoji: '📊',
     icon: tallyIcon,
     site: 'https://tallyrate.site',
     external: true,
-    bullets: ['Session + weekly windows', 'Reset countdowns', 'Threshold notifications', 'Secure Keychain login'],
+    bullets: ['Claude, Codex, or both', 'Session + weekly limits', 'Live models + token totals', 'Private local authentication'],
   },
   {
     id: 'guitar',

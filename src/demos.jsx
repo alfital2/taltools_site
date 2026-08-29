@@ -263,6 +263,10 @@ export function TallyDemo({ className = '' }) {
           <MiniRing pct={session} />
           {Math.round(session)}%
         </span>
+        <span className="flex items-center gap-1" style={{ color: severity(weekly, '#ffffff') }}>
+          <MiniRing pct={weekly} />
+          {Math.round(weekly)}%
+        </span>
         <WifiGlyph />
         <BatteryGlyph />
         <span>9:41</span>
@@ -270,14 +274,15 @@ export function TallyDemo({ className = '' }) {
       <div className="relative">
         <div className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 rounded-[2px] border-l border-t border-white/10" style={{ background: 'rgba(22,24,44,0.96)' }} />
         <div className="rounded-2xl border border-white/10 p-5 shadow-lg" style={{ background: 'rgba(22,24,44,0.96)', backdropFilter: 'blur(10px)' }}>
+          <div className="mb-3 text-[11px] font-bold tracking-wide text-white/55">CLAUDE + CODEX</div>
           <div className="flex items-start justify-around gap-4">
             <TallyGauge pct={session} innerPct={sessionInner} label="session" reset="1h 55m" dot={T_CYAN} outerColor={severity(session, T_GREEN)} numberColor={severity(session, T_GREEN)} />
             <TallyGauge pct={weekly} innerPct={weeklyInner} label="weekly" reset="12h 25m" dot={T_CYAN} />
           </div>
-          <div className="mt-4 border-t border-white/10 pt-2 text-center text-[11px] font-semibold text-white/45">Plan: Max (5x) · Updated just now</div>
+          <div className="mt-4 border-t border-white/10 pt-2 text-center text-[11px] font-semibold text-white/45">Two providers · live limits · updated just now</div>
         </div>
       </div>
-      <p className="mt-4 text-center text-sm font-semibold text-white/55">Live - your usage fills as you work.</p>
+      <p className="mt-4 text-center text-sm font-semibold text-white/55">Claude and Codex, together in your menu bar.</p>
     </div>
   )
 }
