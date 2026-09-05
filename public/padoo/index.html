@@ -72,13 +72,6 @@
   .fine{margin-top:18px;font-size:14px;color:var(--sub)}
   .fine .sep{opacity:.45;margin:0 8px}
 
-  /* the price, said once in the hero and never whispered */
-  .pricepill{display:inline-flex;align-items:baseline;gap:10px;margin-top:26px;
-    background:rgba(61,107,255,.09);border:1px solid rgba(61,107,255,.20);
-    border-radius:999px;padding:10px 20px}
-  .pricepill b{font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--ink-blue)}
-  .pricepill span{font-size:14.5px;font-weight:600;color:var(--blue-deep)}
-
   section{padding:96px 0 0}
   .sh{text-align:center;max-width:680px;margin:0 auto 44px}
   .sh h2{font-size:clamp(28px,4.6vw,44px);letter-spacing:-.03em;line-height:1.08;font-weight:800}
@@ -130,19 +123,28 @@
   .rtext li{margin:6px 0}
   .rtext li b{color:var(--ink);font-weight:600}
 
-  /* the phone, in the orientation each surface is actually held in */
-  /* 290px is not arbitrary: with the status bar cropped off, the portrait shot
-     is 1206x2482, and 290*2.058 plus its caption lands within a few pixels of
-     the two landscape figures stacked beside it */
-  .phones{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:22px;
-    max-width:920px;margin:0 auto;align-items:start}
-  .phones figure{margin:0}
-  .phones .tall{grid-row:span 2}
+  /* the phone, in the orientation each surface is actually held in.
+     The two landscape shots are stacked inside one grid cell rather than
+     occupying a row each, so the grid has a single row and both columns
+     stretch to the same height. That is what puts "Deck" and "Air pointer"
+     on one line, at any width, without a magic number holding it together. */
+  .phones{display:grid;grid-template-columns:minmax(0,1fr) 296px;gap:22px;
+    max-width:920px;margin:0 auto}
+  .phones .stack{display:flex;flex-direction:column;gap:22px}
+  .phones figure{margin:0;display:flex;flex-direction:column}
+  .phones .tall{height:100%;min-height:0}
   .phones figcaption{margin-top:11px;font-size:14px;color:var(--sub);text-align:center}
   .phones figcaption b{color:var(--ink);font-weight:600}
+  /* the portrait shot takes whatever height the stack beside it comes to and
+     letterboxes inside its own frame, which is invisible because both the
+     frame and the screenshot's edges are black */
+  .phones .tall .shot{flex:1;min-height:0}
+  .phones .tall .shot img{height:100%;object-fit:contain}
   @media(max-width:760px){
     .phones{grid-template-columns:1fr}
-    .phones .tall{grid-row:auto;max-width:290px;margin:0 auto}}
+    .phones .tall{height:auto;max-width:296px;margin:0 auto}
+    .phones .tall .shot{flex:none}
+    .phones .tall .shot img{height:auto}}
   /* a screen capture has square corners; the radius is what makes it read as glass */
   .shot.glass{border-radius:20px;background:#000}
 
@@ -221,7 +223,6 @@
         Get the free Mac app
       </a>
     </div>
-    <div class="pricepill"><b>$9.99</b><span>one purchase, no subscription</span></div>
     <p class="fine">
       <span>3-day free trial</span><span class="sep">·</span><span>Mac app free</span><span class="sep">·</span><span>iOS 18+ and macOS 15+</span>
     </p>
@@ -274,17 +275,19 @@
     </div>
 
     <div class="phones" style="margin-top:40px">
-      <figure>
-        <div class="shot glass"><img src="shots/phone-trackpad.webp" alt="Padoo's trackpad surface on an iPhone held landscape: an empty black field with the focused app's key at the top and a five-app dock along the bottom." /></div>
-        <figcaption><b>Trackpad</b></figcaption>
-      </figure>
+      <div class="stack">
+        <figure>
+          <div class="shot glass"><img src="shots/phone-trackpad.webp" alt="Padoo's trackpad surface on an iPhone held landscape: an empty black field with the focused app's key at the top and a five-app dock along the bottom." /></div>
+          <figcaption><b>Trackpad</b></figcaption>
+        </figure>
+        <figure>
+          <div class="shot glass"><img src="shots/phone-deck.webp" alt="Padoo's deck on an iPhone held landscape: fifteen glass keys wearing real Mac app icons, with brightness and volume sliders down either edge." /></div>
+          <figcaption><b>Deck</b></figcaption>
+        </figure>
+      </div>
       <figure class="tall">
         <div class="shot glass"><img src="shots/phone-pointer.webp" alt="Padoo's air pointer surface on an iPhone held portrait: a click wheel with Drag and Right buttons either side, and the focused app named at the top." /></div>
         <figcaption><b>Air pointer</b></figcaption>
-      </figure>
-      <figure>
-        <div class="shot glass"><img src="shots/phone-deck.webp" alt="Padoo's deck on an iPhone held landscape: fifteen glass keys wearing real Mac app icons, with brightness and volume sliders down either edge." /></div>
-        <figcaption><b>Deck</b></figcaption>
       </figure>
     </div>
   </div>
