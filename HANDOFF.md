@@ -8,6 +8,12 @@ Mac app or a native iPhone screenshot, served as WebP. The whole page is 0.76MB.
 
 ## Recent changes
 
+- Published a developer identity in the closing section of `Variant26.jsx`:
+  name, short bio, LinkedIn, contact email. r/macapps will not accept a
+  main-feed post from a developer without an App Store account unless the site
+  shows exactly that, and the site said nothing about who makes these apps.
+  Note the live component is `Variant26.jsx` — `App.jsx` is the old three-app
+  design and is no longer wired into `main.jsx`.
 - Replaced the Padoo page with the draft developed in `drafts/padoo-v2/`, which
   argues from screenshots instead of from a demo, and states the $9.99 one-time
   price in three places.
@@ -23,6 +29,9 @@ Mac app or a native iPhone screenshot, served as WebP. The whole page is 0.76MB.
 
 ## Open questions / blockers
 
+- The contact address in the new identity block is `support@flickey.site`,
+  which reads oddly on a six-app site — Padoo and Tally users emailing a FlicKey
+  address. A taltools-generic alias would be better.
 - The `#mac` section explaining that Padoo needs its free Mac app was removed
   during editing. Both "Get the Mac app" buttons now link straight to
   `PadooMac.dmg` so nothing is dead, but the page no longer says the Mac app is
@@ -45,4 +54,4 @@ Mac app or a native iPhone screenshot, served as WebP. The whole page is 0.76MB.
 4. Consider re-shooting the Connection pane with the phone attached; that row was
    cut, and with it the measured 0.8ms latency evidence.
 
-_Last updated: 2026-09-05 by Claude Opus 5 (Claude Code)_
+_Last updated: 2026-09-07 by Claude Opus 5 (Claude Code)_
