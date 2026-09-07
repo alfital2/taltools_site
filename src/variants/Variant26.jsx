@@ -1250,9 +1250,72 @@ function CtaScene({ reduced, year }) {
             </a>
           ))}
         </div>
+        {/* Developer identity. r/macapps requires a real name, a LinkedIn and
+            reachable contact details before an unknown developer may post to
+            the main feed, and it is the only place on the site that says who
+            actually makes these. */}
         <div
           style={{
             marginTop: 56,
+            paddingTop: 30,
+            borderTop: `1px solid ${HAIR}`,
+            maxWidth: 560,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+          }}
+        >
+          <div
+            style={{
+              fontFamily: DISPLAY,
+              fontWeight: 700,
+              fontSize: 17,
+              color: INK,
+            }}
+          >
+            Made by Tal Alfi
+          </div>
+          <p
+            style={{
+              fontFamily: TEXT,
+              fontSize: 14.5,
+              lineHeight: 1.6,
+              color: SUBTLE,
+              margin: '10px 0 16px',
+            }}
+          >
+            I build small, native Mac utilities that each fix one annoying thing
+            and then get out of the way. Six so far, all menu-bar apps that run
+            locally and ask for as little as they can.
+          </p>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '8px 18px',
+              justifyContent: 'center',
+              fontFamily: TEXT,
+              fontSize: 14.5,
+            }}
+          >
+            <a
+              href="https://www.linkedin.com/in/talalfi/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: BLUE, textDecoration: 'none' }}
+            >
+              LinkedIn
+            </a>
+            <a
+              href="mailto:support@flickey.site"
+              style={{ color: BLUE, textDecoration: 'none' }}
+            >
+              support@flickey.site
+            </a>
+          </div>
+        </div>
+        <div
+          style={{
+            marginTop: 26,
             fontFamily: TEXT,
             fontSize: 13.5,
             color: SUBTLE,
