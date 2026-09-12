@@ -1,23 +1,22 @@
 ## Status
 
-Padoo Mac 1.2 (5) is deployed through a signed Sparkle feed. The versioned and stable downloads use the same notarized, stapled universal DMG, and a real 1.2 (4) installation successfully updated to 1.2 (5), relaunched, and retained its pairing.
+The notarized Padoo Mac 1.3 (9) reviewer DMG is published at the versioned URL while the stable download and signed Sparkle appcast intentionally remain on 1.2 (5). This lets App Review use the matching companion without offering 1.3 to existing Mac users before iOS 1.3 is live.
 
 ## Recent changes
 
-- Published the versioned 1.2 DMG before exposing it in the feed so clients could never see a dangling update URL.
-- Published the generated EdDSA-signed Sparkle appcast only after the archive was live and its SHA-256 matched the release artifact.
-- Exercised the full updater path from build 4 to build 5, including download, signature verification, installation, and relaunch.
-- Promoted the exact tested artifact to the stable `PadooMac.dmg` download after the updater test passed.
+- Published `PadooMac-1.3.dmg` from tagged source `v1.3-build9` after Developer ID signing, two-stage notarization/stapling, Gatekeeper validation, universal-architecture verification, and the all-Macs provisioning-profile check.
+- Kept `PadooMac.dmg`, `PadooMac-1.2.dmg`, and `appcast.xml` byte-for-byte unchanged to preserve the release-day ordering.
+- Used a clean temporary checkout so the separate dirty `taltools_site` working copy and its unrelated draft work were not touched.
 
 ## Open questions / blockers
 
-- The matching iPhone companion from Padoo `dev` still needs installation and on-device validation of cable → Wi-Fi Direct → Wi-Fi; CoreDevice previously could not establish a tunnel while the phone was unavailable.
-- The unrelated landing-page wording and cleanup questions from the prior handoff remain open. The existing dirty site checkout was deliberately left untouched; this release used a clean temporary clone.
+- Do not publish the generated 1.3 appcast or replace the stable recovery download until iOS 1.3 is live on the App Store.
+- The unrelated landing-page wording and cleanup questions remain open in the primary site checkout.
 
 ## Next steps
 
-1. Verify the final public stable and versioned DMG hashes and the signed appcast after Pages deploys.
-2. Install and test the matching iPhone companion when the phone is unlocked and available.
-3. Monitor the first public updater checks for any delivery errors.
+1. Update the 1.3 App Review notes to use `https://taltools.site/padoo/PadooMac-1.3.dmg`.
+2. After iOS 1.3 goes live, publish the generated signed 1.3 appcast and point the stable recovery URL/download at the 1.3 DMG.
+3. Verify the final live hashes after each release-day deployment.
 
 _Last updated: 2026-09-13 by Codex_
