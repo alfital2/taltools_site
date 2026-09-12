@@ -1,0 +1,19 @@
+<?xml version="1.0" standalone="yes"?><!-- sparkle-sign-warning:
+IMPORTANT: This file was signed by Sparkle. Any modifications to this file requires re-signing this file with generate_appcast or sign_update! The signed signature will be embedded at the end of this file.
+--><rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>Padoo</title>
+        <item>
+            <title>1.2</title>
+            <pubDate>Sun, 13 Sep 2026 01:05:25 +0300</pubDate>
+            <link>https://taltools.site/padoo/</link>
+            <sparkle:version>5</sparkle:version>
+            <sparkle:shortVersionString>1.2</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://taltools.site/padoo/PadooMac-1.2.dmg" length="5463433" type="application/octet-stream" sparkle:edSignature="3tKJvLc/eieQ3QQro64eQeVqiN6N6tXeUN/TGhme2bJdotQTElAr+wsYVAFVJKvBAS5x11GI5YHf84ueF19uCg=="></enclosure>
+        </item>
+    </channel>
+</rss><!-- sparkle-signatures:
+edSignature: nfseRCjG6Op7u2drpifYeIZ7xL971X2FnAWhUPn959YKeMffkK04CAAG9EG7s4l1qXNyzv7xwXJutD3X3H1BCw==
+length: 1052
+-->
