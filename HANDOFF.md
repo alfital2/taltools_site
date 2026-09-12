@@ -1,57 +1,23 @@
 ## Status
 
-The Padoo page at `public/padoo/index.html` is now the screenshot-led rewrite. The
-old page, built around an interactive fake Mac driven by `engine.js`, is gone from
-the markup; `engine.css` and `engine.js` are still in `public/padoo/` but nothing
-references them any more. Every image on the new page is a capture of the shipping
-Mac app or a native iPhone screenshot, served as WebP. The whole page is 0.76MB.
+Padoo Mac 1.2 (5) is deployed through a signed Sparkle feed. The versioned and stable downloads use the same notarized, stapled universal DMG, and a real 1.2 (4) installation successfully updated to 1.2 (5), relaunched, and retained its pairing.
 
 ## Recent changes
 
-- Published a developer identity in the closing section of `Variant26.jsx`:
-  name, short bio, LinkedIn, contact email. r/macapps will not accept a
-  main-feed post from a developer without an App Store account unless the site
-  shows exactly that, and the site said nothing about who makes these apps.
-  Note the live component is `Variant26.jsx` — `App.jsx` is the old three-app
-  design and is no longer wired into `main.jsx`.
-- Replaced the Padoo page with the draft developed in `drafts/padoo-v2/`, which
-  argues from screenshots instead of from a demo, and states the $9.99 one-time
-  price in three places.
-- Converted every screenshot to WebP at q=90. The PNG originals totalled 7.6MB,
-  which is not a landing page; WebP brings that to 0.74MB with the text still
-  crisp at 1:1, checked on the densest image rather than assumed.
-- Sized every screenshot to source/2 in CSS. A macOS window is captured at exactly
-  2x its point size, so anything wider than that upscales and looks soft on a
-  retina screen. The inline `max-width` on each `.shot` is load-bearing: change a
-  screenshot and its number has to change with it.
-- Restored the sharing metadata (og:*, canonical, apple-touch-icon) that the draft
-  did not carry, and gave the page a real title.
+- Published the versioned 1.2 DMG before exposing it in the feed so clients could never see a dangling update URL.
+- Published the generated EdDSA-signed Sparkle appcast only after the archive was live and its SHA-256 matched the release artifact.
+- Exercised the full updater path from build 4 to build 5, including download, signature verification, installation, and relaunch.
+- Promoted the exact tested artifact to the stable `PadooMac.dmg` download after the updater test passed.
 
 ## Open questions / blockers
 
-- The contact address in the new identity block is `support@flickey.site`,
-  which reads oddly on a six-app site — Padoo and Tally users emailing a FlicKey
-  address. A taltools-generic alias would be better.
-- The `#mac` section explaining that Padoo needs its free Mac app was removed
-  during editing. Both "Get the Mac app" buttons now link straight to
-  `PadooMac.dmg` so nothing is dead, but the page no longer says the Mac app is
-  required, needs Accessibility permission, or is not on the Mac App Store. That
-  is a real gap on a page selling the iPhone half.
-- The h1 reads "best controlling device". "Controlling" carries a sense of
-  domineering in English; "best control surface" or "best controller" is closer to
-  the intent.
-- `drafts/padoo-v2/` is untracked. It holds the PNG originals and the capture
-  scripts (`cap.sh`, `probe.swift`, `edgecheck.swift`, `crop.swift`). Decide
-  whether the 13MB belongs in git or should be gitignored.
-- The unversioned `PadooMac.dmg` still must not be replaced until Padoo 1.1 is
-  actually released on the App Store.
+- The matching iPhone companion from Padoo `dev` still needs installation and on-device validation of cable → Wi-Fi Direct → Wi-Fi; CoreDevice previously could not establish a tunnel while the phone was unavailable.
+- The unrelated landing-page wording and cleanup questions from the prior handoff remain open. The existing dirty site checkout was deliberately left untouched; this release used a clean temporary clone.
 
 ## Next steps
 
-1. Decide on the Mac app section: restore it, or accept the download-only buttons.
-2. Settle the h1 wording.
-3. Delete `engine.css` and `engine.js` once the new page has been live a while.
-4. Consider re-shooting the Connection pane with the phone attached; that row was
-   cut, and with it the measured 0.8ms latency evidence.
+1. Verify the final public stable and versioned DMG hashes and the signed appcast after Pages deploys.
+2. Install and test the matching iPhone companion when the phone is unlocked and available.
+3. Monitor the first public updater checks for any delivery errors.
 
-_Last updated: 2026-09-07 by Claude Opus 5 (Claude Code)_
+_Last updated: 2026-09-13 by Codex_
