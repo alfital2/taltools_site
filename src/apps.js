@@ -91,12 +91,12 @@ export const APPS = [
     name: 'FrameNook',
     tagline: 'Your photos, at home on every screen.',
     blurb:
-      'Turns an iPhone or iPad into a private hub for photo and video displays around your home. Choose the moments, tune the atmosphere, then open a simple local address on another screen.',
+      'Runs on your iPhone and gives an old iPad a new purpose as a private photo and video display. TVs, other tablets, and computers can join through their browser too.',
     accent: '#ee6c4d',
     emoji: '🖼️',
     icon: frameNookIcon,
     site: '/framenook/',
     external: false,
-    bullets: ['Photos, videos and ambient clock', 'Plays on this device or another screen', 'Private local-network sharing', 'No account or analytics'],
+    bullets: ['Give an old iPad a new purpose', 'Works with TVs, tablets and computers', 'Private local-network sharing', 'No account or analytics'],
   },
 ]

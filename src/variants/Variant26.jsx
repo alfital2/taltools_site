@@ -444,7 +444,7 @@ function AppScene({ app, index, reduced }) {
       : app.id === 'padoo'
       ? 'iPhone + Mac · Input'
       : app.id === 'framenook'
-      ? 'iPhone + iPad · Photos'
+      ? 'iPhone + browsers · Photos'
       : 'Menu bar · Display'
   const linkProps = app.external
     ? { target: '_blank', rel: 'noopener noreferrer' }
