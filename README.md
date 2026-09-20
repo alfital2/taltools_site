@@ -1,7 +1,7 @@
 # TalTools
 
 The umbrella site for a little lab of small tools: **Natcho**, **FlicKey**,
-**Tally**, **Guitar Studio**, **Poof**, and **Padoo**.
+**Tally**, **Guitar Studio**, **Poof**, **Padoo**, and **FrameNook**.
 
 Live at **[taltools.site](https://taltools.site)**.
 
@@ -30,10 +30,11 @@ npm run preview  # preview the production build
 
 Apps without their own domain get a hand-written static page under `public/`,
 copied verbatim into `dist/` at build time — no React, no build step of their
-own. Two live there today:
+own. Three live there today:
 
 - `public/natcho/` → `taltools.site/natcho/`
 - `public/padoo/` → `taltools.site/padoo/` (plus `privacy.html`, `support.html`)
+- `public/framenook/` → `taltools.site/framenook/` (plus `privacy.html`, `support.html`)
 
 An app is added to the homepage by appending it to `src/apps.js`; the live
 design (`src/variants/Variant26.jsx`, "Daylight Glide") also wants a hero

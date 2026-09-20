@@ -5,6 +5,7 @@ import tallyIcon from './assets/icons/tally.png'
 import guitarIcon from './assets/icons/guitar.svg'
 import poofIcon from './assets/icons/poof.png'
 import padooIcon from './assets/icons/padoo.png'
+import frameNookIcon from './assets/icons/framenook.png'
 
 export const APPS = [
   {
@@ -84,5 +85,18 @@ export const APPS = [
     site: '/padoo/',
     external: false,
     bullets: ['Trackpad, air pointer and key deck', '~2 ms finger to cursor', 'Cable, Wi-Fi Direct or your network', 'No account, no servers'],
+  },
+  {
+    id: 'framenook',
+    name: 'FrameNook',
+    tagline: 'Your photos, at home on every screen.',
+    blurb:
+      'Turns an iPhone or iPad into a private hub for photo and video displays around your home. Choose the moments, tune the atmosphere, then open a simple local address on another screen.',
+    accent: '#ee6c4d',
+    emoji: '🖼️',
+    icon: frameNookIcon,
+    site: '/framenook/',
+    external: false,
+    bullets: ['Photos, videos and ambient clock', 'Plays on this device or another screen', 'Private local-network sharing', 'No account or analytics'],
   },
 ]

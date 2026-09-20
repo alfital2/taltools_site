@@ -269,10 +269,11 @@ function GooglyWordmark({ reduced }) {
   )
 }
 
-// The six apps, drawn as their own silhouettes rather than plain dots, each a
+// The seven apps, drawn as their own silhouettes rather than plain dots, each a
 // button that jumps to its scene with a playful name tooltip on hover:
 // Natcho - tortilla-chip triangle · FlicKey - keycap · Tally - progress ring ·
-// Guitar Studio - a pick · Poof - a puff of smoke · Padoo - a paw pad.
+// Guitar Studio - a pick · Poof - a puff of smoke · Padoo - a paw pad ·
+// FrameNook - a framed landscape.
 function TrioGlyph({ id, name, children }) {
   const go = () => {
     const el = document.getElementById(`app-${id}`)
@@ -298,7 +299,7 @@ function AppTrio() {
   return (
     <div
       role="group"
-      aria-label="Jump to a tool: Natcho, FlicKey, Tally, Guitar Studio, Poof or Padoo"
+      aria-label="Jump to a tool: Natcho, FlicKey, Tally, Guitar Studio, Poof, Padoo or FrameNook"
       style={{
         display: 'flex',
         justifyContent: 'center',
@@ -382,6 +383,20 @@ function AppTrio() {
           </g>
         </svg>
       </TrioGlyph>
+
+      <TrioGlyph id="framenook" name="FrameNook">
+        {/* FrameNook - a small picture frame with a sunlit landscape. */}
+        <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
+          <rect x="4" y="5" width="20" height="18" rx="4" fill="#ee6c4d" />
+          <circle cx="18.5" cy="10" r="2.2" fill="#fff7ee" />
+          <path
+            d="M7 20l5.2-6 3.4 3.6 2.3-2.4L22 20H7Z"
+            fill="#fff7ee"
+            stroke="#fff7ee"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </TrioGlyph>
     </div>
   )
 }
@@ -428,6 +443,8 @@ function AppScene({ app, index, reduced }) {
       ? 'Menu bar · Capture'
       : app.id === 'padoo'
       ? 'iPhone + Mac · Input'
+      : app.id === 'framenook'
+      ? 'iPhone + iPad · Photos'
       : 'Menu bar · Display'
   const linkProps = app.external
     ? { target: '_blank', rel: 'noopener noreferrer' }
@@ -1188,7 +1205,7 @@ function CtaScene({ reduced, year }) {
             color: INK,
           }}
         >
-          Six tools.
+          Seven tools.
           <br />
           One calmer setup.
         </h2>
@@ -1283,9 +1300,9 @@ function CtaScene({ reduced, year }) {
               margin: '10px 0 16px',
             }}
           >
-            I build small, native Mac utilities that each fix one annoying thing
-            and then get out of the way. Six so far, all menu-bar apps that run
-            locally and ask for as little as they can.
+            I build small, focused tools that each fix one annoying thing and
+            then get out of the way. Seven so far, all designed to work locally
+            and ask for as little as they can.
           </p>
           <div
             style={{
