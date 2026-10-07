@@ -46,6 +46,7 @@
     box-shadow:0 18px 36px -18px rgba(61,107,255,.85);
     transition:transform .16s ease, box-shadow .16s ease}
   .btn:hover{transform:translateY(-2px);box-shadow:0 24px 46px -18px rgba(61,107,255,.95)}
+  a:focus-visible{outline:3px solid var(--blue);outline-offset:4px}
   .btn.ghost{background:rgba(255,255,255,.9);color:var(--ink);border-color:var(--line);
     box-shadow:0 14px 30px -20px rgba(26,19,95,.5)}
   .btn .apple{width:16px;height:16px;fill:currentColor}
@@ -68,7 +69,7 @@
     background-clip:text;color:transparent}
   .sub{max-width:640px;margin:22px auto 0;color:var(--sub);font-size:18.5px;line-height:1.6}
   .sub b{color:var(--ink);font-weight:600}
-  .cta{display:flex;gap:14px;justify-content:center;align-items:center;margin-top:32px;flex-wrap:wrap}
+  .cta{display:flex;gap:14px;justify-content:center;align-items:center;margin-top:32px;flex-wrap:wrap;scroll-margin-top:90px}
   .fine{margin-top:18px;font-size:14px;color:var(--sub)}
   .fine .sep{opacity:.45;margin:0 8px}
 
@@ -203,7 +204,7 @@
       <a class="lnk" href="#yours">Customize</a>
       <a class="lnk" href="#price">Price</a>
       <a class="lnk" href="#privacy">Privacy</a>
-      <a class="btn" href="PadooMac.dmg">Get the Mac app</a>
+      <a class="btn" href="#get">Get the apps</a>
     </div>
   </div>
 </nav>
@@ -213,7 +214,7 @@
   <div class="wrap">
     <h1>Your iPhone is your Mac's<br /><span class="grad">best controlling device.</span></h1>
     <p class="sub">Your iPhone becomes a trackpad, an air pointer, or a deck of glass keys for your Mac. Which apps sit on that deck, what each gesture fires, and how far a finger may stray and still count as a tap are all set from the Mac. <b>Padoo costs $9.99 and there is no subscription.</b></p>
-    <div class="cta">
+    <div class="cta" id="get">
       <a class="btn" href="https://apps.apple.com/app/id6798790976" target="_blank" rel="noopener">
         <svg class="apple" viewBox="0 0 384 512" aria-hidden><path d="M318.7 268c-.3-37 16.4-65 50.1-85.6-18.9-27-47.5-41.9-85.1-44.8-35.7-2.8-74.8 20.9-89.1 20.9-15.1 0-49.7-19.9-76.9-19.9C71.2 138.9 16 178.9 16 260.4c0 24.1 4.4 49 13.2 74.6 11.8 33.9 54.4 117.1 98.8 115.7 23.2-.6 39.6-16.5 69.8-16.5 29.3 0 44.5 16.5 69.8 16.5 44.8-.6 83.4-76.2 94.6-110.2-60.1-28.3-56.9-82.9-56.9-84.7zM256.6 84.5c19.7-23.4 17.9-44.7 17.3-52.5-17.4 1-37.5 11.8-49 25.2-12.7 14.3-20.1 32-18.5 50.9 18.8 1.4 36.1-8.3 50.2-23.6z"/></svg>
         Get the iPhone app
@@ -222,10 +223,15 @@
         <svg class="dl" viewBox="0 0 24 24" aria-hidden><path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
         Get the free Mac app
       </a>
+      <a class="btn ghost" href="windows/" data-windows-download>
+        <svg class="dl" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <span data-windows-label>Windows · coming soon</span>
+      </a>
     </div>
     <p class="fine">
       <span>3-day free trial</span><span class="sep">·</span><span>Mac app free</span><span class="sep">·</span><span>iOS 18+ and macOS 15+</span>
     </p>
+    <p class="fine">Padoo now supports Windows. The Windows download link is coming soon.</p>
 
     <div class="heroshot">
       <div class="shot"><img src="shots/deck.webp" alt="Padoo's Deck &amp; Library settings on macOS: a fifteen-key glass deck being built from a searchable app list, with per-key gestures on the right." /></div>
