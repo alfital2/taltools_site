@@ -1,21 +1,21 @@
 ## Status
 
-Padoo Mac 1.3.2 (27) versioned artifact is live at /padoo/PadooMac-1.3.2-27.dmg. Stable downloads and feed changes are prepared locally pending clean Mac launch verification (Padoo Actions run 37628685028). Public stable remains 1.3 (9) until those changes are pushed. User authorized publication and installation on their Mac. Other products, including FrameNook, remain unchanged.
+Padoo Mac 1.3.2 (27) is published on taltools.site and GitHub. Stable download, legacy recovery aliases, signed Sparkle feed and /padoo/update redirect select build 27. Website deployment 37628778221 succeeded and all live hashes were verified. The exact public app is installed and running on the user’s Mac. Other products, including FrameNook, remain unchanged.
 
 ## Recent changes
 
-- Staged corrected notarized build 27, SHA256 bb02df23d106c766a4df37f333a123bc9740d10e619a0f6ddbceca62d65f3b48, in deployed commit 12e9dec; verified live digest.
-- Withdrew staged build 26 after clean Mac runtime failure exposed a signing certificate/provisioning profile mismatch. It was never selected by stable downloads/feed.
-- Prepared stable and legacy recovery aliases, signed Sparkle feed and update redirect for build 27. Preserved immutable PadooMac-1.3.dmg used by previous signed feed.
+- Published immutable /padoo/PadooMac-1.3.2-27.dmg and switched stable PadooMac.dmg, recovery 1.1/1.2 aliases, signed appcast and update redirect after clean Mac launch check passed (Padoo workflow 37628685028).
+- Release DMG SHA256 is bb02df23d106c766a4df37f333a123bc9740d10e619a0f6ddbceca62d65f3b48; appcast SHA256 is 866fe2ad273fa8ea19590a1ef7c3beef5a0d09cf4bbf330f190fe046dba9fbc8. Verified both against live responses.
+- Preserved immutable PadooMac-1.3.dmg (previous signed feed artifact). Withdrawn staged build 26 failed clean launch due to a signing certificate/profile mismatch and was never selected by stable URLs.
+- Website build passed using npm --script-shell=/bin/sh run build. Release assets switched in f174003; source release tag mac-v1.3.2-build27 is in alfital2/padoo.
 
 ## Open questions / blockers
 
-- Do not push prepared stable changes until clean Mac launch succeeds. No iPhone publication requested.
+- No website publication blockers. No iPhone release was performed; native Bluetooth experiments remain excluded.
 
 ## Next steps
 
-1. Check Padoo workflow 37628685028; on success build and push prepared stable changes.
-2. Verify live stable/versioned/recovery downloads, signed feed and redirect after deployment.
-3. Update this snapshot with final publication evidence. Preserve unrelated files in the original taltools_site checkout.
+1. Keep versioned artifacts immutable; publish future versions under fresh filenames before changing stable aliases/feed.
+2. Preserve unrelated files in the original /Users/tal/Documents/taltools_site checkout; publication used this isolated worktree.
 
 _Last updated: 2026-10-07 by Codex (GPT-6)_
