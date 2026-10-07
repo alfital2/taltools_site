@@ -1,22 +1,21 @@
 ## Status
 
-TalTools still serves the verified Padoo 1.3 (build 9) release and update feed. FrameNook is live as the seventh product under `https://taltools.site/framenook/`. Its site correctly presents FrameNook as an iPhone app that turns old iPads and other browser-equipped screens into displays, and includes the user's dining-room image. The production deployment succeeded and the new copy and image were verified live.
+Padoo Mac 1.3.2 (27) versioned artifact is live at /padoo/PadooMac-1.3.2-27.dmg. Stable downloads and feed changes are prepared locally pending clean Mac launch verification (Padoo Actions run 37628685028). Public stable remains 1.3 (9) until those changes are pushed. User authorized publication and installation on their Mac. Other products, including FrameNook, remain unchanged.
 
 ## Recent changes
 
-- Corrected the landing, support, privacy, and TalTools homepage copy: the app installs on iPhone only; old iPads, TVs, other tablets, phones, and computers join through their browser.
-- Removed the obsolete “Play on This Device” instruction and clarified that FrameNook only needs to remain open during the initial browser download.
-- Added the user-provided dining-room image to the landing-page gallery while keeping the existing real ambient/settings captures.
-- Rebuilt and published commit `4be0190`; verified the new positioning, support wording, and dining-room image on the live site.
-- Left all Padoo binaries, appcast files, and release URLs untouched.
+- Staged corrected notarized build 27, SHA256 bb02df23d106c766a4df37f333a123bc9740d10e619a0f6ddbceca62d65f3b48, in deployed commit 12e9dec; verified live digest.
+- Withdrew staged build 26 after clean Mac runtime failure exposed a signing certificate/provisioning profile mismatch. It was never selected by stable downloads/feed.
+- Prepared stable and legacy recovery aliases, signed Sparkle feed and update redirect for build 27. Preserved immutable PadooMac-1.3.dmg used by previous signed feed.
 
 ## Open questions / blockers
 
-- None for the website. App Store release work continues in the separate FrameNook repository.
+- Do not push prepared stable changes until clean Mac launch succeeds. No iPhone publication requested.
 
 ## Next steps
 
-1. Keep the live website copy aligned with future FrameNook behavior changes.
-2. Leave unrelated `.agents/` and `drafts/` files untracked unless their owner decides to add them later.
+1. Check Padoo workflow 37628685028; on success build and push prepared stable changes.
+2. Verify live stable/versioned/recovery downloads, signed feed and redirect after deployment.
+3. Update this snapshot with final publication evidence. Preserve unrelated files in the original taltools_site checkout.
 
-_Last updated: 2026-09-20 by Codex_
+_Last updated: 2026-10-07 by Codex (GPT-6)_
