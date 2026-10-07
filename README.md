@@ -51,16 +51,15 @@ resolving:
 - Privacy: `https://taltools.site/padoo/privacy.html`
 - Mac app: `https://taltools.site/padoo/PadooMac.dmg`
 
-The landing and support pages also link to `/padoo/windows/`, which currently
-shows a “Download link coming soon” placeholder. When the public Windows
-repository URL is available, replace the `windows-release` block in
-`public/padoo/windows/index.html` with a download button linking to the repo's
-`/releases/latest` page and update the `data-windows-label` text on the landing
-and support pages. GitHub keeps that URL aligned with the owner's latest
-release, without a scheduled website deployment or a repository token. A direct
-`/releases/latest/download/<filename>` link is an option only if the installer
-filename stays the same across releases. Verify Windows requirements from the
-release documentation before publishing them.
+The Windows companion is published by RonYehuda in the public
+[`padoo-win-releases` repository](https://github.com/RonYehuda/padoo-win-releases).
+The landing, support, and `/padoo/windows/` pages download the installer through
+`https://github.com/RonYehuda/padoo-win-releases/releases/latest/download/PadooWin-Setup.exe`.
+GitHub resolves this to the latest release without a website redeploy or token.
+The publisher must keep the asset filename `PadooWin-Setup.exe` in each release.
+The Windows page also links to `/releases/latest` as a fallback if the installer
+is renamed, and documents the publisher's Windows requirements and unsigned
+installer notice. Do not pin these buttons to a versioned release tag.
 
 `public/padoo/PadooMac.dmg` is the free Mac companion, checked in as a binary
 because the iPhone app does nothing without it and App Review needs a download
