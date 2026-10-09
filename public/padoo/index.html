@@ -110,7 +110,9 @@
   @media(max-width:860px){.band{margin-bottom:56px}}
 
   .heroshot{margin-top:56px}
-  .heroshot .shot{max-width:788px}
+  .heroshot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+  .heroshot .shot{max-width:789px}
+  @media(max-width:760px){.heroshot{grid-template-columns:1fr;gap:32px}}
 
   /* alternating evidence rows */
   .row{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px);align-items:center;
@@ -235,8 +237,14 @@
     <p class="fine">Padoo now supports Windows. <a href="windows/">Windows requirements and installation notes →</a></p>
 
     <div class="heroshot">
-      <div class="shot"><img src="shots/deck.webp" alt="Padoo's Deck &amp; Library settings on macOS: a fifteen-key glass deck being built from a searchable app list, with per-key gestures on the right." /></div>
-      <p class="cap">The deck editor in the Mac app. Every key on that grid was dragged there from the list underneath.</p>
+      <figure>
+        <div class="shot"><img src="shots/trackpad-settings.webp" width="1578" height="1366" alt="Padoo’s Surfaces settings on Mac, with Trackpad selected: focused-app controls enabled in the live preview and a five-app dock below." /></div>
+        <figcaption class="cap">Trackpad: focused-app controls and your five-app dock, configured from the Mac.</figcaption>
+      </figure>
+      <figure>
+        <div class="shot"><img src="shots/app-deck-settings.webp" width="1578" height="1630" alt="Padoo’s Surfaces settings on Mac, with App Deck selected: Off, Follow my Dock and Custom modes, a custom glass-key layout, app library and key gestures." /></div>
+        <figcaption class="cap">App Deck: follow your Mac’s Dock or build a custom layout and choose each key’s gestures.</figcaption>
+      </figure>
     </div>
   </div>
 </header>
@@ -317,7 +325,7 @@
           <li>Reorder by dragging, on the Mac, at any time</li>
         </ul>
       </div>
-      <div><div class="shot plain" style="max-width:365px"><img src="shots/crop-deck-editor.webp" alt="The deck editor: a fifteen-key grid above a searchable list of installed Mac apps." /></div></div>
+      <div><div class="shot plain" style="max-width:357px"><img src="shots/app-deck-layout.webp" alt="The current App Deck layout editor, with glass app keys and sliders above a searchable app library." /></div></div>
     </div>
 
     <div class="row">
@@ -330,7 +338,7 @@
           <li>Per-app overrides on top of the shared defaults</li>
         </ul>
       </div>
-      <div><div class="shot plain" style="max-width:379px"><img src="shots/crop-key-gestures.webp" alt="Key gestures: tap, long press and four drag directions, each bound to an action or a recorded keystroke." /></div></div>
+      <div><div class="shot plain" style="max-width:339px"><img src="shots/app-deck-key-gestures.webp" alt="Key gestures: tap, long press and four drag directions, each bound to an action or a recorded keystroke." /></div></div>
     </div>
 
     <div class="row">
@@ -382,7 +390,7 @@
           <li>Shown per orientation, so landscape can stay bare</li>
         </ul>
       </div>
-      <div><div class="shot plain" style="max-width:752px"><img src="shots/crop-trackpad-dock.webp" alt="Trackpad dock settings: contents, edge position, and which phone orientations show it." /></div></div>
+      <div><div class="shot plain" style="max-width:727px"><img src="shots/trackpad-dock.webp" alt="Trackpad dock settings: contents, edge position, and which phone orientations show it." /></div></div>
     </div>
 
     <div class="row">
