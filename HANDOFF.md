@@ -1,19 +1,18 @@
 ## Status
 
-Padoo's website now uses the owner's current Surfaces → Trackpad and Surfaces → App Deck screenshots instead of the outdated combined Deck & Library screenshot. The final Trackpad image shows focused-app controls enabled, as requested in the owner's correction. The update is published through GitHub Pages under continuing authorization. Paid-feature copy, the centered Windows tooltip, permanent Windows download URL, and Mac 1.3.2 (27) remain in place; other products are unchanged.
+Padoo's current Trackpad and App Deck screenshots are now presented one at a time in a large tabbed viewer, replacing the unreadable side-by-side layout. Visitors can click/tap to inspect an enlarged screenshot in a modal; mobile users can pan within that view. This update is published through GitHub Pages under continuing authorization. Paid-feature copy, refreshed detail crops, the centered Windows tooltip, permanent Windows download URL, and Mac 1.3.2 (27) remain in place; other products are unchanged.
 
 ## Recent changes
 
-- Replaced the hero screenshot with two current app-window captures, displayed side by side on desktop and stacked on mobile. Cropped transparent outer margins and encoded WebP assets for the site.
-- Used the last supplied Trackpad capture (1.20.53), superseding the earlier capture with controls disabled; retained the supplied App Deck capture (1.20.16).
-- Refreshed matching deck-layout, default key-gesture, and trackpad-dock detail crops from those captures so they no longer show the old combined interface.
-- Updated captions and alt text to describe Surfaces, focused-app controls, and App Deck modes. Added intrinsic dimensions to hero images.
-- Production build and diff checks passed. Chromium checks passed at 375, 768, and 1440 px for image loading, removal of old screenshot references, and no horizontal overflow. Visually inspected desktop/mobile hero layouts and detail crops.
+- Replaced two small hero images with a single screenshot up to 900px wide and Trackpad/App Deck tabs because the settings text was too small in the paired layout.
+- Added click/tap enlargement in a native dialog with a clear Close control, Escape dismissal, focus restoration, and scrollable full-size details. On mobile the enlarged image stays at least 900px wide for readable labels and can be panned inside the dialog.
+- Implemented keyboard-accessible tabs with selected states and arrow/Home/End navigation. Retained the owner's final Trackpad capture with focused-app controls enabled.
+- Production build, syntax, and diff checks passed. Chromium checks passed at 375, 768, and 1440 px for tab switching, keyboard controls, screenshot width, enlargement, closing, focus restoration, mobile panning, and no page overflow. Visually inspected desktop viewer and mobile enlarged view.
 
 ## Open questions / blockers
 
 - The new paid feature's name, price, and billing model remain unspecified; pricing copy refers to the app and App Store.
-- Other screenshots (appearance, per-app overrides, action library, and phone views) were not replaced because new captures for them were not supplied.
+- Appearance, per-app overrides, action library, and phone captures still use existing images until replacements are supplied.
 
 ## Next steps
 

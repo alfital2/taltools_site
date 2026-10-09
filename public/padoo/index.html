@@ -109,10 +109,22 @@
   .band p{margin:14px auto 26px;color:var(--sub);font-size:16.5px;max-width:620px}
   @media(max-width:860px){.band{margin-bottom:56px}}
 
-  .heroshot{margin-top:56px}
-  .heroshot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
-  .heroshot .shot{max-width:789px}
-  @media(max-width:760px){.heroshot{grid-template-columns:1fr;gap:32px}}
+  .heroshot{margin:56px auto 0;max-width:900px}
+  .screenshot-tabs{display:flex;justify-content:center;gap:4px;width:fit-content;margin:0 auto 24px;padding:5px;border:1px solid var(--line);border-radius:999px;background:#e9eef9}
+  .screenshot-tabs button{padding:10px 24px;border:0;border-radius:999px;background:transparent;color:var(--sub);font:600 15px/1.4 var(--disp);cursor:pointer}
+  .screenshot-tabs button[aria-selected="true"]{background:#fff;color:var(--blue-deep);box-shadow:0 2px 8px rgba(13,18,32,.08)}
+  .screenshot-tabs button:hover{color:var(--blue-deep)}
+  .screenshot-tabs button:focus-visible,.screenshot-open:focus-visible,.screenshot-dialog button:focus-visible{outline:3px solid var(--blue);outline-offset:4px}
+  .screenshot-panel[hidden]{display:none}
+  .screenshot-open{width:100%;padding:0;cursor:zoom-in;font:inherit}
+  .screenshot-hint{display:block;margin-top:6px;color:var(--blue-deep);font-size:13px}
+  .screenshot-dialog{width:min(1600px,calc(100vw - 32px));max-width:none;max-height:calc(100dvh - 32px);margin:auto;padding:0;border:1px solid var(--line);border-radius:18px;background:var(--bg);color:var(--ink);box-shadow:var(--shadow-lg)}
+  .screenshot-dialog::backdrop{background:rgba(13,18,32,.75)}
+  .screenshot-dialog-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 18px;border-bottom:1px solid var(--line)}
+  .screenshot-dialog-bar p{margin:0;font-size:13px;color:var(--sub)}
+  .screenshot-dialog-bar button{min-height:44px;padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--blue-deep);font:600 14px var(--disp);cursor:pointer}
+  .screenshot-zoom{max-height:calc(100dvh - 112px);overflow:auto;overscroll-behavior:contain}
+  .screenshot-zoom img{display:block;width:100%;min-width:900px;height:auto}
 
   /* alternating evidence rows */
   .row{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px);align-items:center;
@@ -196,6 +208,7 @@
 </style>
 <link rel="stylesheet" href="windows-download.css" />
 <script src="windows-download.js" defer></script>
+<script src="screenshots.js" defer></script>
 </head>
 <body>
 
@@ -237,13 +250,17 @@
     <p class="fine">Padoo now supports Windows. <a href="windows/">Windows requirements and installation notes →</a></p>
 
     <div class="heroshot">
-      <figure>
-        <div class="shot"><img src="shots/trackpad-settings.webp" width="1578" height="1366" alt="Padoo’s Surfaces settings on Mac, with Trackpad selected: focused-app controls enabled in the live preview and a five-app dock below." /></div>
-        <figcaption class="cap">Trackpad: focused-app controls and your five-app dock, configured from the Mac.</figcaption>
+      <div class="screenshot-tabs" role="tablist" aria-label="Explore Padoo settings">
+        <button type="button" id="trackpad-tab" role="tab" aria-selected="true" aria-controls="trackpad-panel">Trackpad</button>
+        <button type="button" id="app-deck-tab" role="tab" aria-selected="false" aria-controls="app-deck-panel" tabindex="-1">App Deck</button>
+      </div>
+      <figure class="screenshot-panel" id="trackpad-panel" role="tabpanel" aria-labelledby="trackpad-tab">
+        <button type="button" class="shot screenshot-open" aria-label="Enlarge Trackpad settings screenshot" data-screenshot-title="Trackpad settings"><img src="shots/trackpad-settings.webp" width="1578" height="1366" alt="Padoo’s Surfaces settings on Mac, with Trackpad selected: focused-app controls enabled in the live preview and a five-app dock below." /></button>
+        <figcaption class="cap">Focused-app controls and your five-app dock, configured from the Mac.<span class="screenshot-hint">Click or tap the image to enlarge</span></figcaption>
       </figure>
-      <figure>
-        <div class="shot"><img src="shots/app-deck-settings.webp" width="1578" height="1630" alt="Padoo’s Surfaces settings on Mac, with App Deck selected: Off, Follow my Dock and Custom modes, a custom glass-key layout, app library and key gestures." /></div>
-        <figcaption class="cap">App Deck: follow your Mac’s Dock or build a custom layout and choose each key’s gestures.</figcaption>
+      <figure class="screenshot-panel" id="app-deck-panel" role="tabpanel" aria-labelledby="app-deck-tab" hidden>
+        <button type="button" class="shot screenshot-open" aria-label="Enlarge App Deck settings screenshot" data-screenshot-title="App Deck settings"><img src="shots/app-deck-settings.webp" width="1578" height="1630" alt="Padoo’s Surfaces settings on Mac, with App Deck selected: Off, Follow my Dock and Custom modes, a custom glass-key layout, app library and key gestures." /></button>
+        <figcaption class="cap">Follow your Mac’s Dock or build a custom layout and choose each key’s gestures.<span class="screenshot-hint">Click or tap the image to enlarge</span></figcaption>
       </figure>
     </div>
   </div>
@@ -472,5 +489,12 @@
   </div>
 </footer>
 
+<dialog class="screenshot-dialog" aria-labelledby="screenshot-dialog-title">
+  <div class="screenshot-dialog-bar">
+    <div><strong id="screenshot-dialog-title">Padoo settings</strong><p>Scroll to explore the details</p></div>
+    <button type="button" autofocus>Close</button>
+  </div>
+  <div class="screenshot-zoom"><img alt="" /></div>
+</dialog>
 </body>
 </html>
