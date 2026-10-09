@@ -1,13 +1,14 @@
 ## Status
 
-Padoo's landing, support, and Windows download pages have a compact English installation tooltip on their Windows download links. The separate info icon has been removed at the user's request; hovering or focusing the download link displays the instructions. The update is published through GitHub Pages under the user's continuing publication authorization. All three links still use the permanent latest-installer URL. Padoo Mac 1.3.2 (27) remains current; other products are unchanged.
+Padoo's landing, support, and Windows download pages have a compact English installation tooltip on their Windows download links. Hovering or focusing the download link displays the instructions without a separate info icon. The tooltip is now centered on the button, with a small pointer, compact steps, and a softer shadow. The update is published through GitHub Pages under the user's continuing publication authorization. All three links still use the permanent latest-installer URL. Padoo Mac 1.3.2 (27) remains current; other products are unchanged.
 
 ## Recent changes
 
-- Removed the info button and its styles, anchoring the existing tooltip directly to the Windows download link for a cleaner download row.
-- Kept keyboard focus, Escape dismissal, pointer dismissal, and the ability to hover over the tooltip itself. Clicking the link still downloads the installer normally.
-- Kept the developer's condensed instructions: unsigned installer; Keep for browser warnings; More info → Run anyway, then Yes for installation and firewall access.
-- Production build, JavaScript syntax, and diff checks passed. Chromium checks passed on all three pages at 375 and 1440 px for absence of the icon, hover, focus, dismissal, and viewport bounds.
+- Corrected the tooltip's right-edge alignment to center it on the download link, clamping it within narrow viewports and positioning its pointer toward the button.
+- Replaced the dense paragraph with a small title, unsigned-installer explanation, and separate Browser and Windows steps. Reduced typography, padding, and shadow weight for a lighter appearance.
+- Preserved hover, keyboard focus, Escape, and pointer dismissal, with no separate icon.
+- Production build, JavaScript syntax, and diff checks passed. Chromium interaction and viewport checks passed on all three pages at 375 and 1440 px. Verified desktop centering within 1 px and visually inspected the screenshot.
+- Published under the user's continuing authorization to update the live tooltip.
 
 ## Open questions / blockers
 

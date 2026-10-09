@@ -9,15 +9,20 @@ document.querySelectorAll('[data-windows-download]').forEach((link, index) => {
   tooltip.className = 'windows-download-tooltip';
   tooltip.setAttribute('role', 'tooltip');
   tooltip.hidden = true;
-  tooltip.innerHTML = 'The installer isn’t digitally signed. If your browser warns you, choose <strong>Keep</strong>. In Windows, choose <strong>More info → Run anyway</strong>, then <strong>Yes</strong> to allow installation and firewall access.';
+  tooltip.innerHTML = '<span class="windows-tip-title">Installing on Windows</span><span class="windows-tip-copy">The installer isn’t digitally signed, so you may see a warning.</span><span class="windows-tip-step">Browser: <strong>Keep</strong></span><span class="windows-tip-step">Windows: <strong>More info → Run anyway → Yes</strong></span>';
   link.setAttribute('aria-describedby', tooltip.id);
   wrapper.append(tooltip);
 
   const position = () => {
     const anchor = link.getBoundingClientRect();
     const box = tooltip.getBoundingClientRect();
-    tooltip.style.left = `${Math.max(12, Math.min(anchor.right - box.width, window.innerWidth - box.width - 12))}px`;
-    tooltip.style.top = `${anchor.bottom + box.height + 8 < window.innerHeight ? anchor.bottom + 8 : Math.max(12, anchor.top - box.height - 8)}px`;
+    const center = anchor.left + anchor.width / 2;
+    const left = Math.max(12, Math.min(center - box.width / 2, window.innerWidth - box.width - 12));
+    const below = anchor.bottom + box.height + 12 < window.innerHeight;
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${below ? anchor.bottom + 12 : Math.max(12, anchor.top - box.height - 12)}px`;
+    tooltip.style.setProperty('--tip-arrow-left', `${Math.max(20, Math.min(center - left, box.width - 20))}px`);
+    tooltip.dataset.placement = below ? 'bottom' : 'top';
   };
   const show = () => { tooltip.hidden = false; position(); };
   const hide = () => { tooltip.hidden = true; };

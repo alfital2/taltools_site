@@ -1,5 +1,11 @@
 .windows-download-help{display:inline-flex;align-items:center;vertical-align:middle}
 .windows-download-help a:focus-visible{outline:3px solid #3d6bff;outline-offset:4px}
-.windows-download-tooltip{position:fixed;z-index:100;width:310px;max-width:calc(100vw - 24px);padding:14px 16px;border:1px solid rgba(13,18,32,.12);border-radius:14px;background:#fff;color:#0d1220;box-shadow:0 12px 32px rgba(13,18,32,.16);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;text-align:left;white-space:normal}
+.windows-download-tooltip{position:fixed;z-index:100;width:300px;max-width:calc(100vw - 24px);padding:16px 18px;border:1px solid #e2e7f2;border-radius:12px;background:#fff;color:#0d1220;box-shadow:0 8px 24px rgba(30,42,140,.10);font:13px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;text-align:left;white-space:normal}
 .windows-download-tooltip[hidden]{display:none}
-.windows-download-tooltip::before{content:"";position:absolute;inset:-8px 0;z-index:-1}
+.windows-download-tooltip::before{content:"";position:absolute;inset:-12px 0;z-index:-1}
+.windows-download-tooltip::after{content:"";position:absolute;left:var(--tip-arrow-left);top:-5px;width:8px;height:8px;background:#fff;border-top:1px solid #e2e7f2;border-left:1px solid #e2e7f2;transform:translateX(-50%) rotate(45deg)}
+.windows-download-tooltip[data-placement="top"]::after{top:auto;bottom:-5px;transform:translateX(-50%) rotate(225deg)}
+.windows-tip-title{display:block;margin-bottom:5px;font-size:14px;font-weight:650;color:#1e2a8c}
+.windows-tip-copy{display:block;margin-bottom:10px;color:#5b6478}
+.windows-tip-step{display:block;margin-top:3px}
+.windows-tip-step strong{font-weight:600}
