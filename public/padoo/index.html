@@ -129,6 +129,11 @@
   .row{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px);align-items:center;
     margin-bottom:84px}
   .row:nth-child(even) .rtext{order:2}
+  /* A screenshot too wide for half the page: text above, image below at its
+     natural 2x size, so its settings text stays legible. */
+  .row.wide{grid-template-columns:1fr;justify-items:center}
+  .row.wide .rtext{order:0;max-width:680px}
+  .row.wide>div:last-child{width:100%}
   @media(max-width:860px){.row{grid-template-columns:1fr;gap:26px;margin-bottom:56px}
     .row:nth-child(even) .rtext{order:0}}
   .rtext h3{font-size:clamp(22px,3.2vw,30px);letter-spacing:-.025em;line-height:1.14;font-weight:800}
@@ -393,7 +398,7 @@
           <li>Sliders for brightness and volume, one per column</li>
         </ul>
       </div>
-      <div><div class="shot plain" style="max-width:365px"><img src="shots/crop-actions.webp" alt="The action library: mute mic, mute sound, camera preview and record screen." /></div></div>
+      <div><div class="shot plain" style="max-width:345px"><img src="shots/crop-actions.webp" alt="The action library: mute mic, mute sound, camera preview and record screen." /></div></div>
     </div>
 
     <div class="row">
@@ -418,7 +423,7 @@
           <li>The look reaches the phone the moment you pick it</li>
         </ul>
       </div>
-      <div><div class="shot plain" style="max-width:407px"><img src="shots/crop-looks.webp" alt="Six trackpad looks: Slate, Sketch, Blush, Midnight, Majestic and Ember." /></div></div>
+      <div><div class="shot plain" style="max-width:399px"><img src="shots/crop-looks.webp" alt="Six trackpad looks: Slate, Sketch, Blush, Midnight, Majestic and Ember." /></div></div>
     </div>
 
     <div class="row">
@@ -431,10 +436,10 @@
           <li>A spectrum ring on every press, if you want one</li>
         </ul>
       </div>
-      <div><div class="shot plain" style="max-width:436px"><img src="shots/crop-glass.webp" alt="Deck glass settings: a live preview of three glass keys above refraction, colour split, highlight, edge width and edge light sliders." /></div></div>
+      <div><div class="shot plain" style="max-width:430px"><img src="shots/crop-glass.webp" alt="Deck glass settings: a live preview of three glass keys, the Padoo, Quiet and Off presets, refraction, colour split, highlight, edge width and edge light sliders, and the press burst switch." /></div></div>
     </div>
 
-    <div class="row">
+    <div class="row wide">
       <div class="rtext">
         <h3>Nine thresholds, so it will be a perfect fit for you.</h3>
         <p>The sliders cover how far a finger may stray and still count as a tap, how long a hold waits before it turns into a drag, and how much of a swipe has to travel before it commits to a Space. Each one shows the shipped default beside your value, and one button restores them all.</p>
@@ -444,7 +449,7 @@
           <li>Reset to shipped values in one click</li>
         </ul>
       </div>
-      <div><div class="shot plain" style="max-width:432px"><img src="shots/gestures.webp" alt="Gesture tuning: nine sliders, each showing the current value beside the shipped default." /></div></div>
+      <div><div class="shot plain" style="max-width:788px;margin:0 auto"><img src="shots/gestures.webp" alt="Gestures settings: scroll acceleration and invert scroll direction above nine gesture sliders grouped into taps and clicks, hand resting, dragging and three-finger swipes, each beside its shipped value." /></div></div>
     </div>
 
   </div>
