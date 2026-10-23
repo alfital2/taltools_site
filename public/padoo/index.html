@@ -112,6 +112,10 @@
   .film{margin:56px auto 0;max-width:900px}
   .film video{width:100%;height:auto;aspect-ratio:16/9;display:block;background:#0d1230}
   .film + .heroshot{margin-top:48px}
+  .deck-film{margin:72px auto 0;max-width:900px;scroll-margin-top:80px}
+  .deck-film .sh{margin-bottom:24px}
+  .deck-film .film{margin-top:0}
+  .deck-film + .heroshot{margin-top:48px}
   .heroshot{margin:56px auto 0;max-width:900px}
   .screenshot-tabs{display:flex;justify-content:center;gap:4px;width:fit-content;margin:0 auto 24px;padding:5px;border:1px solid var(--line);border-radius:999px;background:#e9eef9}
   .screenshot-tabs button{padding:10px 24px;border:0;border-radius:999px;background:transparent;color:var(--sub);font:600 15px/1.4 var(--disp);cursor:pointer}
@@ -261,6 +265,15 @@
         <source src="film/padoo-film-1080p.mp4" type="video/mp4" />
       </video></div>
     </figure>
+
+    <div class="deck-film" id="deck-film">
+      <div class="sh"><h2>Meet the Deck</h2></div>
+      <figure class="film">
+        <div class="shot"><video controls playsinline preload="none" width="1920" height="1080" poster="film/padoo-deck-film-poster.webp" aria-label="Meet the Deck: a one-minute film of App Deck for streamers, switching OBS scenes, muting the mic, app gestures and custom shortcuts">
+          <source src="film/padoo-deck-film-1080p.mp4" type="video/mp4" />
+        </video></div>
+      </figure>
+    </div>
 
     <div class="heroshot">
       <div class="screenshot-tabs" role="tablist" aria-label="Explore Padoo settings">
