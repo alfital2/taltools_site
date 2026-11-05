@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Padoo · Fix a stuttering Wi-Fi connection</title>
+<meta name="description" content="If Padoo stutters about twice a second on Wi-Fi but is smooth on a cable, your router's channel may be the cause. Here is how to check it and change it." />
+<link rel="canonical" href="https://taltools.site/padoo/wifi-channel.html" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<meta name="theme-color" content="#3d6bff" />
+<style>
+  :root{
+    --blue:#3d6bff; --blue-deep:#1e2a8c; --ink:#0d1220; --sub:#5b6478;
+    --bg:#f5f8ff; --card:#ffffff; --line:rgba(13,18,32,.10);
+    --disp:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Inter,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--disp);font-size:17px;line-height:1.68;
+    -webkit-font-smoothing:antialiased;min-height:100vh;position:relative}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(46vw 46vw at 10% -10%, rgba(112,167,255,.28), transparent 62%),
+      radial-gradient(44vw 44vw at 92% 100%, rgba(61,107,255,.14), transparent 66%);}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:780px;margin:0 auto;padding:0 24px}
+
+  nav{position:sticky;top:0;z-index:50;background:rgba(245,248,255,.80);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(13,18,32,.06)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;letter-spacing:-.02em}
+  .brand img{width:28px;height:28px;border-radius:8px;display:block}
+  .back{font-size:15px;color:var(--sub);font-weight:500}
+  .back:hover{color:var(--ink)}
+
+  main{padding:44px 0 20px}
+  h1{font-size:clamp(32px,5.4vw,50px);line-height:1.06;letter-spacing:-.035em;font-weight:800}
+  .lede{font-size:19px;color:var(--sub);margin-top:16px}
+  h2{font-size:22px;font-weight:700;letter-spacing:-.02em;margin:42px 0 12px}
+  h3{font-size:17.5px;font-weight:700;letter-spacing:-.01em;margin:0 0 6px}
+  p{margin:12px 0;color:var(--sub)}
+  p strong,li strong{color:var(--ink);font-weight:600}
+  ul,ol{margin:12px 0 12px 22px;color:var(--sub)}
+  li{margin:8px 0}
+  a.inl{color:var(--blue-deep);font-weight:600}
+  a.inl:hover{text-decoration:underline}
+
+  .contact{background:linear-gradient(155deg,#1b2354,#0d1230);color:#fff;border-radius:22px;
+    padding:28px 30px;box-shadow:0 34px 70px -40px rgba(26,19,95,.7);margin:28px 0 8px;position:relative;overflow:hidden}
+  .contact::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(60% 80% at 88% 4%, rgba(112,167,255,.30), transparent 70%)}
+  .contact > *{position:relative;z-index:1}
+  .contact h2{margin:0 0 8px;font-size:24px;color:#fff}
+  .contact p{color:rgba(255,255,255,.76);margin:8px 0}
+  .contact a.mail{display:inline-flex;align-items:center;gap:9px;margin-top:14px;font-weight:600;font-size:16px;
+    background:rgba(255,255,255,.96);color:#0d1230;border-radius:999px;padding:12px 22px;
+    transition:transform .16s ease}
+  .contact a.mail:hover{transform:translateY(-2px)}
+
+  .req{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 4px}
+  .req span{font-size:14px;font-weight:600;color:var(--blue-deep);background:rgba(61,107,255,.09);
+    border:1px solid rgba(61,107,255,.18);border-radius:999px;padding:8px 16px}
+
+  .faq{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 24px;
+    box-shadow:0 22px 50px -34px rgba(26,19,95,.5);margin:14px 0}
+  .faq p:last-child{margin-bottom:0}
+
+  footer{padding:44px 0 60px;text-align:center;border-top:1px solid rgba(13,18,32,.07);margin-top:60px}
+  .foot-in{color:var(--sub);font-size:14.5px}
+  .foot-in a{color:var(--blue-deep);font-weight:600}
+  .foot-in a:hover{text-decoration:underline}
+  .foot-in .sep{opacity:.4;margin:0 8px}
+
+  .note{background:rgba(61,107,255,.08);border:1px solid rgba(61,107,255,.18);border-radius:14px;padding:14px 18px;margin:18px 0}
+  .note p{margin:0}
+  .steps{list-style:none;margin:16px 0;padding:0;counter-reset:s}
+  .steps li{counter-increment:s;background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:16px 18px 16px 58px;margin:10px 0;position:relative}
+  .steps li::before{content:counter(s);position:absolute;left:16px;top:15px;width:28px;height:28px;border-radius:50%;
+    background:var(--blue);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:16px;
+    overflow:hidden;margin:16px 0;font-size:15.5px}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--ink);font-weight:600}
+  td{color:var(--sub)}
+  tr:last-child td{border-bottom:0}
+  .picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0}
+  .pick{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+  .pick b{display:block;font-size:30px;line-height:1.1;letter-spacing:-.02em;color:var(--blue-deep)}
+  .pick span{display:block;margin-top:6px;color:var(--sub);font-size:15px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-in">
+    <a class="brand" href="index.html"><img src="icon-512.png" alt="" width="28" height="28" /> Padoo</a>
+    <a class="back" href="support.html">← Back to Support</a>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <h1>Fix a stuttering Wi-Fi connection</h1>
+    <p class="lede">If the cursor catches about twice a second on Wi-Fi but feels smooth on a cable, your router's channel may be the cause. It usually takes a few minutes to change.</p>
+
+    <h2>Is this your problem?</h2>
+    <p>It's a good match if all of these are true:</p>
+    <ul>
+      <li>Movement catches in a steady rhythm, not at random.</li>
+      <li>Padoo is smooth when the iPhone is connected by cable.</li>
+      <li>Your Mac is on a 5 GHz channel other than 44 or 149. To check, hold <strong>Option</strong> and click the Wi-Fi icon in the Mac's menu bar, then look for <strong>Channel</strong>.</li>
+    </ul>
+    <p>If your Mac is already on 44 or 149, this probably isn't the cause. <a class="inl" href="support.html">Support</a> can help from there.</p>
+
+    <h2>Why it happens</h2>
+    <p>Your iPhone's Wi-Fi radio does two jobs. It talks to your router, and it keeps a small private link with your other Apple devices for features like AirDrop. That private link normally uses channel 44 or channel 149.</p>
+    <p>When your router is on a different channel, the radio has to keep leaving your network to visit the private link's channel. Nothing gets through while it's away. You wouldn't notice that while streaming a video, but a cursor shows every gap straight away.</p>
+    <p>When your router uses the same channel, the radio doesn't have to leave.</p>
+    <p>Your router isn't faulty. On its Auto setting it picks a channel that looks quiet, and it has no way of knowing about Apple's link. It can also move to a new channel after a restart, so this can appear out of nowhere.</p>
+
+    <h2>What we measured</h2>
+    <table>
+      <tr><th>Connection</th><th>Result</th></tr>
+      <tr><td>Router on channel 100</td><td>76 pauses in 40 seconds, about 75 ms each</td></tr>
+      <tr><td>Router on channel 44</td><td>0 to 1 pauses in 40 seconds</td></tr>
+      <tr><td>Cable</td><td>No stalls in a short test</td></tr>
+    </table>
+    <p>That's one home setup in Israel, so your numbers will differ.</p>
+
+    <h2>Which channel to choose</h2>
+    <div class="picks">
+      <div class="pick"><b>44</b><span>Try this first. It's the channel we tested, and it's widely available.</span></div>
+      <div class="pick"><b>149</b><span>Try this if 44 doesn't help, especially in the US. It isn't offered in every country. We haven't tested it ourselves; it comes from public research on Apple's link.</span></div>
+    </div>
+
+    <h2>How to change it</h2>
+    <p>Every router's screens look different, so the names below may not match exactly.</p>
+    <ol class="steps">
+      <li><strong>Open your router's settings.</strong> The address and login are usually on a label on the router, or in its app.</li>
+      <li><strong>Find the wireless settings for 5 GHz.</strong> If your router combines its bands under one name, often called Smart Connect, you may need to turn that off first to see the channel setting.</li>
+      <li><strong>Change the channel from Auto to 44.</strong> Leave the channel width on 80 MHz or Auto.</li>
+      <li><strong>Save.</strong> Your Wi-Fi will drop for a moment while the router restarts it.</li>
+      <li><strong>Try Padoo again.</strong> Check that your Mac and iPhone have reconnected on 5 GHz. If the stutter is still there, try 149 where it's available.</li>
+    </ol>
+
+    <div class="note"><p><strong>Before you change it:</strong> Apple generally recommends leaving routers on Auto, so this is a fix for this specific problem. A fixed channel won't move away from a busy neighbor. If the rest of your Wi-Fi gets worse, set it back to Auto.</p></div>
+
+    <h2>Common questions</h2>
+    <div class="faq">
+      <h3>I can't change my router's channel.</h3>
+      <p>Some provider routers and mesh systems don't allow it. Use a cable with Padoo, or ask your provider whether the channel can be set.</p>
+    </div>
+    <div class="faq">
+      <h3>Will turning off AirDrop fix it?</h3>
+      <p>It didn't in our testing. iOS can keep the private link running with AirDrop off.</p>
+    </div>
+    <div class="faq">
+      <h3>Will this affect my other devices?</h3>
+      <p>Most devices that use 5 GHz will simply follow the router to the new channel. Very old devices that only use 2.4 GHz aren't affected.</p>
+    </div>
+    <div class="faq">
+      <h3>Does this apply to Windows?</h3>
+      <p>We've only measured this with a Mac. The iPhone's radio works the same way, so it may help on Windows too.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    Padoo <span class="sep">·</span> part of <a href="/">TalTools</a>
+    <span class="sep">·</span> <a href="index.html">Home</a>
+    <span class="sep">·</span> <a href="privacy.html">Privacy</a>
+    <span class="sep">·</span> <a href="mailto:05_tallow_trains@icloud.com?subject=Padoo%20support">Email support</a>
+  </div>
+</footer>
+
+</body>
+</html>
