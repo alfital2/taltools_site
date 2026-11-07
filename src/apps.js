@@ -29,6 +29,8 @@ export const APPS = [
     icon: tallyIcon,
     site: 'https://tallyrate.site',
     external: true,
+    appStore: 'https://apps.apple.com/app/id6780034410',
+    appStoreLabel: 'Get Tally for Mac & iPhone',
     bullets: ['Claude, Codex, or both', 'Session + weekly limits', 'Live models + token totals', 'Private local authentication'],
   },
   {
@@ -55,6 +57,8 @@ export const APPS = [
     icon: frameNookIcon,
     site: '/framenook/',
     external: false,
+    appStore: 'https://apps.apple.com/app/id6814156822',
+    appStoreLabel: 'Get FrameNook on the App Store',
     bullets: ['Give an old iPad a new purpose', 'Works with TVs, tablets and computers', 'Private local-network sharing', 'No account or analytics'],
   },
 ]

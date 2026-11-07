@@ -144,6 +144,18 @@ const MOTES_FAR = makeMotes(60, 7)
 const MOTES_NEAR = makeMotes(34, 99)
 
 // small inline arrow (no external images)
+// Apple logo for App Store buttons (same glyph the Padoo page uses).
+function AppleLogo({ color }) {
+  return (
+    <svg width="14" height="17" viewBox="0 0 384 512" aria-hidden style={{ marginTop: -2 }}>
+      <path
+        fill={color}
+        d="M318.7 268c-.3-37 16.4-65 50.1-85.6-18.9-27-47.5-41.9-85.1-44.8-35.7-2.8-74.8 20.9-89.1 20.9-15.1 0-49.7-19.9-76.9-19.9C71.2 138.9 16 178.9 16 260.4c0 24.1 4.4 49 13.2 74.6 11.8 33.9 54.4 117.1 98.8 115.7 23.2-.6 39.6-16.5 69.8-16.5 29.3 0 44.5 16.5 69.8 16.5 44.8-.6 83.4-76.2 94.6-110.2-60.1-28.3-56.9-82.9-56.9-84.7zM256.6 84.5c19.7-23.4 17.9-44.7 17.3-52.5-17.4 1-37.5 11.8-49 25.2-12.7 14.3-20.1 32-18.5 50.9 18.8 1.4 36.1-8.3 50.2-23.6z"
+      />
+    </svg>
+  )
+}
+
 function Arrow({ color }) {
   return (
     <svg
@@ -591,8 +603,8 @@ function AppScene({ app, index, reduced }) {
             }}
           >
             <a
-              href={app.site}
-              {...linkProps}
+              href={app.appStore || app.site}
+              {...(app.appStore ? { target: '_blank', rel: 'noopener noreferrer' } : linkProps)}
               className="dl-link dl-link-primary"
               style={{
                 display: 'inline-flex',
@@ -610,8 +622,17 @@ function AppScene({ app, index, reduced }) {
                 boxShadow: '0 10px 26px -10px rgba(0,0,0,0.45)',
               }}
             >
-              Get {app.name}
-              <Arrow color="#fff" />
+              {app.appStore ? (
+                <>
+                  <AppleLogo color="#fff" />
+                  {app.appStoreLabel}
+                </>
+              ) : (
+                <>
+                  Get {app.name}
+                  <Arrow color="#fff" />
+                </>
+              )}
             </a>
 
             <a
