@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { APPS } from '../apps.js'
-import { NatchoDemo, FlicKeyDemo, TallyDemo, GuitarStudioDemo, PoofDemo, PadooDemo } from '../demos.jsx'
+import { FlicKeyDemo, TallyDemo, PadooDemo } from '../demos.jsx'
 
 // ---------------------------------------------------------------------------
 // Variant 26 - "Daylight Glide"
@@ -32,11 +32,8 @@ const SKY_MID = '#eaf3ff'
 const SKY_WARM = '#fffaf2' // warm light at the horizon
 
 const DEMO_BY_ID = {
-  natcho: NatchoDemo,
   flickey: FlicKeyDemo,
   tally: TallyDemo,
-  guitar: GuitarStudioDemo,
-  poof: PoofDemo,
   padoo: PadooDemo,
 }
 
@@ -269,10 +266,9 @@ function GooglyWordmark({ reduced }) {
   )
 }
 
-// The seven apps, drawn as their own silhouettes rather than plain dots, each a
+// The four apps, drawn as their own silhouettes rather than plain dots, each a
 // button that jumps to its scene with a playful name tooltip on hover:
-// Natcho - tortilla-chip triangle · FlicKey - keycap · Tally - progress ring ·
-// Guitar Studio - a pick · Poof - a puff of smoke · Padoo - a paw pad ·
+// FlicKey - keycap · Tally - progress ring · Padoo - a paw pad ·
 // FrameNook - a framed landscape.
 function TrioGlyph({ id, name, children }) {
   const go = () => {
@@ -299,7 +295,7 @@ function AppTrio() {
   return (
     <div
       role="group"
-      aria-label="Jump to a tool: Natcho, FlicKey, Tally, Guitar Studio, Poof, Padoo or FrameNook"
+      aria-label="Jump to a tool: FlicKey, Tally, Padoo or FrameNook"
       style={{
         display: 'flex',
         justifyContent: 'center',
@@ -308,18 +304,6 @@ function AppTrio() {
         marginTop: 26,
       }}
     >
-      <TrioGlyph id="natcho" name="Notch? Nacho problem.">
-        {/* Natcho - rounded tortilla-chip triangle */}
-        <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
-          <polygon
-            points="14,5.5 23.5,22 4.5,22"
-            fill="#ffb703"
-            stroke="#ffb703"
-            strokeWidth="3.6"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </TrioGlyph>
 
       <TrioGlyph id="flickey" name="FlicKey">
         {/* FlicKey - a keyboard keycap */}
@@ -347,28 +331,7 @@ function AppTrio() {
         </svg>
       </TrioGlyph>
 
-      <TrioGlyph id="guitar" name="Guitar Studio">
-        {/* Guitar Studio - a guitar pick */}
-        <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
-          <path
-            d="M14 5 C18.4 5 21 7.6 21 11.2 C21 15.8 16.6 20.4 14 22 C11.4 20.4 7 15.8 7 11.2 C7 7.6 9.6 5 14 5 Z"
-            fill="#f0b429"
-          />
-        </svg>
-      </TrioGlyph>
 
-      <TrioGlyph id="poof" name="Poof!">
-        {/* Poof - a little puff of smoke */}
-        <svg className="dl-trio" width="26" height="26" viewBox="0 0 28 28" aria-hidden>
-          <g fill="#ff4436">
-            <circle cx="9.5" cy="16" r="5" />
-            <circle cx="17.5" cy="16" r="5.5" />
-            <circle cx="13" cy="12" r="5.2" />
-            <circle cx="20" cy="13.5" r="3.8" />
-            <rect x="7.5" y="14.5" width="14" height="6" rx="3" />
-          </g>
-        </svg>
-      </TrioGlyph>
 
       <TrioGlyph id="padoo" name="Padoo">
         {/* Padoo - the paw pad from the app icon: three beads over the plate.
@@ -437,10 +400,6 @@ function AppScene({ app, index, reduced }) {
       ? 'Menu bar · Usage'
       : app.id === 'flickey'
       ? 'Menu bar · Typing'
-      : app.id === 'guitar'
-      ? 'Web · Guitar'
-      : app.id === 'poof'
-      ? 'Menu bar · Capture'
       : app.id === 'padoo'
       ? 'iPhone + Mac · Input'
       : app.id === 'framenook'
@@ -651,31 +610,29 @@ function AppScene({ app, index, reduced }) {
                 boxShadow: '0 10px 26px -10px rgba(0,0,0,0.45)',
               }}
             >
-              {app.id === 'guitar' ? 'Launch Guitar Studio' : `Get ${app.name}`}
+              Get {app.name}
               <Arrow color="#fff" />
             </a>
 
-            {app.id !== 'guitar' && app.id !== 'poof' && (
-              <a
-                href={app.site}
-                {...linkProps}
-                className="dl-link dl-fulldemo"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 7,
-                  fontFamily: DISPLAY,
-                  fontWeight: 700,
-                  fontSize: 15,
-                  color: acText,
-                  textDecoration: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                See the full demo
-                <Arrow color={acText} />
-              </a>
-            )}
+            <a
+              href={app.site}
+              {...linkProps}
+              className="dl-link dl-fulldemo"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 7,
+                fontFamily: DISPLAY,
+                fontWeight: 700,
+                fontSize: 15,
+                color: acText,
+                textDecoration: 'none',
+                cursor: 'pointer',
+              }}
+            >
+              See the full demo
+              <Arrow color={acText} />
+            </a>
           </div>
         </div>
 
@@ -1205,7 +1162,7 @@ function CtaScene({ reduced, year }) {
             color: INK,
           }}
         >
-          Seven tools.
+          Four tools.
           <br />
           One calmer setup.
         </h2>
@@ -1301,7 +1258,7 @@ function CtaScene({ reduced, year }) {
             }}
           >
             I build small, focused tools that each fix one annoying thing and
-            then get out of the way. Seven so far, all designed to work locally
+            then get out of the way. Four so far, all designed to work locally
             and ask for as little as they can.
           </p>
           <div

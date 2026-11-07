@@ -1,25 +1,21 @@
 ## Status
 
-The live Padoo site has the large tabbed Trackpad/App Deck screenshot viewer with click-to-enlarge; its visible enlargement hint was removed. A new Multi-Mac marketing section is implemented locally for review only, using the owner's supplied phone interface image. The user explicitly requested seeing the preview before pushing: do not publish these changes without their approval. The pricing panel now advertises $9.99 and a 3-day free trial at the owner’s request, without promises that this includes all paid add-ons. The centered Windows tooltip, permanent Windows URL, and Mac 1.3.2 (27) remain in place.
+The taltools.site homepage now lists four apps: FlicKey, Tally, Padoo and FrameNook. Natcho, Guitar Studio and Poof were removed from it on the owner's request. `public/natcho/` (page, terms, Sparkle appcast) is still deployed but no longer linked from the homepage. The Padoo page itself is unchanged by this session. The owner's main checkout (`~/Documents/taltools_site`) was behind origin/main and still holds an older, unpublished Multi-Mac draft of `public/padoo/index.html` plus `shots/multi-mac-control.webp`. Check whether origin's Padoo page already covers it before re-applying anything, and don't publish it without approval.
 
 ## Recent changes
 
-- Replaced the pricing panel’s generic paid-feature paragraph with $9.99 and “Try Padoo free for 3 days.” Kept the trial CTA and existing non-pricing benefits.
-- Published only the requested pricing change. Preserved the unapproved Multi-Mac section as an uncommitted local draft, along with its WebP image.
-- The Multi-Mac draft was informed by the app’s main worktree: up to three connected Macs, one controlled at a time, manual switching in all surfaces, optional left/right edge switching in Trackpad and Air Pointer.
-- Production build and diff checks passed. The pricing panel was checked at mobile and desktop widths.
+- Removed Natcho, Guitar Studio and Poof from `src/apps.js` and from the live design (`Variant26.jsx`): hero app glyphs, demo map, scene eyebrows and the guitar/poof special-cased CTAs. The headline and bio now say "Four tools" and "Four so far". The meta description now names the remaining four apps.
+- Kept `public/natcho/` so installed Natcho copies can still reach the appcast and old links don't 404. Kept the demo components in `demos.jsx` and the old gallery variants (not wired into the build) to avoid churn.
+- Done in a clean worktree off origin/main so the owner's uncommitted local draft stayed untouched.
 
 ## Open questions / blockers
 
-- Await the owner's feedback/approval on the Multi-Mac preview before pushing.
-- Padoo's October 10 handoff says the add-on is a $5.99 lifetime non-consumable, READY_TO_SUBMIT, with no public iPhone release yet. Confirm current availability before advertising it as available; use coming-soon wording if still unreleased.
-- Existing appearance, per-app overrides, action-library, and phone captures await replacements if desired.
+- Should `/natcho/` be taken down entirely? (Removing it breaks Sparkle updates for existing installs.)
+- Is the Multi-Mac draft in the main checkout still wanted, or has it been superseded on origin?
 
 ## Next steps
 
-1. Show/review the Multi-Mac section and refine based on owner feedback.
-2. Confirm release availability and adjust the feature's badge/CTA accordingly before publishing.
-3. Publish only after owner approval, then verify the live section.
-4. Preserve Mac release artifacts and unrelated untracked .agents/ and drafts/ files.
+1. Pull origin/main into the main checkout, keeping or discarding the Multi-Mac draft per the owner.
+2. Optionally prune the unused Natcho/Guitar/Poof demos and icons once the old gallery variants are deleted.
 
-_Last updated: 2026-10-10 by Codex (GPT-6)_
+_Last updated: 2026-11-07 by Claude Code (Opus 5.5)_

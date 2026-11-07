@@ -1,7 +1,7 @@
 # TalTools
 
-The umbrella site for a little lab of small tools: **Natcho**, **FlicKey**,
-**Tally**, **Guitar Studio**, **Poof**, **Padoo**, and **FrameNook**.
+The umbrella site for a little lab of small tools: **FlicKey**, **Tally**,
+**Padoo**, and **FrameNook**.
 
 Live at **[taltools.site](https://taltools.site)**.
 
@@ -32,7 +32,8 @@ Apps without their own domain get a hand-written static page under `public/`,
 copied verbatim into `dist/` at build time — no React, no build step of their
 own. Three live there today:
 
-- `public/natcho/` → `taltools.site/natcho/`
+- `public/natcho/` → `taltools.site/natcho/` (no longer listed on the homepage;
+  kept so the direct link and the Sparkle appcast keep working for installed copies)
 - `public/padoo/` → `taltools.site/padoo/` (plus `privacy.html`, `support.html`)
 - `public/framenook/` → `taltools.site/framenook/` (plus `privacy.html`, `support.html`)
 
