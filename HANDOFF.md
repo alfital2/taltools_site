@@ -1,21 +1,23 @@
 ## Status
 
-The taltools.site homepage now lists four apps: FlicKey, Tally, Padoo and FrameNook. Tally (id6780034410, one listing for Mac and iPhone) and FrameNook (id6814156822, iPhone) are live on the App Store at $9.99. Their homepage cards now use an App Store button as the main call to action, and the FrameNook page links to the App Store instead of saying "coming soon". Natcho, Guitar Studio and Poof were removed from it on the owner's request. `public/natcho/` (page, terms, Sparkle appcast) is still deployed but no longer linked from the homepage. The Padoo page itself is unchanged by this session. The owner's main checkout (`~/Documents/taltools_site`) was behind origin/main and still holds an older, unpublished Multi-Mac draft of `public/padoo/index.html` plus `shots/multi-mac-control.webp`. Check whether origin's Padoo page already covers it before re-applying anything, and don't publish it without approval.
+The taltools.site homepage lists four apps: FlicKey, Tally, Padoo and FrameNook. Tally and FrameNook have App Store buttons. Natcho, Guitar Studio and Poof are off the homepage, but `public/natcho/` stays deployed so Sparkle updates keep working. The homepage hero no longer has the "A lab of tiny tools" badge, and the Padoo scene has a richer interactive demo (see below). The owner's main checkout (`~/Documents/taltools_site`) is behind origin/main. It still holds an older, unpublished Multi-Mac draft of `public/padoo/index.html` plus `shots/multi-mac-control.webp`. Don't publish that without approval.
 
 ## Recent changes
 
-- Removed Natcho, Guitar Studio and Poof from `src/apps.js` and from the live design (`Variant26.jsx`): hero app glyphs, demo map, scene eyebrows and the guitar/poof special-cased CTAs. The headline and bio now say "Four tools" and "Four so far". The meta description now names the remaining four apps.
-- Kept `public/natcho/` so installed Natcho copies can still reach the appcast and old links don't 404. Kept the demo components in `demos.jsx` and the old gallery variants (not wired into the build) to avoid churn.
-- Added App Store links: optional `appStore`/`appStoreLabel` fields in `src/apps.js` swap the card's primary button for an Apple-logo App Store button. "See the full demo" still opens the app's own site. On the FrameNook page the button appears in the hero and the closing section, plus a desktop-only nav link (it wrapped on phones). Verified with Playwright at 1280px and 390px.
-- Done in a clean worktree off origin/main so the owner's uncommitted local draft stayed untouched.
+- Removed the hero badge on the owner's request and set the wordmark's top margin to 0 so the hero stays centred.
+- Rebuilt `PadooDemo` in `src/demos.jsx`, because the owner felt the old blue drag pad undersold the app. It now shows Padoo's three surfaces the way the app draws them (dark glass):
+  - **Trackpad (landscape):** relative drag, tap to click, a focused-app chip and the five-app edge dock. An idle tour plays tap, two-finger right-click, scroll and three-finger desktop swipes; it pauses for 5 s whenever the visitor touches it.
+  - **Air pointer (portrait):** the phone tilts toward the aim. Hovering the mock Mac aims it, and the phone's buttons click, right-click and switch desktops.
+  - **App Deck:** 15 keys (apps, snap left/fill/right, media, mic mute, screen recording, Focus) plus brightness and volume sliders, each with a visible effect on the mock Mac.
+  - Icons are generic glyphs, not real app logos, to stay clear of trademarks. The idle tour and air sweep are off under prefers-reduced-motion.
+- Done in a clean worktree off origin/main so the owner's local draft stayed untouched.
 
 ## Open questions / blockers
 
 - Should `/natcho/` be taken down entirely? (Removing it breaks Sparkle updates for existing installs.)
 - Is the Multi-Mac draft in the main checkout still wanted, or has it been superseded on origin?
-
-- tallyrate.site (separate `tally-app` repo) has no App Store link yet. It still only offers the GitHub DMG (1.5.2), while the App Store edition is 1.0.
-- The FrameNook page is 410px wide in a 390px viewport (it was before this session too). The hero device and its floating note likely spill over the edge.
+- tallyrate.site (separate `tally-app` repo) has no App Store link yet.
+- The FrameNook page is 410px wide in a 390px viewport. The hero device likely spills over the edge.
 
 ## Next steps
 

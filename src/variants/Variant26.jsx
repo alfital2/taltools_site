@@ -992,32 +992,6 @@ export default function Variant26() {
           }}
         >
           <motion.div style={{ opacity: heroOpacity, y: heroY }}>
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 9,
-                fontFamily: TEXT,
-                fontSize: 13.5,
-                fontWeight: 600,
-                color: SUBTLE,
-                background: 'rgba(255,255,255,0.8)',
-                border: `1px solid ${HAIR}`,
-                padding: '7px 16px',
-                borderRadius: 999,
-                boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-              }}
-            >
-              <span
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: '50%',
-                  background: `linear-gradient(135deg, ${BLUE}, #59b4ff)`,
-                }}
-              />
-              A lab of tiny tools
-            </span>
             <h1
               aria-label="TalTools"
               style={{
@@ -1026,7 +1000,7 @@ export default function Variant26() {
                 fontSize: 'clamp(46px, 10vw, 120px)',
                 lineHeight: 0.98,
                 letterSpacing: '-0.04em',
-                margin: '26px auto 0',
+                margin: '0 auto',
                 color: INK,
               }}
             >
