@@ -4,16 +4,16 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
     <channel>
         <title>Padoo</title>
         <item>
-            <title>1.4.4</title>
-            <pubDate>Sun, 08 Nov 2026 14:32:34 +0200</pubDate>
+            <title>1.4.5</title>
+            <pubDate>Sun, 08 Nov 2026 21:23:03 +0200</pubDate>
             <link>https://taltools.site/padoo/</link>
-            <sparkle:version>37</sparkle:version>
-            <sparkle:shortVersionString>1.4.4</sparkle:shortVersionString>
+            <sparkle:version>38</sparkle:version>
+            <sparkle:shortVersionString>1.4.5</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://taltools.site/padoo/PadooMac-1.4.4-37.dmg" length="5966156" type="application/octet-stream" sparkle:edSignature="8O2X4hcDnhvT9p/Jh+lQp6KWwPZZARkv13H9Ng/kRGTVhG4YwAqmoh1RzZv8IGECcvRlulVSwg/YgVXq4av4BA=="></enclosure>
+            <enclosure url="https://taltools.site/padoo/PadooMac-1.4.5-38.dmg" length="5982840" type="application/octet-stream" sparkle:edSignature="y3lYBF6XsOh9knMTVtAqZrb8z4YIob/BbO1XTw6Zy/Ug0Mmrg/6aT1Od+zw6uhX2vU/hmI5KWD0bra6KZnKtDw=="></enclosure>
         </item>
     </channel>
 </rss><!-- sparkle-signatures:
-edSignature: h6IqD3u5+KNpdHM1zFJxM8+69Mgz8RO+F7y3etDS27kTqtZqJCJrqmKGcrgreo7EtGgpqLPFa8XUCZ4ZgbGVBQ==
+edSignature: 7DYKHmfYaMNweoqESH0KzsCP3e1S/EsP6CGXFW4xWi28SBnubqjobEKezbYUZzGnVHNqYfhlXT1heUXM2fbpCw==
 length: 1062
 -->
